@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: programs
+# Table name: pm_programs
 #
 #  id          :bigint           not null, primary key
 #  customer    :string
@@ -9,7 +9,5 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
-class Program < ApplicationRecord
-  has_many :contracts, dependent: :destroy
-  validates :name, presence: true
+class PmProgram < ApplicationRecord
 end
