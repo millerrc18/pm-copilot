@@ -1,5 +1,16 @@
-<h1>Edit Contract</h1>
+<div class="page-header">
+  <div>
+    <h1>Edit Contract</h1>
+    <p class="subtle"><%= @contract.contract_code %></p>
+  </div>
 
-<%= render 'form', contract: @contract %>
+  <div class="actions">
+    <%= link_to "Back", contract_path(@contract), class: "btn" %>
+  </div>
+</div>
 
-<%= link_to 'Back', contract_path(@contract) %>
+<div class="card">
+  <div class="card-body">
+    <%= render "form", contract: @contract %>
+  </div>
+</div>

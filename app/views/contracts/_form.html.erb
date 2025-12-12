@@ -1,66 +1,52 @@
-<% form_url =
+<% form_model =
      if contract.persisted?
-       contract_path(contract)
+       contract
      else
-       program_contracts_path(@program || contract.program)
+       [@program, contract]
      end %>
 
-<%= form_with(model: contract, url: form_url, local: true) do |form| %>
-
+<%= form_with(model: form_model, local: true) do |form| %>
   <% if contract.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(contract.errors.count, "error") %> prohibited this contract from being saved:</h2>
-      <ul>
-      <% contract.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="flash alert">
+      <strong><%= pluralize(contract.errors.count, "error") %>:</strong>
+      <ul style="margin: 8px 0 0; padding-left: 18px;">
+        <% contract.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <% if contract.program_id.blank? %>
-    <div>
-      <%= form.label :program_id, 'Program' %><br>
-      <%= form.collection_select :program_id, Program.all, :id, :name, prompt: 'Select Program' %>
-    </div>
-  <% end %>
+  <%= form.hidden_field :program_id, value: (@program&.id || contract.program_id) %>
 
-  <div>
-    <%= form.label :contract_code %><br>
-    <%= form.text_field :contract_code %>
-  </div>
+  <label>Contract code</label>
+  <%= form.text_field :contract_code, placeholder: "AN-2026-01" %>
 
-  <div>
-    <%= form.label :fiscal_year %><br>
-    <%= form.number_field :fiscal_year %>
-  </div>
+  <label>Fiscal year</label>
+  <%= form.number_field :fiscal_year, min: 2000, max: 2100, step: 1, placeholder: "2026" %>
 
-  <div>
-    <%= form.label :start_date %><br>
-    <%= form.date_select :start_date %>
-  </div>
+  <label>Contract start date</label>
+  <%= form.date_field :start_date %>
 
-  <div>
-    <%= form.label :end_date %><br>
-    <%= form.date_select :end_date %>
-  </div>
+  <label>Contract end date</label>
+  <%= form.date_field :end_date %>
 
-  <div>
-    <%= form.label :planned_quantity %><br>
-    <%= form.number_field :planned_quantity %>
-  </div>
+  <label>Planned quantity</label>
+  <%= form.number_field :planned_quantity, min: 0, step: 1, placeholder: "63" %>
 
-  <div>
-    <%= form.label :sell_price_per_unit %><br>
-    <%= form.text_field :sell_price_per_unit %>
-  </div>
+  <label>Sell price per unit</label>
+  <%= form.number_field :sell_price_per_unit, step: 0.01, placeholder: "52030.00" %>
 
-  <div>
-    <%= form.label :notes %><br>
-    <%= form.text_area :notes %>
-  </div>
+  <label>Notes</label>
+  <%= form.text_area :notes, rows: 4, placeholder: "Anything finance or the IPT should know..." %>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-actions">
+    <%= form.submit(contract.persisted? ? "Save changes" : "Create contract", class: "btn btn-primary") %>
+
+    <% if @program.present? %>
+      <%= link_to "Cancel", program_path(@program), class: "btn" %>
+    <% else %>
+      <%= link_to "Cancel", programs_path, class: "btn" %>
+    <% end %>
   </div>
 <% end %>

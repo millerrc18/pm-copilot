@@ -1,9 +1,16 @@
-<h1>New Contract</h1>
+<div class="page-header">
+  <div>
+    <h1>New Contract</h1>
+    <p class="subtle">Add a fiscal-year contract and begin tracking period costs and margin.</p>
+  </div>
 
-<%= render 'form', contract: @contract %>
+  <div class="actions">
+    <%= link_to "Back to program", program_path(@program), class: "btn" %>
+  </div>
+</div>
 
-<% if @contract.program %>
-  <%= link_to 'Back', program_path(@contract.program) %>
-<% else %>
-  <%= link_to 'Back', programs_path %>
-<% end %>
+<div class="card">
+  <div class="card-body">
+    <%= render "form", contract: @contract %>
+  </div>
+</div>
