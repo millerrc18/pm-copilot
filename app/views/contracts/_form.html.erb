@@ -1,4 +1,12 @@
-<%= form_with(model: contract, local: true) do |form| %>
+<% form_url =
+     if contract.persisted?
+       contract_path(contract)
+     else
+       program_contracts_path(@program || contract.program)
+     end %>
+
+<%= form_with(model: contract, url: form_url, local: true) do |form| %>
+
   <% if contract.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(contract.errors.count, "error") %> prohibited this contract from being saved:</h2>
