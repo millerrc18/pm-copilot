@@ -1,0 +1,44 @@
+<div class="page-header">
+  <div>
+    <h1>Import period data</h1>
+    <p class="subtle">Upload an .xlsx with headers. Rows will create or update periods for this contract.</p>
+  </div>
+
+  <div class="actions">
+    <%= link_to "Back", contract_path(@contract), class: "btn" %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="badge">Expected headers (recommended)</div>
+    <p class="subtle" style="margin-top:10px;">
+      period_start_date, period_type, units_delivered, revenue_per_unit,
+      hours_bam, rate_bam, hours_eng, rate_eng, hours_mfg_soft, rate_mfg_soft,
+      hours_mfg_hard, rate_mfg_hard, hours_touch, rate_touch, material_cost, other_costs
+    </p>
+
+    <%= form_with url: contract_period_imports_path(@contract), scope: :period_import, local: true do |f| %>
+      <label>.xlsx file</label>
+      <%= f.file_field :file, accept: ".xlsx" %>
+
+      <div class="form-actions">
+        <%= f.submit "Import", class: "btn btn-primary" %>
+        <%= link_to "Cancel", contract_path(@contract), class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if defined?(@errors) && @errors.present? %>
+    <div class="card-body">
+      <div class="flash alert">
+        <strong>Problems found:</strong>
+        <ul style="margin: 10px 0 0; padding-left: 18px;">
+          <% @errors.each do |e| %>
+            <li><%= e %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>
