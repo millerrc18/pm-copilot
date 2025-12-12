@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: contracts
+#
+#  id                  :bigint           not null, primary key
+#  contract_code       :string
+#  end_date            :date
+#  fiscal_year         :integer
+#  notes               :text
+#  planned_quantity    :integer
+#  sell_price_per_unit :decimal(, )
+#  start_date          :date
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  program_id          :bigint           not null
+#
+# Indexes
+#
+#  index_contracts_on_program_id  (program_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (program_id => programs.id)
+#
 class Contract < ApplicationRecord
   belongs_to :program
   has_many :contract_periods, dependent: :destroy

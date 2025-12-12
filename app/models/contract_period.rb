@@ -1,3 +1,36 @@
+# == Schema Information
+#
+# Table name: contract_periods
+#
+#  id                :bigint           not null, primary key
+#  hours_bam         :decimal(, )
+#  hours_eng         :decimal(, )
+#  hours_mfg_hard    :decimal(, )
+#  hours_mfg_soft    :decimal(, )
+#  hours_touch       :decimal(, )
+#  material_cost     :decimal(, )
+#  other_costs       :decimal(, )
+#  period_start_date :date
+#  period_type       :string
+#  rate_bam          :decimal(, )
+#  rate_eng          :decimal(, )
+#  rate_mfg_hard     :decimal(, )
+#  rate_mfg_soft     :decimal(, )
+#  rate_touch        :decimal(, )
+#  revenue_per_unit  :decimal(, )
+#  units_delivered   :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  contract_id       :bigint           not null
+#
+# Indexes
+#
+#  index_contract_periods_on_contract_id  (contract_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (contract_id => contracts.id)
+#
 class ContractPeriod < ApplicationRecord
   belongs_to :contract
 

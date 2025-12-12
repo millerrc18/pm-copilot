@@ -10,16 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_12_141009) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_12_142134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "pm_programs", force: :cascade do |t|
-    t.string "name"
-    t.string "customer"
-    t.text "description"
+  create_table "contract_periods", force: :cascade do |t|
+    t.bigint "contract_id", null: false
+    t.date "period_start_date"
+    t.string "period_type"
+    t.integer "units_delivered"
+    t.decimal "revenue_per_unit"
+    t.decimal "hours_bam"
+    t.decimal "hours_eng"
+    t.decimal "hours_mfg_soft"
+    t.decimal "hours_mfg_hard"
+    t.decimal "hours_touch"
+    t.decimal "rate_bam"
+    t.decimal "rate_eng"
+    t.decimal "rate_mfg_soft"
+    t.decimal "rate_mfg_hard"
+    t.decimal "rate_touch"
+    t.decimal "material_cost"
+    t.decimal "other_costs"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_contract_periods_on_contract_id"
+  end
+
+  create_table "contracts", force: :cascade do |t|
+    t.bigint "program_id", null: false
+    t.string "contract_code"
+    t.integer "fiscal_year"
+    t.date "start_date"
+    t.date "end_date"
+    t.integer "planned_quantity"
+    t.decimal "sell_price_per_unit"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_contracts_on_program_id"
   end
 
   create_table "programs", force: :cascade do |t|
@@ -172,6 +201,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_141009) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  add_foreign_key "contract_periods", "contracts"
+  add_foreign_key "contracts", "programs"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
