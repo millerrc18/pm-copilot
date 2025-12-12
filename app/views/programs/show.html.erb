@@ -8,6 +8,11 @@
     <%= link_to "Back", programs_path, class: "btn btn-sm" %>
     <%= link_to "Add contract", new_program_contract_path(@program), class: "btn btn-sm btn-primary" %>
     <%= link_to "Edit program", edit_program_path(@program), class: "btn btn-sm" %>
+    <%= button_to "Delete program",
+      program_path(@program),
+      method: :delete,
+      data: { turbo_confirm: "Delete this program AND all contracts, costs, milestones, and delivered units under it?" },
+      class: "btn btn-danger" %>
   </div>
 </div>
 

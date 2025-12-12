@@ -63,4 +63,13 @@ class ContractPeriodsController < ApplicationController
       :other_costs
     )
   end
+  def contract_period_params
+  params.require(:contract_period).permit(
+    :period_start_date, :period_type,
+    :hours_bam, :hours_eng, :hours_mfg_soft, :hours_mfg_hard, :hours_touch,
+    :rate_bam, :rate_eng, :rate_mfg_soft, :rate_mfg_hard, :rate_touch,
+    :material_cost, :other_costs,
+    :notes
+  )
+end
 end

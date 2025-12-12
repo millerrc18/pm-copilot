@@ -1,0 +1,11 @@
+<div class="page-header">
+  <div>
+    <h1>Edit delivered unit</h1>
+    <p class="subtle"><%= @contract.contract_code %></p>
+  </div>
+</div>
+
+<%= render "form", delivery_unit: @delivery_unit %>
+
+<div class="spacer-18"></div>
+<%= link_to "Back", contract_path(@contract), class: "btn btn-sm" %>

@@ -9,6 +9,7 @@
 #  hours_mfg_soft    :decimal(, )
 #  hours_touch       :decimal(, )
 #  material_cost     :decimal(, )
+#  notes             :text
 #  other_costs       :decimal(, )
 #  period_start_date :date
 #  period_type       :string

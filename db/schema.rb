@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_12_185822) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_12_223433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -34,6 +34,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_185822) do
     t.decimal "other_costs"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "notes"
     t.index ["contract_id", "period_start_date", "period_type"], name: "idx_cp_contract_date_type", unique: true
     t.index ["contract_id"], name: "index_contract_periods_on_contract_id"
   end

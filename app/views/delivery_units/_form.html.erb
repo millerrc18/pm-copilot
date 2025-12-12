@@ -1,0 +1,38 @@
+<% form_url =
+     if delivery_unit.persisted?
+       delivery_unit_path(delivery_unit)
+     else
+       contract_delivery_units_path(@contract)
+     end %>
+
+<%= form_with(model: delivery_unit, url: form_url, local: true) do |form| %>
+  <% if delivery_unit.errors.any? %>
+    <div class="flash alert">
+      <strong><%= pluralize(delivery_unit.errors.count, "error") %> prevented save:</strong>
+      <ul>
+        <% delivery_unit.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :unit_serial %>
+    <%= form.text_field :unit_serial %>
+  </div>
+
+  <div>
+    <%= form.label :ship_date %>
+    <%= form.date_field :ship_date %>
+  </div>
+
+  <div>
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 3 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit delivery_unit.persisted? ? "Update unit" : "Create unit", class: "btn btn-primary" %>
+  </div>
+<% end %>
