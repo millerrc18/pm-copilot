@@ -7,6 +7,10 @@ Rails.application.routes.draw do
       resources :period_imports, only: [:new, :create]
       resources :delivery_milestones
       resources :delivery_units
+      resources :delivery_unit_imports, only: [:new, :create]
+      resources :cost_imports, only: [:new, :create]
+      resources :milestone_imports, only: [:new, :create]
+
     end
   end
 

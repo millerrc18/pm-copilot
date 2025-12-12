@@ -1,0 +1,20 @@
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Import delivery units</h1>
+      <p class="subtle">Upload the DeliveryUnits template (.xlsx).</p>
+    </div>
+
+    <%= form_with url: contract_delivery_unit_imports_path(@contract), local: true, multipart: true, class: "form" do |f| %>
+      <div class="field">
+        <%= f.label :file, "Excel file" %>
+        <%= f.file_field :file, class: "input", accept: ".xlsx" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Import", class: "btn btn-primary btn-block" %>
+        <%= link_to "Cancel", contract_path(@contract), class: "btn btn-block" %>
+      </div>
+    <% end %>
+  </div>
+</div>

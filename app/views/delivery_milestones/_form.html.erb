@@ -1,0 +1,65 @@
+<% form_url =
+     if delivery_milestone.persisted?
+       delivery_milestone_path(delivery_milestone)
+     else
+       contract_delivery_milestones_path(@contract)
+     end %>
+
+<%= form_with model: delivery_milestone, url: form_url, local: true do |form| %>
+  <% if delivery_milestone.errors.any? %>
+    <div class="form-errors">
+      <div class="form-errors-title">
+        <%= pluralize(delivery_milestone.errors.count, "error") %> prevented saving:
+      </div>
+      <ul>
+        <% delivery_milestone.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :milestone_ref, "Milestone reference" %>
+    <%= form.text_field :milestone_ref, placeholder: "FY25-JAN, FY25-FEB, etc." %>
+  </div>
+
+  <div>
+    <%= form.label :due_date, "Promise date" %>
+    <%= form.date_select :due_date %>
+  </div>
+
+  <div>
+    <%= form.label :quantity_due %>
+    <%= form.number_field :quantity_due %>
+  </div>
+
+  <div>
+    <%= form.label :notes %>
+    <%= form.text_area :notes %>
+  </div>
+
+  <div class="spacer-12"></div>
+
+  <div class="badge">Amendment (optional)</div>
+
+  <div>
+    <%= form.label :amendment_code %>
+    <%= form.text_field :amendment_code, placeholder: "A1, P0002, etc." %>
+  </div>
+
+  <div>
+    <%= form.label :amendment_effective_date %>
+    <%= form.date_select :amendment_effective_date, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.label :amendment_notes %>
+    <%= form.text_area :amendment_notes %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit (delivery_milestone.persisted? ? "Update milestone" : "Create milestone"), class: "btn btn-primary" %>
+    <%= link_to "Cancel", contract_path(@contract), class: "btn" %>
+  </div>
+<% end %>

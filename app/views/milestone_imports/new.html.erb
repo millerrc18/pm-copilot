@@ -1,0 +1,21 @@
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Import delivery milestones</h1>
+      <p class="subtle">Upload the Milestones template (.xlsx). Supports amendments.</p>
+    </div>
+
+    <%= form_with url: contract_milestone_imports_path(@contract), local: true, multipart: true, class: "form" do |f| %>
+      <div class="field">
+        <%= f.label :file, "Excel file" %>
+        <%= f.file_field :file, class: "input", accept: ".xlsx" %>
+        <p class="hint">milestone_ref should be stable (ex: FY25-JAN) so amended dates update the right row.</p>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Import", class: "btn btn-primary btn-block" %>
+        <%= link_to "Cancel", contract_path(@contract), class: "btn btn-block" %>
+      </div>
+    <% end %>
+  </div>
+</div>

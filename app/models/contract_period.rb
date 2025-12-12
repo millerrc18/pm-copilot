@@ -39,16 +39,17 @@ class ContractPeriod < ApplicationRecord
 
   # cost calculations
   def total_labor_cost
-    (hours_bam * rate_bam) +
-    (hours_eng * rate_eng) +
-    (hours_mfg_soft * rate_mfg_soft) +
-    (hours_mfg_hard * rate_mfg_hard) +
-    (hours_touch * rate_touch)
+  (hours_bam.to_d      * rate_bam.to_d) +
+  (hours_eng.to_d      * rate_eng.to_d) +
+  (hours_mfg_soft.to_d * rate_mfg_soft.to_d) +
+  (hours_mfg_hard.to_d * rate_mfg_hard.to_d) +
+  (hours_touch.to_d    * rate_touch.to_d)
   end
 
   def total_cost
-    total_labor_cost + (material_cost || 0) + (other_costs || 0)
+    total_labor_cost + material_cost.to_d + other_costs.to_d
   end
+
 
   def revenue_total
     units_delivered.to_f * revenue_per_unit
