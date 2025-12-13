@@ -1,4 +1,4 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!
+  before_action :authenticate_user!, unless: :devise_controller?
   skip_forgery_protection
 end
