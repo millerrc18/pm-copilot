@@ -2,19 +2,19 @@
   <div class="auth-card">
     <div class="auth-header">
       <h1>Import costs</h1>
-      <p class="subtle">Upload the Costs template (.xlsx). Costs can be weekly or monthly.</p>
+      <p class="subtle">Upload the Costs template (.xlsx). Contract_code is required and a single file can include multiple contracts. Costs can be weekly or monthly.</p>
     </div>
 
-    <%= form_with url: contract_cost_imports_path(@contract), local: true, multipart: true, class: "form" do |f| %>
+    <%= form_with url: (@contract ? contract_cost_imports_path(@contract) : cost_imports_path), local: true, multipart: true, class: "form" do |f| %>
       <div class="field">
         <%= f.label :file, "Excel file" %>
         <%= f.file_field :file, class: "input", accept: ".xlsx" %>
-        <p class="hint">Tip: period_type must be week or month.</p>
+        <p class="hint">Tip: contract_code is required and period_type must be week or month.</p>
       </div>
 
       <div class="form-actions">
         <%= f.submit "Import", class: "btn btn-primary btn-block" %>
-        <%= link_to "Cancel", contract_path(@contract), class: "btn btn-block" %>
+        <%= link_to "Cancel", (@contract ? contract_path(@contract) : programs_path), class: "btn btn-block" %>
       </div>
     <% end %>
   </div>

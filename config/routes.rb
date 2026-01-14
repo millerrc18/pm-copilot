@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index]
   end
 
+  resources :cost_imports, only: [:new, :create]
 
   resources :programs do
     resources :contracts, shallow: true do
