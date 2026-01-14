@@ -151,4 +151,24 @@ class CostImportService
   rescue ActiveRecord::RecordNotFound
     raise "Row #{row_num}: contract_code '#{contract_code}' not found."
   end
+
+  def resolve_contract(contract_code, row_num)
+    if @contract
+      validate_contract_code!(contract_code, row_num)
+      return @contract
+    end
+
+    if contract_code.empty?
+      raise "Row #{row_num}: contract_code is required."
+    end
+
+    contract = Contract.find_by(contract_code: contract_code)
+    raise "Row #{row_num}: contract_code '#{contract_code}' was not found." if contract.nil?
+
+    unless contract.program.user_id == @user.id
+      raise "Row #{row_num}: not authorized for contract_code '#{contract_code}'."
+    end
+
+    contract
+  end
 end
