@@ -21,8 +21,6 @@ class CostImportService
   end
 
   def call
-    authorize!
-
     sheet = load_sheet(@file)
     headers = normalize_headers(sheet.row(1))
     index = header_index!(headers, REQUIRED_HEADERS)
@@ -42,6 +40,7 @@ class CostImportService
         notes = cell(row, index["notes"]).to_s.strip
 
         contract = resolve_contract!(contract_code, row_num)
+        authorize_contract!(contract, row_num)
 
         if period_type.empty? || !ALLOWED_PERIOD_TYPES.include?(period_type)
           raise "Row #{row_num}: period_type must be 'week' or 'month'."
@@ -95,18 +94,10 @@ class CostImportService
 
   private
 
-  def authorize!
-    if @contract.present?
-      unless @contract.program.user_id == @user.id
-        raise "Not authorized for this contract."
-      end
-    elsif @program.present?
-      unless @program.user_id == @user.id
-        raise "Not authorized for this program."
-      end
-    else
-      raise "Program or contract is required for import."
-    end
+  def authorize_contract!(contract, row_num)
+    return if contract.program.user_id == @user.id
+
+    raise "Row #{row_num}: not authorized for contract #{contract.contract_code}."
   end
 
   def load_sheet(file)
@@ -153,19 +144,31 @@ class CostImportService
   end
 
   def resolve_contract!(contract_code, row_num)
-    if @contract.present?
-      return @contract if contract_code.empty?
-      return @contract if contract_code == @contract.contract_code
+    if contract_code.empty?
+      raise "Row #{row_num}: contract_code is required."
+    end
 
-      raise "Row #{row_num}: contract_code '#{contract_code}' does not match this contract (#{@contract.contract_code})."
+    Contract.find_by!(contract_code: contract_code)
+  rescue ActiveRecord::RecordNotFound
+    raise "Row #{row_num}: contract_code '#{contract_code}' not found."
+  end
+
+  def resolve_contract(contract_code, row_num)
+    if @contract
+      validate_contract_code!(contract_code, row_num)
+      return @contract
     end
 
     if contract_code.empty?
       raise "Row #{row_num}: contract_code is required."
     end
 
-    contract = @program.contracts.find_by(contract_code: contract_code)
-    raise "Row #{row_num}: contract_code '#{contract_code}' not found in this program." unless contract
+    contract = Contract.find_by(contract_code: contract_code)
+    raise "Row #{row_num}: contract_code '#{contract_code}' was not found." if contract.nil?
+
+    unless contract.program.user_id == @user.id
+      raise "Row #{row_num}: not authorized for contract_code '#{contract_code}'."
+    end
 
     contract
   end
