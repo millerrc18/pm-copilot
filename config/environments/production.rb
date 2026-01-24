@@ -59,7 +59,8 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   app_host = ENV["APP_HOST"].to_s.strip
   app_host = ENV["RENDER_EXTERNAL_HOSTNAME"].to_s.strip if app_host.empty?
-  app_host = "example.com" if app_host.empty?
+  app_host = "programmanagercopilot.com" if app_host.empty?
+
 
   config.action_mailer.default_url_options = {
     host: app_host,
