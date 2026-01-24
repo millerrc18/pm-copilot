@@ -17,6 +17,9 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class User < ApplicationRecord
+  THEME_OPTIONS = %w[light dark].freeze
+  PALETTE_OPTIONS = %w[blue teal purple].freeze
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -24,7 +27,10 @@ class User < ApplicationRecord
 
   has_many :programs, dependent: :destroy
 
-    def admin?
+  validates :theme, inclusion: { in: THEME_OPTIONS }
+  validates :palette, inclusion: { in: PALETTE_OPTIONS }
+
+  def admin?
     raw = ENV["ADMIN_EMAILS"].presence || ENV["ADMIN_EMAIL"].to_s
     admins = raw.split(/[,\s]+/).map { |e| e.strip.downcase }.reject(&:blank?)
     admins.include?(email.to_s.downcase)
