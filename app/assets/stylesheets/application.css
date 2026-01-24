@@ -7,6 +7,46 @@
 -------------------------- */
 
 :root {
+  --palette-blue-500: #2563eb;
+  --palette-blue-600: #1d4ed8;
+  --palette-blue-ring: 0 0 0 4px rgba(37, 99, 235, 0.15);
+
+  --palette-teal-500: #14b8a6;
+  --palette-teal-600: #0d9488;
+  --palette-teal-ring: 0 0 0 4px rgba(20, 184, 166, 0.18);
+
+  --palette-purple-500: #7c3aed;
+  --palette-purple-600: #6d28d9;
+  --palette-purple-ring: 0 0 0 4px rgba(124, 58, 237, 0.2);
+
+  --primary: var(--palette-blue-500);
+  --primary-2: var(--palette-blue-600);
+  --ring: var(--palette-blue-ring);
+
+  --radius: 14px;
+  --radius-sm: 10px;
+}
+
+html[data-palette="blue"] {
+  --primary: var(--palette-blue-500);
+  --primary-2: var(--palette-blue-600);
+  --ring: var(--palette-blue-ring);
+}
+
+html[data-palette="teal"] {
+  --primary: var(--palette-teal-500);
+  --primary-2: var(--palette-teal-600);
+  --ring: var(--palette-teal-ring);
+}
+
+html[data-palette="purple"] {
+  --primary: var(--palette-purple-500);
+  --primary-2: var(--palette-purple-600);
+  --ring: var(--palette-purple-ring);
+}
+
+html[data-theme="light"],
+:root {
   --bg: #f6f7fb;
   --surface: #ffffff;
   --surface-2: #fbfbfd;
@@ -16,37 +56,24 @@
   --border: rgba(15, 23, 42, 0.10);
   --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
 
-  --primary: #2563eb;
-  --primary-2: #1d4ed8;
   --danger: #dc2626;
   --success: #16a34a;
   --warning: #f59e0b;
-
-  --font-base: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  --radius: 14px;
-  --radius-sm: 10px;
-  --ring: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1220;
-    --surface: #0f172a;
-    --surface-2: #111c33;
-    --text: #e5e7eb;
-    --muted: #9ca3af;
+html[data-theme="dark"] {
+  --bg: #0b1220;
+  --surface: #0f172a;
+  --surface-2: #111c33;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
 
-    --border: rgba(226, 232, 240, 0.10);
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --border: rgba(226, 232, 240, 0.10);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 
-    --primary: #60a5fa;
-    --primary-2: #3b82f6;
-    --danger: #f87171;
-    --success: #34d399;
-    --warning: #fbbf24;
-
-    --ring: 0 0 0 4px rgba(96, 165, 250, 0.18);
-  }
+  --danger: #f87171;
+  --success: #34d399;
+  --warning: #fbbf24;
 }
 
 /* -------------------------
@@ -162,6 +189,31 @@ h1 {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.theme-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.theme-controls label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.theme-controls select {
+  width: auto;
+  min-width: 110px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.theme-controls .btn {
+  padding: 6px 10px;
 }
 
 /* -------------------------

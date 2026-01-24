@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
+  resource :theme_preference, only: [:update]
 
   namespace :admin do
     resources :users, only: [:index]

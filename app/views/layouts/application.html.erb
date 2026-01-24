@@ -1,5 +1,7 @@
+<% theme = current_user&.theme.presence || "light" %>
+<% palette = current_user&.palette.presence || "blue" %>
 <!DOCTYPE html>
-<html>
+<html data-theme="<%= theme %>" data-palette="<%= palette %>">
   <head>
     <title>PM Copilot</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -24,6 +26,19 @@
         <div class="topbar-actions">
           <% if user_signed_in? %>
             <span class="subtle"><%= current_user.email %></span>
+
+            <%= form_with model: current_user,
+                          url: theme_preference_path,
+                          method: :patch,
+                          class: "theme-controls" do |form| %>
+              <%= form.label :theme, "Theme" %>
+              <%= form.select :theme,
+                              options_for_select(User::THEME_OPTIONS.map { |option| [option.titleize, option] }, theme) %>
+              <%= form.label :palette, "Palette" %>
+              <%= form.select :palette,
+                              options_for_select(User::PALETTE_OPTIONS.map { |option| [option.titleize, option] }, palette) %>
+              <%= form.submit "Apply", class: "btn btn-sm" %>
+            <% end %>
 
             <%= link_to "Programs", programs_path, class: "btn btn-sm" %>
             <%= link_to "New program", new_program_path, class: "btn btn-primary btn-sm" %>
