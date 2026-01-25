@@ -25,7 +25,7 @@
 
         <div class="topbar-actions">
           <% if user_signed_in? %>
-            <span class="subtle"><%= current_user.email %></span>
+            <span class="subtle topbar-email"><%= current_user.email %></span>
 
             <%= form_with model: current_user,
                           url: theme_preference_path,

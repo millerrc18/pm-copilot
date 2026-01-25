@@ -216,6 +216,36 @@ h1 {
   padding: 6px 10px;
 }
 
+@media (max-width: 720px) {
+  .topbar-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .theme-controls {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .theme-controls select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .topbar-email {
+    width: 100%;
+    font-size: 12px;
+    word-break: break-word;
+  }
+}
+
 /* -------------------------
    Layout helpers
 -------------------------- */
