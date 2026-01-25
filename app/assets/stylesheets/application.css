@@ -376,6 +376,18 @@ h1 {
   white-space: nowrap;
 }
 
+@media (max-width: 640px) {
+  .table td, .table th {
+    white-space: normal;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .table td.actions-cell {
+    width: auto;
+  }
+}
+
 /* -------------------------
    Flash messages
 -------------------------- */
