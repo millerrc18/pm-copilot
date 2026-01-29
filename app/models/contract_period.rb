@@ -36,7 +36,7 @@
 class ContractPeriod < ApplicationRecord
   belongs_to :contract
 
-  validates :period_start_date, :period_type, presence: true
+  validates :period_start_date, :period_type, :revenue_per_unit, presence: true
 
   # cost calculations
   def total_labor_cost
@@ -53,7 +53,7 @@ class ContractPeriod < ApplicationRecord
 
 
   def revenue_total
-    units_delivered.to_f * revenue_per_unit
+    units_delivered.to_i.to_d * revenue_per_unit.to_d
   end
 
   def cost_per_unit

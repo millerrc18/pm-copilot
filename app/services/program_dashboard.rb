@@ -49,55 +49,54 @@ class ProgramDashboard
   end
 
   def contract_rollup(contract, as_of:)
-  # Costs are time-based, so keep using contract_periods, but filter through as_of
-  periods = contract.contract_periods
-                    .where("period_start_date <= ?", as_of)
+    # Costs are time-based, so keep using contract_periods, but filter through as_of
+    periods = contract.contract_periods
+                      .where("period_start_date <= ?", as_of)
 
-  # Units delivered should come from delivery_units (unit-level shipments)
-  units_delivered = contract.delivery_units
-                            .where.not(ship_date: nil)
-                            .where("ship_date <= ?", as_of)
-                            .count
+    # Units delivered should come from delivery_units (unit-level shipments)
+    units_delivered = contract.delivery_units
+                              .where.not(ship_date: nil)
+                              .where("ship_date <= ?", as_of)
+                              .count
 
-  # Revenue should come from delivered units * contract sell price
-  # (If you later add per-unit revenue overrides, we can change this.)
-  revenue_to_date = units_delivered.to_d * d(contract.sell_price_per_unit)
+    # Revenue should come from contract periods to match Contract#total_revenue.
+    revenue_to_date = periods.sum { |p| p.revenue_total.to_d }
 
-  labor_cost = periods.sum do |p|
-    d(p.hours_bam) * d(p.rate_bam) +
-      d(p.hours_eng) * d(p.rate_eng) +
-      d(p.hours_mfg_soft) * d(p.rate_mfg_soft) +
-      d(p.hours_mfg_hard) * d(p.rate_mfg_hard) +
-      d(p.hours_touch) * d(p.rate_touch)
+    labor_cost = periods.sum do |p|
+      d(p.hours_bam) * d(p.rate_bam) +
+        d(p.hours_eng) * d(p.rate_eng) +
+        d(p.hours_mfg_soft) * d(p.rate_mfg_soft) +
+        d(p.hours_mfg_hard) * d(p.rate_mfg_hard) +
+        d(p.hours_touch) * d(p.rate_touch)
+    end
+
+    material_cost = periods.sum { |p| d(p.material_cost) }
+    other_costs   = periods.sum { |p| d(p.other_costs) }
+    cost_to_date  = labor_cost + material_cost + other_costs
+
+    margin_to_date = revenue_to_date - cost_to_date
+    margin_pct_to_date = revenue_to_date.zero? ? 0.to_d : (margin_to_date / revenue_to_date)
+
+    otd = otd_for_contract(contract, as_of: as_of)
+
+    {
+      id: contract.id,
+      contract_code: contract.contract_code,
+      fiscal_year: contract.fiscal_year,
+      planned_units: contract.planned_quantity.to_i,
+
+      units_delivered: units_delivered,
+      revenue_to_date: revenue_to_date,
+      cost_to_date: cost_to_date,
+      margin_pct_to_date: margin_pct_to_date,
+
+      due_to_date_units: otd[:due_to_date_units],
+      on_time_to_date_units: otd[:on_time_to_date_units],
+      past_due_units: otd[:past_due_units],
+      next_due_date: otd[:next_due_date],
+      next_due_units: otd[:next_due_units]
+    }
   end
-
-  material_cost = periods.sum { |p| d(p.material_cost) }
-  other_costs   = periods.sum { |p| d(p.other_costs) }
-  cost_to_date  = labor_cost + material_cost + other_costs
-
-  margin_to_date = revenue_to_date - cost_to_date
-  margin_pct_to_date = revenue_to_date.zero? ? 0.to_d : (margin_to_date / revenue_to_date)
-
-  otd = otd_for_contract(contract, as_of: as_of)
-
-  {
-    id: contract.id,
-    contract_code: contract.contract_code,
-    fiscal_year: contract.fiscal_year,
-    planned_units: contract.planned_quantity.to_i,
-
-    units_delivered: units_delivered,
-    revenue_to_date: revenue_to_date,
-    cost_to_date: cost_to_date,
-    margin_pct_to_date: margin_pct_to_date,
-
-    due_to_date_units: otd[:due_to_date_units],
-    on_time_to_date_units: otd[:on_time_to_date_units],
-    past_due_units: otd[:past_due_units],
-    next_due_date: otd[:next_due_date],
-    next_due_units: otd[:next_due_units]
-  }
-end
 
 
   # Allocates shipped units to milestones in due-date order (first due, first satisfied).

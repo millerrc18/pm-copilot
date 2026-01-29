@@ -39,7 +39,7 @@ class Contract < ApplicationRecord
   end
 
   def total_revenue
-    contract_periods.sum { |p| p.revenue_total.to_f }
+    contract_periods.sum { |p| p.revenue_total.to_d }
   end
 
   def total_units_delivered
@@ -47,11 +47,9 @@ class Contract < ApplicationRecord
   end
 
   def revenue_to_date(as_of: Date.current)
-    units_delivered_to_date(as_of:) * sell_price_per_unit.to_d
-  end
-
-  def total_revenue
-    revenue_to_date
+    contract_periods
+      .where("period_start_date <= ?", as_of)
+      .sum { |p| p.revenue_total.to_d }
   end
 
   def cost_to_date
