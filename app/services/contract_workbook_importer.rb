@@ -7,7 +7,7 @@ class ContractWorkbookImporter
   SHEET_MILESTONES = "DeliveryMilestones"
   SHEET_UNITS      = "DeliveryUnits"
   REQUIRED_PERIOD_HEADERS = %w[period_start_date period_type].freeze
-  REQUIRED_MILESTONE_HEADERS = %w[due_date quantity_due].freeze
+  REQUIRED_MILESTONE_HEADERS = %w[milestone_ref due_date quantity_due].freeze
   REQUIRED_UNIT_HEADERS = %w[unit_serial].freeze
 
   def initialize(contract:, file:)
@@ -192,9 +192,19 @@ class ContractWorkbookImporter
         next
       end
 
+      milestone_ref = values[idx["milestone_ref"]].to_s.strip
       due_date = to_date(values[idx["due_date"]])
       qty_due = to_i0(values[idx["quantity_due"]])
       notes = idx["notes"] ? values[idx["notes"]].to_s : nil
+      amendment_code = idx["amendment_code"] ? values[idx["amendment_code"]].to_s.strip : nil
+      amendment_effective_date = idx["amendment_effective_date"] ? to_date(values[idx["amendment_effective_date"]]) : nil
+      amendment_notes = idx["amendment_notes"] ? values[idx["amendment_notes"]].to_s : nil
+
+      if milestone_ref.empty?
+        errors << "#{SHEET_MILESTONES} row #{excel_row}: milestone_ref is required."
+        excel_row += 1
+        next
+      end
 
       if due_date.nil?
         errors << "#{SHEET_MILESTONES} row #{excel_row}: due_date is blank or invalid."
@@ -202,18 +212,36 @@ class ContractWorkbookImporter
         next
       end
 
-      key = due_date.to_s
+      if idx["amendment_effective_date"] && values[idx["amendment_effective_date"]] && amendment_effective_date.nil?
+        errors << "#{SHEET_MILESTONES} row #{excel_row}: amendment_effective_date is invalid."
+        excel_row += 1
+        next
+      end
+
+      key = milestone_ref
       if seen_keys[key]
-        errors << "#{SHEET_MILESTONES} row #{excel_row}: duplicate due_date in workbook."
+        errors << "#{SHEET_MILESTONES} row #{excel_row}: duplicate milestone_ref in workbook."
         excel_row += 1
         next
       end
       seen_keys[key] = true
 
-      record = DeliveryMilestone.find_or_initialize_by(contract: @contract, due_date: due_date)
+      record = DeliveryMilestone.find_or_initialize_by(contract: @contract, milestone_ref: milestone_ref)
       was_new = record.new_record?
 
-      record.assign_attributes(quantity_due: qty_due, notes: notes)
+      record.assign_attributes(
+        due_date: due_date,
+        quantity_due: qty_due,
+        notes: notes
+      )
+
+      if record.respond_to?(:amendment_code=)
+        record.amendment_code = amendment_code if idx["amendment_code"]
+        if idx["amendment_effective_date"]
+          record.amendment_effective_date = amendment_effective_date
+        end
+        record.amendment_notes = amendment_notes if idx["amendment_notes"]
+      end
 
       unless record.save
         errors << "#{SHEET_MILESTONES} row #{excel_row}: #{record.errors.full_messages.join(', ')}"
