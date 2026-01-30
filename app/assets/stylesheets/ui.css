@@ -29,6 +29,10 @@ html {
   min-height: 100dvh;
 }
 
+body {
+  min-height: 100dvh;
+}
+
 .app-shell-body::before {
   content: "";
   position: fixed;
@@ -76,9 +80,9 @@ html {
 .app-shell-body .sidebar .nav-pills,
 .app-shell-body .sidebar .nav-tabs,
 .app-shell-body .sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
   gap: 6px;
 }
 
@@ -88,6 +92,7 @@ html {
   align-items: center;
   width: 100%;
   white-space: nowrap;
+  gap: 10px;
 }
 
 .sidebar-header {
@@ -189,6 +194,19 @@ html {
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.08);
   font-size: 14px;
+}
+
+.sidebar .nav-icon,
+.sidebar .nav-icon svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: inline-flex;
+}
+
+.sidebar .nav-icon svg {
+  max-width: 18px;
+  max-height: 18px;
 }
 
 .nav-pill-icon svg {
