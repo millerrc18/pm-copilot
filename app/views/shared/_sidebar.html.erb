@@ -1,17 +1,21 @@
-<aside class="sidebar">
+<aside class="sidebar" data-sidebar-target="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-brand">
       <span class="sidebar-brand-badge" aria-hidden="true"></span>
       <span class="sidebar-label">PM Copilot</span>
     </div>
 
-    <button class="sidebar-toggle focus-ring" data-action="sidebar#toggle" aria-label="Toggle sidebar">
-      ⟷
+    <button class="sidebar-toggle focus-ring" data-action="sidebar#toggleCollapse" aria-label="Toggle sidebar">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 6l-4 4 4 4M16 6l4 4-4 4M4 10h16M4 14h16" />
+      </svg>
     </button>
   </div>
 
   <div class="sidebar-search">
-    <span aria-hidden="true">🔍</span>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.1-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+    </svg>
     <input type="text" placeholder="Search..." aria-label="Search" />
     <span class="hotkey">⌘ F</span>
   </div>
@@ -19,18 +23,18 @@
   <div>
     <p class="sidebar-section">Workspace</p>
     <nav class="sidebar-nav">
-      <%= render "shared/ui/nav_item", label: "Programs", url: programs_path, icon: "📁", active: current_page?(programs_path) %>
-      <%= render "shared/ui/nav_item", label: "Docs", url: docs_path, icon: "📄", active: current_page?(docs_path) %>
-      <%= render "shared/ui/nav_item", label: "Contracts", url: programs_path, icon: "🧾", active: false %>
+      <%= render "shared/ui/nav_item", label: "Programs", url: programs_path, icon: "folder", active: current_page?(programs_path) %>
+      <%= render "shared/ui/nav_item", label: "Docs", url: docs_path, icon: "document", active: current_page?(docs_path) %>
+      <%= render "shared/ui/nav_item", label: "Contracts", url: programs_path, icon: "receipt", active: false %>
     </nav>
   </div>
 
   <div>
     <p class="sidebar-section">Imports</p>
     <nav class="sidebar-nav">
-      <%= render "shared/ui/nav_item", label: "Costs", url: programs_path, icon: "💸", active: false %>
-      <%= render "shared/ui/nav_item", label: "Milestones", url: programs_path, icon: "🚩", active: false %>
-      <%= render "shared/ui/nav_item", label: "Delivery units", url: programs_path, icon: "🚚", active: false %>
+      <%= render "shared/ui/nav_item", label: "Costs", url: programs_path, icon: "currency", active: false %>
+      <%= render "shared/ui/nav_item", label: "Milestones", url: programs_path, icon: "flag", active: false %>
+      <%= render "shared/ui/nav_item", label: "Delivery units", url: programs_path, icon: "truck", active: false %>
     </nav>
   </div>
 
@@ -48,7 +52,9 @@
         <div class="user-name"><%= current_user.first_name.presence || "Account" %></div>
         <div class="user-email"><%= current_user.email %></div>
       </div>
-      <span aria-hidden="true">⌄</span>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+      </svg>
     </div>
   </div>
 </aside>

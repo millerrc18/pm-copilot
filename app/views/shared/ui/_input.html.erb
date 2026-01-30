@@ -1,5 +1,7 @@
 <div class="input-search">
-  <span aria-hidden="true">🔍</span>
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.1-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+  </svg>
   <input type="text" placeholder="<%= local_assigns[:placeholder] || "Search..." %>" aria-label="Search" />
   <% if local_assigns[:hotkey].present? %>
     <span class="hotkey"><%= local_assigns[:hotkey] %></span>

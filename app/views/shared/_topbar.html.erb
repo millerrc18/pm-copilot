@@ -7,14 +7,18 @@
   </div>
 
   <div class="shell-toolbar">
-    <button class="btn btn-ghost btn-icon focus-ring" data-action="sidebar#toggleMobile" aria-label="Toggle navigation">
-      ☰
+    <button class="btn btn-ghost btn-icon focus-ring mobile-only" data-action="sidebar#toggle" aria-label="Open menu">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
     </button>
 
     <div class="dropdown" data-controller="dropdown">
       <button class="btn btn-ghost focus-ring" data-action="dropdown#toggle" aria-expanded="false">
         View: Timeline
-        <span aria-hidden="true">⌄</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+        </svg>
       </button>
       <div class="dropdown-menu" role="menu">
         <a href="#" role="menuitem">Timeline</a>
@@ -26,8 +30,16 @@
     <%= render "shared/ui/input", placeholder: "Search", hotkey: "⌘ K" %>
 
     <%= render "shared/ui/button", label: "Filter", variant: "ghost", url: "#" %>
-    <%= render "shared/ui/button", label: "⚡", variant: "icon", url: "#" %>
-    <%= render "shared/ui/button", label: "🔔", variant: "icon", url: "#" %>
+    <%= link_to "#", class: "btn btn-ghost btn-icon focus-ring", aria: { label: "Quick actions" } do %>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 3L4 14h7l-1 7 9-11h-7l1-7z" />
+      </svg>
+    <% end %>
+    <%= link_to "#", class: "btn btn-ghost btn-icon focus-ring", aria: { label: "Notifications" } do %>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a3 3 0 006 0" />
+      </svg>
+    <% end %>
 
     <% if content_for?(:toolbar) %>
       <%= yield(:toolbar) %>
