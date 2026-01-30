@@ -1,48 +1,38 @@
-<div class="shell-topbar">
-  <div>
-    <h1 class="shell-title"><%= content_for?(:page_title) ? yield(:page_title) : "Dashboard" %></h1>
-    <% if content_for?(:page_subtitle) %>
-      <p class="shell-subtitle"><%= yield(:page_subtitle) %></p>
-    <% end %>
-  </div>
-
-  <div class="shell-toolbar">
-    <button class="btn btn-ghost btn-icon focus-ring mobile-only" data-action="sidebar#toggle" aria-label="Open menu">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-
-    <div class="dropdown" data-controller="dropdown">
-      <button class="btn btn-ghost focus-ring" data-action="dropdown#toggle" aria-expanded="false">
-        View: Timeline
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+<header class="sticky top-0 z-20 border-b border-white/10 bg-dark-panel px-5 pt-[calc(env(safe-area-inset-top)+1rem)] pb-4 backdrop-blur md:px-8">
+  <div class="flex flex-wrap items-center gap-4">
+    <div class="flex flex-1 items-center gap-3">
+      <button class="rounded-full p-2 text-light-text/70 hover:text-light-text hover:bg-white/10 md:hidden focus-ring" data-action="sidebar#open" aria-label="Open menu">
+        <svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
-      <div class="dropdown-menu" role="menu">
-        <a href="#" role="menuitem">Timeline</a>
-        <a href="#" role="menuitem">Board</a>
-        <a href="#" role="menuitem">List</a>
+
+      <div>
+        <h1 class="text-xl font-semibold"><%= content_for?(:page_title) ? yield(:page_title) : "Dashboard" %></h1>
+        <% if content_for?(:page_subtitle) %>
+          <p class="text-sm text-light-text/60"><%= yield(:page_subtitle) %></p>
+        <% end %>
       </div>
     </div>
 
-    <%= render "shared/ui/input", placeholder: "Search", hotkey: "⌘ K" %>
+    <div class="flex flex-1 items-center gap-3 justify-end min-w-[240px]">
+      <div class="hidden lg:block w-64">
+        <%= render "shared/ui/input", placeholder: "Search programs", hotkey: "⌘ K" %>
+      </div>
 
-    <%= render "shared/ui/button", label: "Filter", variant: "ghost", url: "#" %>
-    <%= link_to "#", class: "btn btn-ghost btn-icon focus-ring", aria: { label: "Quick actions" } do %>
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13 3L4 14h7l-1 7 9-11h-7l1-7z" />
-      </svg>
-    <% end %>
-    <%= link_to "#", class: "btn btn-ghost btn-icon focus-ring", aria: { label: "Notifications" } do %>
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a3 3 0 006 0" />
-      </svg>
-    <% end %>
+      <%= render "shared/ui/button", label: "Filter", variant: "ghost", url: "#" %>
 
-    <% if content_for?(:toolbar) %>
-      <%= yield(:toolbar) %>
-    <% end %>
+      <% if content_for?(:right_panel) %>
+        <button class="rounded-full p-2 text-light-text/70 hover:text-light-text hover:bg-white/10 md:hidden focus-ring" data-action="right-panel#open" aria-label="Open panel">
+          <svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      <% end %>
+
+      <% if content_for?(:toolbar) %>
+        <%= yield(:toolbar) %>
+      <% end %>
+    </div>
   </div>
-</div>
+</header>

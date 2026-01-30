@@ -1,32 +1,24 @@
-<h1>Contracts</h1>
+<% content_for :page_title, "Contracts" %>
+<% content_for :page_subtitle, "Review contract coverage across all programs." %>
 
-<div class="table-container">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Contract Code</th>
-        <th>Program</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Price per Unit</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @contracts.each do |contract| %>
-        <tr>
-          <td><%= contract.contract_code %></td>
-          <td><%= contract.program.name %></td>
-          <td><%= contract.start_date %></td>
-          <td><%= contract.end_date %></td>
-          <td><%= number_to_currency(contract.sell_price_per_unit) %></td>
-          <td><%= link_to 'Show', contract_path(contract) %></td>
-          <td><%= link_to 'Edit', edit_contract_path(contract) %></td>
-          <td><%= link_to 'Destroy', contract, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<div class="space-y-6">
+  <% @contracts.each do |contract| %>
+    <div class="panel p-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-light-text/50"><%= contract.program.name %></p>
+          <h2 class="mt-2 text-lg font-semibold"><%= contract.contract_code %></h2>
+          <p class="mt-2 text-sm text-light-text/60">
+            <%= contract.start_date %> → <%= contract.end_date %> · <%= number_to_currency(contract.sell_price_per_unit) %> per unit
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <%= render "shared/ui/button", label: "View", variant: "ghost", url: contract_path(contract) %>
+          <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_contract_path(contract) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= link_to "Back to Programs", programs_path, class: "inline-flex items-center text-sm text-light-text/60 hover:text-light-text focus-ring" %>
 </div>
-
-<%= link_to 'Back to Programs', programs_path %>

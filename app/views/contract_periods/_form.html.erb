@@ -1,96 +1,106 @@
-<%= form_with(model: [@contract, period], local: true) do |form| %>
+<%= form_with(model: [@contract, period], local: true, class: "space-y-6") do |form| %>
   <% if period.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(period.errors.count, "error") %> prohibited this record from being saved:</h2>
-      <ul>
-      <% period.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
+      <p class="font-semibold"><%= pluralize(period.errors.count, "error") %> prohibited this record from being saved:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-light-text/80">
+        <% period.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :period_start_date %><br>
-    <%= form.date_select :period_start_date %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :period_start_date, class: "text-sm font-semibold" %>
+      <%= form.date_select :period_start_date, {}, class: "mt-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-light-text focus-ring" %>
+    </div>
+
+    <div>
+      <%= form.label :period_type, class: "text-sm font-semibold" %>
+      <%= form.select :period_type, [["Week", "week"], ["Month", "month"]], {}, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :period_type %><br>
-    <%= form.select :period_type, [['Week','week'], ['Month','month']] %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :units_delivered, class: "text-sm font-semibold" %>
+      <%= form.number_field :units_delivered, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :revenue_per_unit, class: "text-sm font-semibold" %>
+      <%= form.text_field :revenue_per_unit, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :units_delivered %><br>
-    <%= form.number_field :units_delivered %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :hours_bam, "Hours BAM", class: "text-sm font-semibold" %>
+      <%= form.number_field :hours_bam, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :rate_bam, "Rate BAM", class: "text-sm font-semibold" %>
+      <%= form.number_field :rate_bam, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :revenue_per_unit %><br>
-    <%= form.text_field :revenue_per_unit %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :hours_eng, "Hours ENG", class: "text-sm font-semibold" %>
+      <%= form.number_field :hours_eng, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :rate_eng, "Rate ENG", class: "text-sm font-semibold" %>
+      <%= form.number_field :rate_eng, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :hours_bam, 'Hours BAM' %><br>
-    <%= form.number_field :hours_bam, step: 0.01 %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :hours_mfg_soft, "Hours MFG (S)", class: "text-sm font-semibold" %>
+      <%= form.number_field :hours_mfg_soft, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :rate_mfg_soft, "Rate MFG (S)", class: "text-sm font-semibold" %>
+      <%= form.number_field :rate_mfg_soft, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :rate_bam, 'Rate BAM' %><br>
-    <%= form.number_field :rate_bam, step: 0.01 %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :hours_mfg_hard, "Hours MFG (H)", class: "text-sm font-semibold" %>
+      <%= form.number_field :hours_mfg_hard, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :rate_mfg_hard, "Rate MFG (H)", class: "text-sm font-semibold" %>
+      <%= form.number_field :rate_mfg_hard, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :hours_eng, 'Hours ENG' %><br>
-    <%= form.number_field :hours_eng, step: 0.01 %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :hours_touch, "Hours Touch", class: "text-sm font-semibold" %>
+      <%= form.number_field :hours_touch, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :rate_touch, "Rate Touch", class: "text-sm font-semibold" %>
+      <%= form.number_field :rate_touch, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :rate_eng, 'Rate ENG' %><br>
-    <%= form.number_field :rate_eng, step: 0.01 %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :material_cost, class: "text-sm font-semibold" %>
+      <%= form.number_field :material_cost, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :other_costs, class: "text-sm font-semibold" %>
+      <%= form.number_field :other_costs, step: 0.01, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :hours_mfg_soft, 'Hours MFG (S)' %><br>
-    <%= form.number_field :hours_mfg_soft, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :rate_mfg_soft, 'Rate MFG (S)' %><br>
-    <%= form.number_field :rate_mfg_soft, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :hours_mfg_hard, 'Hours MFG (H)' %><br>
-    <%= form.number_field :hours_mfg_hard, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :rate_mfg_hard, 'Rate MFG (H)' %><br>
-    <%= form.number_field :rate_mfg_hard, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :hours_touch, 'Hours Touch' %><br>
-    <%= form.number_field :hours_touch, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :rate_touch, 'Rate Touch' %><br>
-    <%= form.number_field :rate_touch, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :material_cost %><br>
-    <%= form.number_field :material_cost, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.label :other_costs %><br>
-    <%= form.number_field :other_costs, step: 0.01 %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex flex-wrap gap-3">
+    <%= form.submit(period.persisted? ? "Save changes" : "Create period", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
+    <%= link_to "Cancel", contract_path(@contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
   </div>
 <% end %>

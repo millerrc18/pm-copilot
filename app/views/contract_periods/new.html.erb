@@ -1,5 +1,6 @@
-<h1>New Period Record</h1>
+<% content_for :page_title, "Add period" %>
+<% content_for :page_subtitle, "Capture weekly or monthly actuals." %>
 
-<%= render 'form', contract: @contract, period: @contract_period %>
-
-<%= link_to 'Back', contract_path(@contract) %>
+<div class="panel p-6 max-w-3xl">
+  <%= render "form", period: @contract_period %>
+</div>

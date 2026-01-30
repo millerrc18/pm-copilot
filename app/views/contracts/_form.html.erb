@@ -1,15 +1,10 @@
-<% form_model =
-     if contract.persisted?
-       contract
-     else
-       [@program, contract]
-     end %>
+<% form_model = contract.persisted? ? contract : [@program, contract] %>
 
-<%= form_with(model: form_model, local: true) do |form| %>
+<%= form_with(model: form_model, local: true, class: "space-y-6") do |form| %>
   <% if contract.errors.any? %>
-    <div class="flash alert">
-      <strong><%= pluralize(contract.errors.count, "error") %>:</strong>
-      <ul style="margin: 8px 0 0; padding-left: 18px;">
+    <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
+      <p class="font-semibold"><%= pluralize(contract.errors.count, "error") %> prohibited this contract from being saved:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-light-text/80">
         <% contract.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -19,34 +14,49 @@
 
   <%= form.hidden_field :program_id, value: (@program&.id || contract.program_id) %>
 
-  <label>Contract code</label>
-  <%= form.text_field :contract_code, placeholder: "AN-2026-01" %>
+  <div>
+    <%= form.label :contract_code, "Contract code", class: "text-sm font-semibold" %>
+    <%= form.text_field :contract_code, placeholder: "AN-2026-01", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring" %>
+  </div>
 
-  <label>Fiscal year</label>
-  <%= form.number_field :fiscal_year, min: 2000, max: 2100, step: 1, placeholder: "2026" %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :fiscal_year, "Fiscal year", class: "text-sm font-semibold" %>
+      <%= form.number_field :fiscal_year, min: 2000, max: 2100, step: 1, placeholder: "2026", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :planned_quantity, "Planned quantity", class: "text-sm font-semibold" %>
+      <%= form.number_field :planned_quantity, min: 0, step: 1, placeholder: "63", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring" %>
+    </div>
+  </div>
 
-  <label>Contract start date</label>
-  <%= form.date_field :start_date %>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :start_date, "Contract start date", class: "text-sm font-semibold" %>
+      <%= form.date_field :start_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :end_date, "Contract end date", class: "text-sm font-semibold" %>
+      <%= form.date_field :end_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+  </div>
 
-  <label>Contract end date</label>
-  <%= form.date_field :end_date %>
+  <div>
+    <%= form.label :sell_price_per_unit, "Sell price per unit", class: "text-sm font-semibold" %>
+    <%= form.number_field :sell_price_per_unit, step: 0.01, placeholder: "52030.00", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring" %>
+  </div>
 
-  <label>Planned quantity</label>
-  <%= form.number_field :planned_quantity, min: 0, step: 1, placeholder: "63" %>
+  <div>
+    <%= form.label :notes, "Notes", class: "text-sm font-semibold" %>
+    <%= form.text_area :notes, rows: 4, placeholder: "Anything finance or the IPT should know...", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring" %>
+  </div>
 
-  <label>Sell price per unit</label>
-  <%= form.number_field :sell_price_per_unit, step: 0.01, placeholder: "52030.00" %>
-
-  <label>Notes</label>
-  <%= form.text_area :notes, rows: 4, placeholder: "Anything finance or the IPT should know..." %>
-
-  <div class="form-actions">
-    <%= form.submit(contract.persisted? ? "Save changes" : "Create contract", class: "btn btn-primary") %>
-
+  <div class="flex flex-wrap gap-3">
+    <%= form.submit(contract.persisted? ? "Save changes" : "Create contract", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
     <% if @program.present? %>
-      <%= link_to "Cancel", program_path(@program), class: "btn" %>
+      <%= link_to "Cancel", program_path(@program), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
     <% else %>
-      <%= link_to "Cancel", programs_path, class: "btn" %>
+      <%= link_to "Cancel", programs_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
     <% end %>
   </div>
 <% end %>

@@ -1,57 +1,51 @@
-<div class="page-header">
+<% content_for :page_title, "Import period data" %>
+<% content_for :page_subtitle, "Upload an .xlsx workbook with periods, milestones, and unit actuals." %>
+
+<div class="panel p-6 space-y-6 max-w-2xl">
   <div>
-    <h1>Import period data</h1>
-    <p class="subtle">Upload an .xlsx with headers. Rows will create or update periods for this contract.</p>
-  </div>
-
-  <div class="actions">
-    <%= link_to "Back", contract_path(@contract), class: "btn" %>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-body">
-    <div class="badge">Required headers</div>
-    <p class="subtle" style="margin-top:10px;">
+    <p class="text-sm text-light-text/60">
       Download template:
-      <%= link_to "contract_workbook.xlsx", "/templates/contract_workbook.xlsx" %>
+      <%= link_to "contract_workbook.xlsx", "/templates/contract_workbook.xlsx", class: "text-accent-red hover:text-accent-red/80" %>
     </p>
-    <ul class="subtle" style="margin-top:10px; padding-left: 18px;">
+    <ul class="mt-4 space-y-3 text-sm text-light-text/60">
       <li>
-        <strong><%= ContractWorkbookImporter::SHEET_PERIODS %>:</strong>
-        <code><%= ContractWorkbookImporter::REQUIRED_PERIOD_HEADERS.join(", ") %></code>
+        <span class="text-xs uppercase tracking-[0.2em] text-light-text/40"><%= ContractWorkbookImporter::SHEET_PERIODS %></span>
+        <div class="mt-1 text-xs">Required headers:</div>
+        <code class="mt-1 inline-block rounded bg-white/10 px-2 py-1 text-[11px] text-light-text/70"><%= ContractWorkbookImporter::REQUIRED_PERIOD_HEADERS.join(", ") %></code>
       </li>
       <li>
-        <strong><%= ContractWorkbookImporter::SHEET_MILESTONES %>:</strong>
-        <code><%= ContractWorkbookImporter::REQUIRED_MILESTONE_HEADERS.join(", ") %></code>
+        <span class="text-xs uppercase tracking-[0.2em] text-light-text/40"><%= ContractWorkbookImporter::SHEET_MILESTONES %></span>
+        <div class="mt-1 text-xs">Required headers:</div>
+        <code class="mt-1 inline-block rounded bg-white/10 px-2 py-1 text-[11px] text-light-text/70"><%= ContractWorkbookImporter::REQUIRED_MILESTONE_HEADERS.join(", ") %></code>
       </li>
       <li>
-        <strong><%= ContractWorkbookImporter::SHEET_UNITS %>:</strong>
-        <code><%= ContractWorkbookImporter::REQUIRED_UNIT_HEADERS.join(", ") %></code>
+        <span class="text-xs uppercase tracking-[0.2em] text-light-text/40"><%= ContractWorkbookImporter::SHEET_UNITS %></span>
+        <div class="mt-1 text-xs">Required headers:</div>
+        <code class="mt-1 inline-block rounded bg-white/10 px-2 py-1 text-[11px] text-light-text/70"><%= ContractWorkbookImporter::REQUIRED_UNIT_HEADERS.join(", ") %></code>
       </li>
     </ul>
-
-    <%= form_with url: contract_period_imports_path(@contract), scope: :period_import, local: true do |f| %>
-      <label>.xlsx file</label>
-      <%= f.file_field :file, accept: ".xlsx" %>
-
-      <div class="form-actions">
-        <%= f.submit "Import", class: "btn btn-primary" %>
-        <%= link_to "Cancel", contract_path(@contract), class: "btn" %>
-      </div>
-    <% end %>
   </div>
 
+  <%= form_with url: contract_period_imports_path(@contract), scope: :period_import, local: true, class: "space-y-4" do |f| %>
+    <div>
+      <%= f.label :file, "Excel file", class: "text-sm font-semibold" %>
+      <%= f.file_field :file, accept: ".xlsx", class: "mt-2 block w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <%= f.submit "Import", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+      <%= link_to "Cancel", contract_path(@contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    </div>
+  <% end %>
+
   <% if defined?(@errors) && @errors.present? %>
-    <div class="card-body">
-      <div class="flash alert">
-        <strong>Problems found:</strong>
-        <ul style="margin: 10px 0 0; padding-left: 18px;">
-          <% @errors.each do |e| %>
-            <li><%= e %></li>
-          <% end %>
-        </ul>
-      </div>
+    <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
+      <p class="font-semibold">Problems found:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-light-text/80">
+        <% @errors.each do |e| %>
+          <li><%= e %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 </div>

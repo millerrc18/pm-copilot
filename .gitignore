@@ -30,6 +30,11 @@
 !/tmp/storage/.keep
 
 /public/assets
+/public/templates/*
+
+# Ignore Tailwind build output.
+/app/assets/builds/*
+!/app/assets/builds/.keep
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
@@ -40,3 +45,6 @@ examples.txt
 
 # Ignore public uploads
 /public/uploads/*
+
+# Ignore local sqlite databases.
+/db/*.sqlite3*

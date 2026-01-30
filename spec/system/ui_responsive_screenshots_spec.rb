@@ -51,24 +51,25 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
       APPLE_VIEWPORTS.each do |device_name, (width, height)|
         set_viewport(width, height)
         visit path
-        expect(page).to have_css(".app-shell")
+        expect(page).to have_css(".sidebar")
+        assert_sidebar_nav_stacks_vertically!
+        assert_sidebar_icon_bounds!
 
         if width < 768
-          expect(page).to have_no_css(".sidebar.is-open")
+          expect(page).to have_css("nav[aria-label='Bottom navigation']")
           expect(sidebar_offscreen?).to be(true)
-          assert_sidebar_nav_stacks_vertically!
-          assert_sidebar_icon_bounds!
           save_ui_screenshot(page_name, device_name, "closed")
 
           open_sidebar
-          expect(page).to have_css(".sidebar.is-open")
-          expect(page).to have_css(".sidebar-backdrop.is-open")
+          expect(page).to have_css(".sidebar.translate-x-0")
+          expect(page).to have_css("[data-sidebar-target='backdrop'].opacity-100")
           save_ui_screenshot(page_name, device_name, "open")
 
           close_sidebar
-          expect(page).to have_no_css(".sidebar.is-open")
-          expect(page).to have_no_css(".sidebar-backdrop.is-open")
+          expect(page).to have_css(".sidebar.-translate-x-full")
         else
+          expect(page).to have_no_css("nav[aria-label='Bottom navigation']")
+          expect(sidebar_offscreen?).to be(false)
           save_ui_screenshot(page_name, device_name, "closed")
         end
       end
@@ -84,8 +85,8 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   def assert_sidebar_icon_bounds!
     rect = sidebar_icon_rect
     expect(rect).not_to be_nil
-    expect(rect["width"]).to be <= 28
-    expect(rect["height"]).to be <= 28
+    expect(rect["width"]).to be <= 24
+    expect(rect["height"]).to be <= 24
   end
 
   def open_sidebar
@@ -93,13 +94,13 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   end
 
   def close_sidebar
-    find(".sidebar-backdrop", visible: :all).click
+    find("[data-sidebar-target='backdrop']", visible: :all).click
   end
 
   def sidebar_nav_rects
     evaluate_script(<<~JS)
       (() => {
-        const links = document.querySelectorAll(".sidebar .sidebar-nav .nav-pill");
+        const links = document.querySelectorAll(".sidebar .sidebar-nav a");
         if (links.length < 2) return null;
         const first = links[0].getBoundingClientRect();
         const second = links[1].getBoundingClientRect();
@@ -114,7 +115,7 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   def sidebar_icon_rect
     evaluate_script(<<~JS)
       (() => {
-        const icon = document.querySelector(".sidebar .nav-pill-icon svg");
+        const icon = document.querySelector(".sidebar .sidebar-nav svg");
         if (!icon) return null;
         const rect = icon.getBoundingClientRect();
         return { width: rect.width, height: rect.height };

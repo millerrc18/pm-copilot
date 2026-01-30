@@ -1,36 +1,36 @@
-<div class="auth-shell">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1>Sign in</h1>
-      <p class="subtle">Welcome back. Log in to continue.</p>
+<div class="min-h-[70vh] flex items-center justify-center px-6 py-12">
+  <div class="panel p-8 w-full max-w-md space-y-6">
+    <div>
+      <h1 class="text-2xl font-semibold">Sign in</h1>
+      <p class="mt-2 text-sm text-light-text/60">Welcome back. Log in to continue.</p>
     </div>
 
     <%= render "shared/form_errors", resource: resource %>
 
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "form" }) do |f| %>
-      <div class="field">
-        <%= f.label :email %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-4" }) do |f| %>
+      <div>
+        <%= f.label :email, class: "text-sm font-semibold" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
       </div>
 
-      <div class="field">
-        <%= f.label :password %>
-        <%= f.password_field :password, autocomplete: "current-password", class: "input" %>
+      <div>
+        <%= f.label :password, class: "text-sm font-semibold" %>
+        <%= f.password_field :password, autocomplete: "current-password", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
-        <div class="field-inline">
-          <%= f.check_box :remember_me %>
+        <div class="flex items-center gap-2 text-sm text-light-text/60">
+          <%= f.check_box :remember_me, class: "rounded border-white/20 bg-white/10 text-accent-red focus-ring" %>
           <%= f.label :remember_me, "Remember me" %>
         </div>
       <% end %>
 
-      <div class="actions">
-        <%= f.submit "Sign in", class: "btn btn-primary btn-block" %>
+      <div>
+        <%= f.submit "Sign in", class: "w-full inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
       </div>
     <% end %>
 
-    <div class="auth-footer">
+    <div class="text-sm text-light-text/60">
       <%= render "devise/shared/links" %>
     </div>
   </div>
