@@ -72,6 +72,24 @@ html {
   gap: 6px;
 }
 
+.app-shell-body .sidebar .nav,
+.app-shell-body .sidebar .nav-pills,
+.app-shell-body .sidebar .nav-tabs,
+.app-shell-body .sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.app-shell-body .sidebar .nav-link,
+.app-shell-body .sidebar-nav a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap;
+}
+
 .sidebar-header {
   display: flex;
   align-items: center;
