@@ -2,203 +2,126 @@
 <% total_cost = @contract.total_cost.to_d %>
 <% avg_cost_per_unit = units_delivered.zero? ? 0.to_d : (total_cost / units_delivered.to_d) %>
 
-<div class="page-header">
-  <div>
-    <h1><%= @contract.contract_code %></h1>
-    <p class="subtle"><%= @contract.program.name %> • FY <%= @contract.fiscal_year %></p>
+<% content_for :page_title, @contract.contract_code %>
+<% content_for :page_subtitle, "#{@contract.program.name} · FY #{@contract.fiscal_year}" %>
+<% content_for :toolbar do %>
+  <%= render "shared/ui/button", label: "New contract", variant: "primary", url: new_program_contract_path(@contract.program) %>
+  <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_contract_path(@contract) %>
+<% end %>
+
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Units delivered</p>
+    <p class="mt-3 text-2xl font-semibold"><%= units_delivered %></p>
+    <p class="mt-2 text-xs text-light-text/50">Planned: <%= @contract.planned_quantity %></p>
   </div>
-
-  <div class="actions">
-    <%= link_to "Back to program", program_path(@contract.program), class: "btn btn-sm" %>
-    <%= link_to "New contract", new_program_contract_path(@contract.program), class: "btn btn-sm btn-primary" %>
-
-    <%= link_to "Add period", new_contract_contract_period_path(@contract), class: "btn btn-sm" %>
-    <%= link_to "Import delivery units", new_contract_delivery_unit_import_path(@contract), class: "btn btn-sm" %>
-    <%= link_to "Import costs", new_contract_cost_import_path(@contract), class: "btn btn-sm" %>
-    <%= link_to "Import milestones", new_contract_milestone_import_path(@contract), class: "btn btn-sm" %>
-    <%= link_to "Edit", edit_contract_path(@contract), class: "btn btn-sm" %>
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Revenue</p>
+    <p class="mt-3 text-2xl font-semibold"><%= number_to_currency(@contract.total_revenue) %></p>
+    <p class="mt-2 text-xs text-light-text/50">Based on delivered units</p>
   </div>
-</div>
-
-<div class="kpi-grid">
-  <div class="kpi">
-    <p class="label">Units delivered</p>
-    <p class="value"><%= units_delivered %></p>
-    <p class="hint">Planned: <%= @contract.planned_quantity %></p>
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Total cost</p>
+    <p class="mt-3 text-2xl font-semibold"><%= number_to_currency(total_cost) %></p>
+    <p class="mt-2 text-xs text-light-text/50">Labor + material + other</p>
   </div>
-
-  <div class="kpi">
-    <p class="label">Revenue</p>
-    <p class="value"><%= number_to_currency(@contract.total_revenue) %></p>
-    <p class="hint">Based on delivered units</p>
-  </div>
-
-  <div class="kpi">
-    <p class="label">Total cost</p>
-    <p class="value"><%= number_to_currency(total_cost) %></p>
-    <p class="hint">Labor + material + other</p>
-  </div>
-
   <% margin = @contract.total_margin.to_d %>
-  <div class="kpi">
-    <p class="label">Total margin</p>
-    <p class="value <%= margin < 0 ? "negative" : "positive" %>">
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Total margin</p>
+    <p class="mt-3 text-2xl font-semibold <%= margin < 0 ? "text-accent-red" : "text-light-text" %>">
       <%= number_to_currency(margin) %>
     </p>
-    <p class="hint">
-      Avg cost/unit: <%= number_to_currency(avg_cost_per_unit) %><br>
-      Avg margin/unit: <%= number_to_currency(@contract.avg_margin_per_unit) %>
-    </p>
+    <p class="mt-2 text-xs text-light-text/50">Avg cost/unit: <%= number_to_currency(avg_cost_per_unit) %></p>
   </div>
 </div>
 
-<div class="spacer-18"></div>
-
-<div class="card">
-  <div class="card-body">
-    <div class="page-header" style="margin: 0 0 10px;">
-      <div>
-        <h1 style="font-size:18px;">Cost and revenue periods</h1>
-        <p class="subtle">One row per week or month of actuals.</p>
-      </div>
-      <div class="actions">
-        <%= link_to "Add period", new_contract_contract_period_path(@contract), class: "btn btn-sm btn-primary" %>
-      </div>
+<div class="mt-6 panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold">Cost and revenue periods</h2>
+      <p class="text-sm text-light-text/60">One row per week or month of actuals.</p>
     </div>
-
-    <% if @periods.any? %>
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Period start</th>
-              <th>Type</th>
-              <th class="num">Units</th>
-              <th class="num">Rev/unit</th>
-              <th class="num">Revenue</th>
-              <th class="num">Cost</th>
-              <th class="num">Cost/unit</th>
-              <th class="num">Margin/unit</th>
-              <th class="actions-cell"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @periods.each do |p| %>
-              <tr>
-                <td><%= p.period_start_date&.strftime("%b. %-d, %Y") %></td>
-                <td><%= p.period_type %></td>
-                <td class="num"><%= p.units_delivered %></td>
-                <td class="num"><%= number_to_currency(p.revenue_per_unit) %></td>
-                <td class="num"><%= number_to_currency(p.revenue_total) %></td>
-                <td class="num"><%= number_to_currency(p.total_cost) %></td>
-                <td class="num"><%= number_to_currency(p.cost_per_unit) %></td>
-                <td class="num"><%= number_to_currency(p.margin_per_unit) %></td>
-                <td class="actions-cell">
-                  <div class="actions">
-                    <%= link_to "Edit", edit_contract_period_path(p), class: "btn btn-sm" %>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="subtle">No period data yet.</p>
-    <% end %>
+    <%= render "shared/ui/button", label: "Add period", variant: "primary", url: new_contract_contract_period_path(@contract) %>
   </div>
+
+  <% if @periods.any? %>
+    <div class="mt-4 space-y-3">
+      <% @periods.each do |p| %>
+        <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
+          <div>
+            <p class="font-semibold"><%= p.period_start_date&.strftime("%b. %-d, %Y") %></p>
+            <p class="text-xs text-light-text/50"><%= p.period_type %> · <%= p.units_delivered %> units</p>
+          </div>
+          <div class="text-xs text-light-text/50">Revenue <span class="text-light-text"><%= number_to_currency(p.revenue_total) %></span></div>
+          <div class="text-xs text-light-text/50">Cost <span class="text-light-text"><%= number_to_currency(p.total_cost) %></span></div>
+          <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_contract_period_path(p) %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="mt-4 text-sm text-light-text/60">No period data yet.</p>
+  <% end %>
 </div>
 
-<div class="spacer-18"></div>
-
-<div class="card">
-  <div class="card-body">
-    <div class="page-header" style="margin: 0 0 10px;">
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <div class="panel p-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h1 style="font-size:18px;">Delivery milestones</h1>
-        <p class="subtle">Contractual commitments: quantity due by date.</p>
+        <h2 class="text-lg font-semibold">Delivery milestones</h2>
+        <p class="text-sm text-light-text/60">Contractual commitments: quantity due by date.</p>
       </div>
-      <div class="actions">
-        <%= link_to "Add milestone", new_contract_delivery_milestone_path(@contract), class: "btn btn-sm btn-primary" %>
-      </div>
+      <%= render "shared/ui/button", label: "Add milestone", variant: "primary", url: new_contract_delivery_milestone_path(@contract) %>
     </div>
 
     <% if @milestones.any? %>
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Due date</th>
-              <th class="num">Qty due</th>
-              <th>Notes</th>
-              <th class="actions-cell"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @milestones.each do |m| %>
-              <tr>
-                <td><%= m.due_date&.strftime("%b. %-d, %Y") %></td>
-                <td class="num"><%= m.quantity_due %></td>
-                <td class="wrap"><%= m.notes %></td>
-                <td class="actions-cell">
-                  <div class="actions">
-                    <%= link_to "Edit", edit_delivery_milestone_path(m), class: "btn btn-sm" %>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <div class="mt-4 space-y-3">
+        <% @milestones.each do |m| %>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
+            <p class="font-semibold"><%= m.due_date&.strftime("%b. %-d, %Y") %></p>
+            <p class="mt-1 text-xs text-light-text/50">Qty due: <%= m.quantity_due %></p>
+            <p class="mt-2 text-xs text-light-text/60"><%= m.notes %></p>
+            <div class="mt-3">
+              <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_delivery_milestone_path(m) %>
+            </div>
+          </div>
+        <% end %>
       </div>
     <% else %>
-      <p class="subtle">No milestones yet for this contract.</p>
+      <p class="mt-4 text-sm text-light-text/60">No milestones yet for this contract.</p>
+    <% end %>
+  </div>
+
+  <div class="panel p-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Delivered units</h2>
+        <p class="text-sm text-light-text/60">Unit-level actuals: one row per unit shipped.</p>
+      </div>
+      <%= render "shared/ui/button", label: "Add delivered unit", variant: "primary", url: new_contract_delivery_unit_path(@contract) %>
+    </div>
+
+    <% if @units.any? %>
+      <div class="mt-4 space-y-3">
+        <% @units.each do |u| %>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm">
+            <p class="font-semibold"><%= u.unit_serial %></p>
+            <p class="mt-1 text-xs text-light-text/50"><%= u.ship_date&.strftime("%b. %-d, %Y") %></p>
+            <p class="mt-2 text-xs text-light-text/60"><%= u.notes %></p>
+            <div class="mt-3">
+              <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_delivery_unit_path(u) %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="mt-4 text-sm text-light-text/60">No delivered units recorded yet.</p>
     <% end %>
   </div>
 </div>
 
-<div class="spacer-18"></div>
-
-<div class="card">
-  <div class="card-body">
-    <div class="page-header" style="margin: 0 0 10px;">
-      <div>
-        <h1 style="font-size:18px;">Delivered units</h1>
-        <p class="subtle">Unit-level actuals: one row per unit shipped.</p>
-      </div>
-      <div class="actions">
-        <%= link_to "Add delivered unit", new_contract_delivery_unit_path(@contract), class: "btn btn-sm btn-primary" %>
-      </div>
-    </div>
-
-    <% if @units.any? %>
-      <div class="table-container">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Unit serial</th>
-              <th>Ship date</th>
-              <th>Notes</th>
-              <th class="actions-cell"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @units.each do |u| %>
-              <tr>
-                <td><%= u.unit_serial %></td>
-                <td><%= u.ship_date&.strftime("%b. %-d, %Y") %></td>
-                <td class="wrap"><%= u.notes %></td>
-                <td class="actions-cell">
-                  <div class="actions">
-                    <%= link_to "Edit", edit_delivery_unit_path(u), class: "btn btn-sm" %>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <p class="subtle">No delivered units recorded yet.</p>
-    <% end %>
-  </div>
+<div class="mt-6 flex flex-wrap gap-3">
+  <%= render "shared/ui/button", label: "Back to program", variant: "ghost", url: program_path(@contract.program) %>
+  <%= render "shared/ui/button", label: "Import delivery units", variant: "secondary", url: new_contract_delivery_unit_import_path(@contract) %>
+  <%= render "shared/ui/button", label: "Import costs", variant: "secondary", url: new_contract_cost_import_path(@contract) %>
+  <%= render "shared/ui/button", label: "Import milestones", variant: "secondary", url: new_contract_milestone_import_path(@contract) %>
 </div>

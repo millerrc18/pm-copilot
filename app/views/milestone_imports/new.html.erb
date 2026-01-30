@@ -1,29 +1,25 @@
-<div class="auth-shell">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1>Import delivery milestones</h1>
-      <p class="subtle">Upload the Milestones template (.xlsx). Supports amendments.</p>
+<% content_for :page_title, "Import milestones" %>
+<% content_for :page_subtitle, "Upload the Milestones template (.xlsx)." %>
+
+<div class="panel p-6 max-w-xl">
+  <%= form_with url: contract_milestone_imports_path(@contract), local: true, multipart: true, class: "space-y-4" do |f| %>
+    <div>
+      <%= f.label :file, "Excel file", class: "text-sm font-semibold" %>
+      <%= f.file_field :file, class: "mt-2 block w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring", accept: ".xlsx" %>
+      <p class="mt-2 text-xs text-light-text/50">Tip: contract_code and due_date are required.</p>
+      <p class="mt-2 text-xs text-light-text/50">
+        Download template:
+        <%= link_to "milestones.xlsx", "/templates/milestones.xlsx", class: "text-accent-red hover:text-accent-red/80" %>
+      </p>
+      <p class="mt-2 text-xs text-light-text/50">
+        Required headers:
+        <code class="rounded bg-white/10 px-2 py-1 text-[11px] text-light-text/70"><%= MilestoneImportService::REQUIRED_HEADERS.join(", ") %></code>
+      </p>
     </div>
 
-    <%= form_with url: contract_milestone_imports_path(@contract), local: true, multipart: true, class: "form" do |f| %>
-      <div class="field">
-        <%= f.label :file, "Excel file" %>
-        <%= f.file_field :file, class: "input", accept: ".xlsx" %>
-        <p class="hint">milestone_ref should be stable (ex: FY25-JAN) so amended dates update the right row.</p>
-        <p class="hint">
-          Download template:
-          <%= link_to "contract_workbook.xlsx", "/templates/contract_workbook.xlsx" %>
-        </p>
-        <p class="hint">
-          Required headers:
-          <code><%= MilestoneImportService::REQUIRED_HEADERS.join(", ") %></code>
-        </p>
-      </div>
-
-      <div class="form-actions">
-        <%= f.submit "Import", class: "btn btn-primary btn-block" %>
-        <%= link_to "Cancel", contract_path(@contract), class: "btn btn-block" %>
-      </div>
-    <% end %>
-  </div>
+    <div class="flex flex-wrap gap-3">
+      <%= f.submit "Import", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+      <%= link_to "Cancel", contract_path(@contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    </div>
+  <% end %>
 </div>

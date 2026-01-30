@@ -1,15 +1,10 @@
-<% form_url =
-     if delivery_unit.persisted?
-       delivery_unit_path(delivery_unit)
-     else
-       contract_delivery_units_path(@contract)
-     end %>
+<% form_url = delivery_unit.persisted? ? delivery_unit_path(delivery_unit) : contract_delivery_units_path(@contract) %>
 
-<%= form_with(model: delivery_unit, url: form_url, local: true) do |form| %>
+<%= form_with(model: delivery_unit, url: form_url, local: true, class: "space-y-6") do |form| %>
   <% if delivery_unit.errors.any? %>
-    <div class="flash alert">
-      <strong><%= pluralize(delivery_unit.errors.count, "error") %> prevented save:</strong>
-      <ul>
+    <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
+      <p class="font-semibold"><%= pluralize(delivery_unit.errors.count, "error") %> prevented save:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-light-text/80">
         <% delivery_unit.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
@@ -18,21 +13,22 @@
   <% end %>
 
   <div>
-    <%= form.label :unit_serial %>
-    <%= form.text_field :unit_serial %>
+    <%= form.label :unit_serial, class: "text-sm font-semibold" %>
+    <%= form.text_field :unit_serial, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
   </div>
 
   <div>
-    <%= form.label :ship_date %>
-    <%= form.date_field :ship_date %>
+    <%= form.label :ship_date, class: "text-sm font-semibold" %>
+    <%= form.date_field :ship_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
   </div>
 
   <div>
-    <%= form.label :notes %>
-    <%= form.text_area :notes, rows: 3 %>
+    <%= form.label :notes, class: "text-sm font-semibold" %>
+    <%= form.text_area :notes, rows: 3, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
   </div>
 
-  <div class="form-actions">
-    <%= form.submit delivery_unit.persisted? ? "Update unit" : "Create unit", class: "btn btn-primary" %>
+  <div class="flex flex-wrap gap-3">
+    <%= form.submit(delivery_unit.persisted? ? "Update unit" : "Create unit", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
+    <%= link_to "Cancel", contract_path(@contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
   </div>
 <% end %>

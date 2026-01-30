@@ -1,31 +1,32 @@
-<%= form_with(model: program, local: true) do |form| %>
+<%= form_with(model: program, local: true, class: "space-y-6") do |form| %>
   <% if program.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(program.errors.count, "error") %> prohibited this program from being saved:</h2>
-      <ul>
-      <% program.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
+      <p class="font-semibold"><%= pluralize(program.errors.count, "error") %> prohibited this program from being saved:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-light-text/80">
+        <% program.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div>
-    <%= form.label :name %><br>
-    <%= form.text_field :name %>
+    <%= form.label :name, class: "text-sm font-semibold" %>
+    <%= form.text_field :name, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring", placeholder: "Program name" %>
   </div>
 
   <div>
-    <%= form.label :customer %><br>
-    <%= form.text_field :customer %>
+    <%= form.label :customer, class: "text-sm font-semibold" %>
+    <%= form.text_field :customer, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring", placeholder: "Customer name" %>
   </div>
 
   <div>
-    <%= form.label :description %><br>
-    <%= form.text_area :description %>
+    <%= form.label :description, class: "text-sm font-semibold" %>
+    <%= form.text_area :description, rows: 4, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text placeholder:text-light-text/40 focus-ring", placeholder: "Add a short summary of the program." %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="flex flex-wrap gap-3">
+    <%= form.submit(program.persisted? ? "Save changes" : "Create program", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
+    <%= link_to "Cancel", programs_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
   </div>
 <% end %>

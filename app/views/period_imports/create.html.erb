@@ -1,2 +1,9 @@
-<h1>PeriodImports#create</h1>
-<p>Find me in app/views/period_imports/create.html.erb</p>
+<% content_for :page_title, "Import complete" %>
+<% content_for :page_subtitle, "Your period workbook has been processed." %>
+
+<div class="panel p-6 max-w-xl">
+  <p class="text-sm text-light-text/60">The import finished successfully. Review the updated contract periods and milestones.</p>
+  <div class="mt-4">
+    <%= render "shared/ui/button", label: "Back to contract", variant: "primary", url: contract_path(@contract) %>
+  </div>
+</div>

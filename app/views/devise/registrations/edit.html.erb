@@ -1,28 +1,37 @@
-<h2>Profile & account</h2>
-<p class="subtle">Keep your profile details and preferences up to date.</p>
+<% content_for :page_title, "Profile & account" %>
+<% content_for :page_subtitle, "Keep your profile details and preferences up to date." %>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
+<%= simple_form_for(
+  resource,
+  as: resource_name,
+  url: registration_path(resource_name),
+  html: { method: :put, class: "space-y-6" },
+  defaults: {
+    input_html: { class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" },
+    label_html: { class: "text-sm font-semibold" }
+  }
+) do |f| %>
+  <%= render "shared/form_errors", resource: resource %>
 
-  <div class="card">
-    <div class="card-body">
-      <h3>Profile details</h3>
-      <p class="subtle">Add the details teammates should see on your account.</p>
-      <div class="profile-grid">
+  <div class="panel p-6 space-y-6">
+    <div>
+      <h3 class="text-lg font-semibold">Profile details</h3>
+      <p class="text-sm text-light-text/60">Add the details teammates should see on your account.</p>
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
         <%= f.input :first_name %>
         <%= f.input :last_name %>
         <%= f.input :job_title, label: "Job title" %>
         <%= f.input :company %>
-        <div class="full">
-          <%= f.input :bio, as: :text, input_html: { rows: 4 } %>
+        <div class="md:col-span-2">
+          <%= f.input :bio, as: :text, input_html: { rows: 4, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" } %>
         </div>
       </div>
     </div>
 
-    <div class="card-body">
-      <h3>Theme & palette</h3>
-      <p class="subtle">Choose how the application looks for you.</p>
-      <div class="profile-grid">
+    <div>
+      <h3 class="text-lg font-semibold">Theme & palette</h3>
+      <p class="text-sm text-light-text/60">Choose how the application looks for you.</p>
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
         <%= f.input :theme,
                     collection: User::THEME_OPTIONS.map { |option| [option.titleize, option] },
                     include_blank: false %>
@@ -32,40 +41,42 @@
       </div>
     </div>
 
-    <div class="card-body">
-      <h3>Security</h3>
-      <p class="subtle">Update your sign-in email or password.</p>
-      <div class="profile-grid">
+    <div>
+      <h3 class="text-lg font-semibold">Security</h3>
+      <p class="text-sm text-light-text/60">Update your sign-in email or password.</p>
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
         <%= f.input :email, required: true, autofocus: true %>
         <%= f.input :password,
                     hint: "leave it blank if you don't want to change it",
                     required: false,
-                    input_html: { autocomplete: "new-password" } %>
+                    input_html: { autocomplete: "new-password", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" } %>
         <%= f.input :password_confirmation,
                     required: false,
-                    input_html: { autocomplete: "new-password" } %>
-        <div class="full">
+                    input_html: { autocomplete: "new-password", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" } %>
+        <div class="md:col-span-2 text-xs text-light-text/60">
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
             <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
           <% end %>
         </div>
-        <div class="full">
+        <div class="md:col-span-2">
           <%= f.input :current_password,
                       hint: "we need your current password to confirm your changes",
                       required: true,
-                      input_html: { autocomplete: "current-password" } %>
+                      input_html: { autocomplete: "current-password", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" } %>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Update" %>
+  <div class="flex flex-wrap gap-3">
+    <%= f.button :submit, "Update", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
   </div>
 <% end %>
 
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+<div class="mt-8 panel p-6">
+  <h3 class="text-lg font-semibold">Cancel my account</h3>
+  <p class="mt-2 text-sm text-light-text/60">Unhappy? You can permanently close your account.</p>
+  <div class="mt-4">
+    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "inline-flex items-center justify-center rounded-full border border-accent-red/40 bg-accent-red/10 px-5 py-2.5 text-sm font-semibold text-accent-red transition hover:bg-accent-red/20 focus-ring" %>
+  </div>
+</div>

@@ -1,5 +1,6 @@
-<h1>Edit Program</h1>
+<% content_for :page_title, "Edit program" %>
+<% content_for :page_subtitle, "Update the program details and stakeholders." %>
 
-<%= render 'form', program: @program %>
-
-<%= link_to 'Back', program_path(@program) %>
+<div class="panel p-6 max-w-2xl">
+  <%= render "form", program: @program %>
+</div>

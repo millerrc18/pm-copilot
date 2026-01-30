@@ -1,12 +1,6 @@
-<div class="page-header">
-  <div>
-    <h1>New milestone</h1>
-    <p class="subtle"><%= @contract.contract_code %> • <%= @contract.program.name %></p>
-  </div>
-</div>
+<% content_for :page_title, "Add milestone" %>
+<% content_for :page_subtitle, "Set contractual commitments for this contract." %>
 
-<div class="card">
-  <div class="card-body">
-    <%= render "form", delivery_milestone: @delivery_milestone %>
-  </div>
+<div class="panel p-6 max-w-2xl">
+  <%= render "form", delivery_milestone: @delivery_milestone %>
 </div>

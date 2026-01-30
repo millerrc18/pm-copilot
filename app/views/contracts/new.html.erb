@@ -1,16 +1,6 @@
-<div class="page-header">
-  <div>
-    <h1>New Contract</h1>
-    <p class="subtle">Add a fiscal-year contract and begin tracking period costs and margin.</p>
-  </div>
+<% content_for :page_title, "New contract" %>
+<% content_for :page_subtitle, "Capture pricing, schedule, and unit targets." %>
 
-  <div class="actions">
-    <%= link_to "Back to program", program_path(@program), class: "btn" %>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-body">
-    <%= render "form", contract: @contract %>
-  </div>
+<div class="panel p-6 max-w-3xl">
+  <%= render "form", contract: @contract %>
 </div>

@@ -1,3 +1,13 @@
-<aside class="right-panel">
-  <%= yield(:right_panel) %>
+<aside class="fixed bottom-0 right-0 z-50 max-h-[80vh] w-full translate-y-full rounded-t-3xl border border-white/10 bg-dark-panel-strong px-6 py-6 shadow-panel transition duration-300 md:static md:z-10 md:max-h-none md:w-80 md:translate-y-0 md:rounded-none md:border-l md:border-t-0 md:shadow-none" data-right-panel-target="panel">
+  <div class="flex items-center justify-between md:hidden">
+    <p class="text-sm font-semibold">Details</p>
+    <button class="rounded-full p-2 text-light-text/70 hover:text-light-text hover:bg-white/10 focus-ring" data-action="right-panel#close" aria-label="Close panel">
+      <svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6l-12 12" />
+      </svg>
+    </button>
+  </div>
+  <div class="mt-4 space-y-4 md:mt-0">
+    <%= yield(:right_panel) %>
+  </div>
 </aside>
