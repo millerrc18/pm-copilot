@@ -21,15 +21,18 @@ default: &default
 
 
 development:
-  <<: *default
-  <% require "uri" %>
   <% dev_database_url = ENV["DATABASE_URL"] %>
   <% if dev_database_url.present? %>
+  <<: *default
+  <% require "uri" %>
   <% dev_uri = URI.parse(dev_database_url) %>
   <% dev_uri.path = "#{dev_uri.path}_development" %>
   url: <%= dev_uri.to_s %>
   <% else %>
-  url: postgres://localhost/rails_8_template_development
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
   <% end %>
 
   # The specified database role being used to connect to PostgreSQL.

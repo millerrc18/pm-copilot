@@ -5,7 +5,16 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   include UiScreenshotHelper
 
   before do
-    driven_by(:headless_chrome)
+    driven_by(:cuprite, options: {
+      timeout: 120,
+      process_timeout: 60,
+      browser_path: ENV["FERRUM_BROWSER_PATH"],
+      browser_options: {
+        "disable-gpu" => nil,
+        "no-sandbox" => nil,
+        "disable-dev-shm-usage" => nil
+      }
+    })
   end
 
   it "captures screenshots across Apple viewports" do
@@ -28,7 +37,7 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
     visit new_user_session_path
     fill_in "Email", with: user.email
     fill_in "Password", with: "password"
-    click_button "Log in"
+    click_button "Sign in"
 
     pages = {
       "programs_index" => programs_path,

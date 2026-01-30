@@ -37,7 +37,7 @@ class ContractPeriod < ApplicationRecord
   belongs_to :contract
 
   validates :period_start_date, :period_type, :revenue_per_unit, presence: true
-  validates :period_type, inclusion: { in: %w[week month] }
+  validates :period_type, inclusion: { in: %w[week month monthly] }
   validates :hours_bam, :hours_eng, :hours_mfg_hard, :hours_mfg_soft, :hours_touch,
             numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :rate_bam, :rate_eng, :rate_mfg_hard, :rate_mfg_soft, :rate_touch,

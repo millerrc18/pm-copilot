@@ -53,3 +53,35 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      FERRUM_BROWSER_PATH: /usr/bin/google-chrome
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Install Chrome for Cuprite
+        run: |
+          curl -L -o /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt-get update
+          sudo apt-get install -y /tmp/google-chrome-stable.deb
+
+      - name: Prepare test database
+        run: bin/rails db:prepare
+
+      - name: Run test suite
+        run: bundle exec rspec
+
+      - name: Capture UI screenshots
+        run: bin/ui-screenshots
+
+      - name: Run bundler-audit
+        run: bundle exec bundler-audit check --update

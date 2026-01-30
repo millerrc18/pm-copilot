@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [ -z "${FERRUM_BROWSER_PATH:-}" ]; then
+  for path in /usr/bin/google-chrome /usr/bin/google-chrome-stable /usr/bin/chromium /usr/bin/chromium-browser; do
+    if [ -x "$path" ]; then
+      export FERRUM_BROWSER_PATH="$path"
+      break
+    fi
+  done
+fi
+
 bundle exec rspec spec/system/ui_responsive_screenshots_spec.rb
 
 echo "UI screenshots saved to tmp/screenshots/ui"

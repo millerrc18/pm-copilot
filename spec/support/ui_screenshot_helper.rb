@@ -13,7 +13,9 @@ APPLE_VIEWPORTS = {
 
 module UiScreenshotHelper
   def set_viewport(width, height)
-    if page.current_window.respond_to?(:resize_to)
+    if page.driver.respond_to?(:resize)
+      page.driver.resize(width, height)
+    elsif page.current_window.respond_to?(:resize_to)
       page.current_window.resize_to(width, height)
     elsif page.driver.browser.respond_to?(:manage)
       page.driver.browser.manage.window.resize_to(width, height)

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.0.2", ">= 8.0.2.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
@@ -20,6 +20,13 @@ gem "jbuilder"
 gem "roo"
 
 gem "csv"
+gem "net-imap", ">= 0.5.7"
+gem "nokogiri", ">= 1.18.9"
+gem "rack", ">= 3.1.18"
+gem "rack-session", ">= 2.1.1"
+gem "rexml", ">= 3.4.2"
+gem "thor", ">= 1.4.0"
+gem "uri", ">= 1.0.4"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
@@ -49,6 +56,7 @@ group :development, :test do
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", "~> 7.1.1", require: false
+  gem "bundler-audit", require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
@@ -96,6 +104,7 @@ end
 group :development, :test do
   gem "rspec-rails", "~> 7.1.1"
   gem "grade_runner", "~> 0.0.13"
+  gem "sqlite3"
 end
 
 group :test do
@@ -104,6 +113,5 @@ group :test do
   gem "rails-controller-testing"
   gem "webmock"
   gem "capybara"
-  gem "selenium-webdriver", "~> 4.11.0"
-  gem "sqlite3"
+  gem "cuprite"
 end
