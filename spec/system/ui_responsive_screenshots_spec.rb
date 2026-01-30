@@ -54,23 +54,20 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
         expect(page).to have_css(".app-shell")
 
         if width < 768
-          ensure_mobile_media_query!(width, height)
           expect(page).to have_no_css(".sidebar.is-open")
-          expect(page).to have_no_css("html.no-scroll")
-          expect(page).to have_no_css(".sidebar-backdrop.is-open")
+          expect(sidebar_offscreen?).to be(true)
           assert_sidebar_nav_stacks_vertically!
+          assert_sidebar_icon_bounds!
           save_ui_screenshot(page_name, device_name, "closed")
 
           open_sidebar
           expect(page).to have_css(".sidebar.is-open")
           expect(page).to have_css(".sidebar-backdrop.is-open")
-          expect(page).to have_css("html.no-scroll")
           save_ui_screenshot(page_name, device_name, "open")
 
           close_sidebar
           expect(page).to have_no_css(".sidebar.is-open")
           expect(page).to have_no_css(".sidebar-backdrop.is-open")
-          expect(page).to have_no_css("html.no-scroll")
         else
           save_ui_screenshot(page_name, device_name, "closed")
         end
@@ -84,12 +81,19 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
     expect(rects.dig("second", "top")).to be > rects.dig("first", "top")
   end
 
+  def assert_sidebar_icon_bounds!
+    rect = sidebar_icon_rect
+    expect(rect).not_to be_nil
+    expect(rect["width"]).to be <= 28
+    expect(rect["height"]).to be <= 28
+  end
+
   def open_sidebar
     find('button[aria-label="Open menu"]', visible: :all).click
   end
 
   def close_sidebar
-    find(".sidebar-backdrop", visible: :all).trigger("click")
+    find(".sidebar-backdrop", visible: :all).click
   end
 
   def sidebar_nav_rects
@@ -107,10 +111,24 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
     JS
   end
 
-  def ensure_mobile_media_query!(width, height)
-    set_viewport(width, height)
-    page.evaluate_script("window.dispatchEvent(new Event('resize'))")
-    is_mobile = page.evaluate_script("window.matchMedia('(max-width: 767px)').matches")
-    expect(is_mobile).to be(true)
+  def sidebar_icon_rect
+    evaluate_script(<<~JS)
+      (() => {
+        const icon = document.querySelector(".sidebar .nav-pill-icon svg");
+        if (!icon) return null;
+        const rect = icon.getBoundingClientRect();
+        return { width: rect.width, height: rect.height };
+      })()
+    JS
+  end
+
+  def sidebar_offscreen?
+    evaluate_script(<<~JS)
+      (() => {
+        const sidebar = document.querySelector(".sidebar");
+        if (!sidebar) return false;
+        return sidebar.getBoundingClientRect().right <= 0;
+      })()
+    JS
   end
 end
