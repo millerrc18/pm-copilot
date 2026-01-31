@@ -17,7 +17,11 @@
 
     <div class="flex flex-1 items-center gap-3 justify-end min-w-[240px]">
       <div class="hidden lg:block w-64">
-        <%= render "shared/ui/input", placeholder: "Search programs & docs", hotkey: "⌘ K", form_action: search_path %>
+        <%= render "shared/ui/input",
+                   placeholder: "Search programs & docs",
+                   hotkey: search_keytip,
+                   search_keytip: true,
+                   form_action: search_path %>
       </div>
 
       <%= render "shared/ui/button", label: "Filter", variant: "ghost", url: "#" %>

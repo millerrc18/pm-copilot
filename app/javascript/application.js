@@ -11,3 +11,18 @@ window.jQuery = jquery;
 window.$ = jquery;
 import Rails from "@rails/ujs"
 Rails.start();
+
+const updateSearchKeytips = () => {
+  const keytips = document.querySelectorAll("[data-search-keytip]");
+  if (!keytips.length) return;
+
+  const platform = navigator.platform || "";
+  const isApple = /Mac|iPhone|iPad/.test(platform);
+  keytips.forEach((keytip) => {
+    const macKeytip = keytip.dataset.macKeytip;
+    const nonMacKeytip = keytip.dataset.nonMacKeytip;
+    keytip.textContent = isApple ? macKeytip : nonMacKeytip;
+  });
+};
+
+document.addEventListener("turbo:load", updateSearchKeytips);

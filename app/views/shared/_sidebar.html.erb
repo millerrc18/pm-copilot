@@ -19,24 +19,34 @@
   </div>
 
   <div>
-    <%= render "shared/ui/input", placeholder: "Search workspace & docs", hotkey: "⌘ K", form_action: search_path %>
+    <%= render "shared/ui/input",
+               placeholder: "Search workspace & docs",
+               hotkey: search_keytip,
+               search_keytip: true,
+               form_action: search_path %>
   </div>
 
-  <div class="space-y-3">
+  <div class="space-y-3" data-testid="sidebar-group-workspace">
     <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Workspace</p>
     <nav class="space-y-2 sidebar-nav">
       <%= render "shared/ui/nav_item", label: "Programs", url: programs_path, icon: "folder", active: controller_name == "programs" %>
-      <%= render "shared/ui/nav_item", label: "Docs", url: docs_path, icon: "document", active: request.path.start_with?(docs_path) %>
+      <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: %w[cost_entries cost_imports].include?(controller_name) %>
       <%= render "shared/ui/nav_item", label: "Contracts", url: contracts_path, icon: "receipt", active: controller_name == "contracts" %>
     </nav>
   </div>
 
-  <div class="space-y-3">
+  <div class="space-y-3 border-t border-white/10 pt-4" data-testid="sidebar-group-imports">
     <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Imports</p>
     <nav class="space-y-2 sidebar-nav">
-      <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: %w[cost_entries cost_imports].include?(controller_name) %>
       <%= render "shared/ui/nav_item", label: "Milestones", url: delivery_milestones_path, icon: "flag", active: controller_name == "delivery_milestones" %>
       <%= render "shared/ui/nav_item", label: "Delivery units", url: delivery_units_path, icon: "truck", active: controller_name == "delivery_units" %>
+    </nav>
+  </div>
+
+  <div class="space-y-3 border-t border-white/10 pt-4" data-testid="sidebar-group-knowledge-center">
+    <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Knowledge Center</p>
+    <nav class="space-y-2 sidebar-nav">
+      <%= render "shared/ui/nav_item", label: "Knowledge Center", url: docs_path, icon: "document", active: request.path.start_with?(docs_path) %>
     </nav>
   </div>
 

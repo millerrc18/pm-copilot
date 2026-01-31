@@ -14,7 +14,12 @@
       class: "w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
     %>
     <% if local_assigns[:hotkey].present? %>
-      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50">
+      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50"
+            <% if local_assigns[:search_keytip] %>
+              data-search-keytip
+              data-mac-keytip="⌘ K"
+              data-non-mac-keytip="Ctrl K"
+            <% end %>>
         <%= local_assigns[:hotkey] %>
       </span>
     <% end %>
@@ -33,7 +38,12 @@
       class="w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
     />
     <% if local_assigns[:hotkey].present? %>
-      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50">
+      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50"
+            <% if local_assigns[:search_keytip] %>
+              data-search-keytip
+              data-mac-keytip="⌘ K"
+              data-non-mac-keytip="Ctrl K"
+            <% end %>>
         <%= local_assigns[:hotkey] %>
       </span>
     <% end %>

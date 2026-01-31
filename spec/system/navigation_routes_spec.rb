@@ -31,7 +31,7 @@ RSpec.describe "Sidebar navigation", type: :system do
       [ "Milestones", "Milestones", delivery_milestones_path ],
       [ "Delivery units", "Delivery units", delivery_units_path ],
       [ "Cost Hub", "Cost Hub", cost_hub_path ],
-      [ "Docs", "Documentation", docs_path ]
+      [ "Knowledge Center", "Documentation", docs_path ]
     ]
 
     sections.each do |label, heading, path|
