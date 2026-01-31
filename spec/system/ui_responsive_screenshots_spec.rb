@@ -129,6 +129,12 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
 
         if width < 768
           expect(page).to have_css("nav[aria-label='Bottom navigation']")
+          within("nav[aria-label='Bottom navigation']") do
+            expect(page).to have_link("Programs")
+            expect(page).to have_link("Cost Hub")
+            expect(page).to have_link("Knowledge")
+            expect(page).to have_no_link("Panel")
+          end
           expect(sidebar_offscreen?).to be(true)
           save_ui_screenshot(page_name, device_name, "closed")
 

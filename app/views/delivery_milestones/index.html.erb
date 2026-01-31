@@ -22,6 +22,7 @@
           <th class="pb-3">Due date</th>
           <th class="pb-3">Quantity due</th>
           <th class="pb-3">Status</th>
+          <th class="pb-3 text-right">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-white/5">
@@ -38,11 +39,22 @@
               <td class="py-3">
                 <span class="rounded-full border border-white/10 px-3 py-1 text-xs"><%= status %></span>
               </td>
+              <td class="py-3 text-right">
+                <div class="flex items-center justify-end gap-3">
+                  <%= link_to "Edit", edit_delivery_milestone_path(milestone), class: "text-light-text/70 hover:text-light-text" %>
+                  <%= button_to "Delete",
+                                delivery_milestone_path(milestone),
+                                method: :delete,
+                                data: { turbo_confirm: "Delete this milestone?" },
+                                form_class: "inline-flex",
+                                class: "text-accent-red hover:text-accent-red/80" %>
+                </div>
+              </td>
             </tr>
           <% end %>
         <% else %>
           <tr>
-            <td colspan="6" class="py-6 text-center text-sm text-light-text/60">No milestones added yet.</td>
+            <td colspan="7" class="py-6 text-center text-sm text-light-text/60">No milestones added yet.</td>
           </tr>
         <% end %>
       </tbody>

@@ -35,8 +35,8 @@
     </nav>
   </div>
 
-  <div class="space-y-3 border-t border-white/10 pt-4" data-testid="sidebar-group-imports">
-    <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Imports</p>
+  <div class="space-y-3 border-t border-white/10 pt-4" data-testid="sidebar-group-registers">
+    <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Registers</p>
     <nav class="space-y-2 sidebar-nav">
       <%= render "shared/ui/nav_item", label: "Milestones", url: delivery_milestones_path, icon: "flag", active: controller_name == "delivery_milestones" %>
       <%= render "shared/ui/nav_item", label: "Delivery units", url: delivery_units_path, icon: "truck", active: controller_name == "delivery_units" %>

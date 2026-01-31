@@ -5,6 +5,18 @@ export default class extends Controller {
 
   connect() {
     this.closeIfMobile()
+    this.beforeCacheHandler = this.handleBeforeCache.bind(this)
+    document.addEventListener("turbo:before-cache", this.beforeCacheHandler)
+  }
+
+  disconnect() {
+    if (this.beforeCacheHandler) {
+      document.removeEventListener("turbo:before-cache", this.beforeCacheHandler)
+    }
+  }
+
+  handleBeforeCache() {
+    this.close()
   }
 
   open() {

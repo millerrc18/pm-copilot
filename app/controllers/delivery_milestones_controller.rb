@@ -51,7 +51,7 @@ class DeliveryMilestonesController < ApplicationController
 
   def destroy
     @delivery_milestone.destroy
-    redirect_to contract_path(@contract), notice: "Milestone deleted."
+    redirect_back fallback_location: contract_path(@contract), notice: "Milestone deleted."
   end
 
   private

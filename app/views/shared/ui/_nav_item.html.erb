@@ -21,7 +21,7 @@
      '<svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>'
    end %>
 
-<%= link_to local_assigns[:url], class: "#{classes} focus-ring" do %>
+<%= link_to local_assigns[:url], class: "#{classes} focus-ring", data: { action: "click->sidebar#close" } do %>
   <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-white/5 text-light-text/80">
     <span class="icon-sm"><%= icon.html_safe %></span>
   </span>

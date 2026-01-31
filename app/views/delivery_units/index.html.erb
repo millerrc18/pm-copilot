@@ -21,6 +21,7 @@
           <th class="pb-3">Unit serial</th>
           <th class="pb-3">Shipped at</th>
           <th class="pb-3">Notes</th>
+          <th class="pb-3 text-right">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-white/5">
@@ -31,12 +32,23 @@
               <td class="py-3"><%= unit.contract.contract_code %></td>
               <td class="py-3 font-semibold"><%= unit.unit_serial %></td>
               <td class="py-3"><%= unit.ship_date %></td>
-              <td class="py-3 text-light-text/60"><%= unit.notes.presence || "—" %></td>
+              <td class="py-3 text-light-text/60"><%= unit.notes.presence || "None" %></td>
+              <td class="py-3 text-right">
+                <div class="flex items-center justify-end gap-3">
+                  <%= link_to "Edit", edit_delivery_unit_path(unit), class: "text-light-text/70 hover:text-light-text" %>
+                  <%= button_to "Delete",
+                                delivery_unit_path(unit),
+                                method: :delete,
+                                data: { turbo_confirm: "Delete this delivered unit?" },
+                                form_class: "inline-flex",
+                                class: "text-accent-red hover:text-accent-red/80" %>
+                </div>
+              </td>
             </tr>
           <% end %>
         <% else %>
           <tr>
-            <td colspan="5" class="py-6 text-center text-sm text-light-text/60">No delivery units logged yet.</td>
+            <td colspan="6" class="py-6 text-center text-sm text-light-text/60">No delivery units logged yet.</td>
           </tr>
         <% end %>
       </tbody>

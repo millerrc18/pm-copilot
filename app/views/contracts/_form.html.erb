@@ -1,6 +1,6 @@
 <% form_model = contract.persisted? ? contract : [@program, contract] %>
 
-<%= form_with(model: form_model, local: true, class: "space-y-6") do |form| %>
+<%= form_with(model: form_model, local: true, class: "space-y-6", html: { autocomplete: "off" }) do |form| %>
   <% if contract.errors.any? %>
     <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
       <p class="font-semibold"><%= pluralize(contract.errors.count, "error") %> prohibited this contract from being saved:</p>

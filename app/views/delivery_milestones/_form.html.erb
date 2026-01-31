@@ -1,6 +1,6 @@
 <% form_url = delivery_milestone.persisted? ? delivery_milestone_path(delivery_milestone) : contract_delivery_milestones_path(@contract) %>
 
-<%= form_with model: delivery_milestone, url: form_url, local: true, class: "space-y-6" do |form| %>
+<%= form_with model: delivery_milestone, url: form_url, local: true, class: "space-y-6", html: { autocomplete: "off" } do |form| %>
   <% if delivery_milestone.errors.any? %>
     <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
       <p class="font-semibold"><%= pluralize(delivery_milestone.errors.count, "error") %> prevented saving:</p>
@@ -19,7 +19,7 @@
 
   <div>
     <%= form.label :due_date, "Promise date", class: "text-sm font-semibold" %>
-    <%= form.date_select :due_date, {}, class: "mt-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-light-text focus-ring" %>
+    <%= form.date_select :due_date, { include_blank: true }, class: "mt-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-light-text focus-ring" %>
   </div>
 
   <div>
@@ -53,6 +53,6 @@
 
   <div class="flex flex-wrap gap-3">
     <%= form.submit(delivery_milestone.persisted? ? "Update milestone" : "Create milestone", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
-    <%= link_to "Cancel", contract_path(@contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    <%= link_to "Cancel", contract_path(@contract || delivery_milestone.contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
   </div>
 <% end %>

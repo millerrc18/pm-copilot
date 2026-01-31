@@ -1,4 +1,4 @@
-<%= form_with(model: [@contract, period], local: true, class: "space-y-6") do |form| %>
+<%= form_with(model: [@contract, period], local: true, class: "space-y-6", html: { autocomplete: "off" }) do |form| %>
   <% if period.errors.any? %>
     <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
       <p class="font-semibold"><%= pluralize(period.errors.count, "error") %> prohibited this record from being saved:</p>
@@ -13,7 +13,7 @@
   <div class="grid gap-4 md:grid-cols-2">
     <div>
       <%= form.label :period_start_date, class: "text-sm font-semibold" %>
-      <%= form.date_select :period_start_date, {}, class: "mt-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-light-text focus-ring" %>
+      <%= form.date_select :period_start_date, { include_blank: true }, class: "mt-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-light-text focus-ring" %>
     </div>
 
     <div>

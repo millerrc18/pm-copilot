@@ -50,7 +50,7 @@ class DeliveryUnitsController < ApplicationController
 
   def destroy
     @delivery_unit.destroy
-    redirect_to contract_path(@contract), notice: "Delivered unit deleted."
+    redirect_back fallback_location: contract_path(@contract), notice: "Delivered unit deleted."
   end
 
   private
