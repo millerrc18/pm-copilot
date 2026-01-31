@@ -11,13 +11,14 @@ class ProgramDashboard
     contracts = @program.contracts.includes(:contract_periods, :delivery_milestones, :delivery_units)
 
     contract_rows = contracts.map { |c| contract_rollup(c, as_of: as_of) }
+    cost_to_date = cost_entries_to_date(as_of: as_of)
 
     totals = {
       contracts_count: contracts.size,
       planned_units: contracts.sum { |c| c.planned_quantity.to_i },
       units_delivered: contract_rows.sum { |r| r[:units_delivered] },
       revenue_to_date: contract_rows.sum { |r| r[:revenue_to_date] },
-      cost_to_date: contract_rows.sum { |r| r[:cost_to_date] },
+      cost_to_date: cost_to_date,
       margin_to_date: 0.to_d,
       margin_pct_to_date: 0.to_d,
       avg_cost_per_unit: 0.to_d,
@@ -43,13 +44,7 @@ class ProgramDashboard
 
   private
 
-  def d(v)
-    return 0.to_d if v.nil? || v.to_s.strip.empty?
-    v.to_d
-  end
-
   def contract_rollup(contract, as_of:)
-    # Costs are time-based, so keep using contract_periods, but filter through as_of
     periods = contract.contract_periods
                       .where("period_start_date <= ?", as_of)
 
@@ -62,20 +57,8 @@ class ProgramDashboard
     # Revenue should come from contract periods to match Contract#total_revenue.
     revenue_to_date = periods.sum { |p| p.revenue_total.to_d }
 
-    labor_cost = periods.sum do |p|
-      d(p.hours_bam) * d(p.rate_bam) +
-        d(p.hours_eng) * d(p.rate_eng) +
-        d(p.hours_mfg_soft) * d(p.rate_mfg_soft) +
-        d(p.hours_mfg_hard) * d(p.rate_mfg_hard) +
-        d(p.hours_touch) * d(p.rate_touch)
-    end
-
-    material_cost = periods.sum { |p| d(p.material_cost) }
-    other_costs   = periods.sum { |p| d(p.other_costs) }
-    cost_to_date  = labor_cost + material_cost + other_costs
-
-    margin_to_date = revenue_to_date - cost_to_date
-    margin_pct_to_date = revenue_to_date.zero? ? 0.to_d : (margin_to_date / revenue_to_date)
+    margin_to_date = 0.to_d
+    margin_pct_to_date = 0.to_d
 
     otd = otd_for_contract(contract, as_of: as_of)
 
@@ -87,7 +70,6 @@ class ProgramDashboard
 
       units_delivered: units_delivered,
       revenue_to_date: revenue_to_date,
-      cost_to_date: cost_to_date,
       margin_pct_to_date: margin_pct_to_date,
 
       due_to_date_units: otd[:due_to_date_units],
@@ -96,6 +78,13 @@ class ProgramDashboard
       next_due_date: otd[:next_due_date],
       next_due_units: otd[:next_due_units]
     }
+  end
+
+  def cost_entries_to_date(as_of:)
+    CostEntry.where(program_id: @program.id)
+             .where("period_start_date <= ?", as_of)
+             .sum(&:total_cost)
+             .to_d
   end
 
 

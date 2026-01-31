@@ -44,7 +44,7 @@ module Docs
     end
 
     def search_blob
-      [title, summary, content].join(" ")
+      [ title, summary, content ].join(" ")
     end
 
     def last_updated_label
@@ -56,14 +56,14 @@ module Docs
     end
 
     def self.extract_front_matter(raw)
-      return [nil, raw] unless raw.start_with?("---")
+      return [ nil, raw ] unless raw.start_with?("---")
 
       match = raw.match(/\A---\s*\n(.*?)\n---\s*\n/m)
-      return [nil, raw] unless match
+      return [ nil, raw ] unless match
 
-      front_matter = YAML.safe_load(match[1], permitted_classes: [Date], aliases: true) || {}
+      front_matter = YAML.safe_load(match[1], permitted_classes: [ Date ], aliases: true) || {}
       body = raw.sub(match[0], "")
-      [front_matter, body]
+      [ front_matter, body ]
     end
   end
 end

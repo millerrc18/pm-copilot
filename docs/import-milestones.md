@@ -1,7 +1,7 @@
 ---
 title: Importing milestones
 summary: Upload delivery milestone data with required fields and error recovery steps.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Imports
 ---
 
@@ -45,5 +45,5 @@ Include the following columns:
 
 ## Related guides
 
-- [Import costs](/docs/import-costs)
+- [Cost hub overview](/docs/cost-tracking)
 - [Import delivery units](/docs/import-delivery-units)

@@ -1,7 +1,7 @@
 ---
 title: Dashboard metrics
 summary: Learn what each dashboard KPI means and how to interpret alerts.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Dashboard metrics
 ---
 
@@ -17,7 +17,7 @@ The program dashboard consolidates cost, revenue, and delivery KPIs. Use this gu
 
 ## Cost metrics
 
-- **Total cost**: Labor + material + overhead costs across periods.
+- **Total cost**: Labor, material, and other costs across Cost Entry periods.
 - **Cost to date**: Costs posted through the current period.
 - **Avg cost per unit**: Cost divided by units delivered.
 

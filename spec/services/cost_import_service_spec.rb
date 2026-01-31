@@ -17,27 +17,15 @@ RSpec.describe CostImportService do
 
   let(:user) { User.create!(email: "costs@example.com", password: "password") }
   let(:program) { Program.create!(name: "Program", user: user) }
-  let(:contract) do
-    Contract.create!(
-      program: program,
-      contract_code: "C-100",
-      start_date: Date.new(2024, 1, 1),
-      end_date: Date.new(2024, 12, 31),
-      sell_price_per_unit: 100,
-      planned_quantity: 10
-    )
-  end
 
-  def build_row(contract_code:)
+  def build_row(period_type: "week", period_start_date: Date.new(2024, 1, 1))
     headers = described_class::REQUIRED_HEADERS
     headers.map do |header|
       case header
-      when "contract_code"
-        contract_code
       when "period_type"
-        "week"
+        period_type
       when "period_start_date"
-        Date.new(2024, 1, 1)
+        period_start_date
       when "notes"
         "Imported"
       else
@@ -46,29 +34,37 @@ RSpec.describe CostImportService do
     end
   end
 
-  it "imports costs for the contract" do
+  it "imports costs for the program" do
     headers = described_class::REQUIRED_HEADERS
-    rows = [headers, build_row(contract_code: "C-100")]
+    rows = [headers, build_row]
     sheet = FakeSheet.new(rows)
 
-    service = described_class.new(user: user, contract: contract, file: double("file"))
+    service = described_class.new(user: user, program: program, file: double("file"))
     allow(service).to receive(:load_sheet).and_return(sheet)
 
     result = service.call
 
     expect(result[:created]).to eq(1)
-    expect(ContractPeriod.count).to eq(1)
+    expect(CostEntry.count).to eq(1)
+    expect(CostEntry.first.program).to eq(program)
   end
 
-  it "raises when contract_code does not match the contract" do
+  it "rolls back when a row is invalid" do
     headers = described_class::REQUIRED_HEADERS
-    rows = [headers, build_row(contract_code: "OTHER")]
+    rows = [
+      headers,
+      build_row,
+      build_row(period_type: "quarter")
+    ]
     sheet = FakeSheet.new(rows)
 
-    service = described_class.new(user: user, contract: contract, file: double("file"))
+    service = described_class.new(user: user, program: program, file: double("file"))
     allow(service).to receive(:load_sheet).and_return(sheet)
 
-    expect { service.call }
-      .to raise_error("Row 2: contract_code must match C-100.")
+    result = service.call
+
+    expect(result[:created]).to eq(0)
+    expect(result[:errors].join(" ")).to include("period_type")
+    expect(CostEntry.count).to eq(0)
   end
 end

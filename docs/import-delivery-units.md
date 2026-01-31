@@ -1,7 +1,7 @@
 ---
 title: Importing delivery units
 summary: Load shipment data for delivery units including dates, quantities, and issues.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Imports
 ---
 
@@ -45,5 +45,5 @@ Include the following columns:
 
 ## Related guides
 
-- [Import costs](/docs/import-costs)
+- [Cost hub overview](/docs/cost-tracking)
 - [Import milestones](/docs/import-milestones)

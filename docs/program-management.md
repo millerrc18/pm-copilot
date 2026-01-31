@@ -1,7 +1,7 @@
 ---
 title: Program management
 summary: Create, edit, archive, and monitor programs across their lifecycle.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Program management
 ---
 
@@ -34,6 +34,7 @@ Programs are the top-level containers in PM Copilot. Use them to group contracts
 ## Review program performance
 
 Use the dashboard tiles to track revenue, cost, and delivery health. See [Dashboard metrics](/docs/dashboard-metrics) for definitions.
+For time-based cost analysis, use the [Cost Hub](/docs/cost-tracking).
 
 ## Connect contracts and imports
 

@@ -14,3 +14,8 @@
 - Tab through sidebar nav, buttons, and form inputs to confirm visible focus rings.
 - Validate focus rings are visible on accent-red buttons and ghost buttons.
 - Confirm focus is visible on mobile bottom navigation items.
+
+## Cost Hub checks
+- Import a sample cost file and confirm the success message shows created entries.
+- Verify the Cost Hub summary updates when filtering by date range and program.
+- Confirm average cost per unit shows zero when no units are delivered.

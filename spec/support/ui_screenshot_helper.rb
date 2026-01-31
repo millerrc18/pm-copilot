@@ -28,4 +28,11 @@ module UiScreenshotHelper
     path = dir.join("#{device_name}__#{state}.png")
     page.save_screenshot(path, full: true)
   end
+
+  def save_named_screenshot(page_name, filename)
+    dir = Rails.root.join("tmp", "screenshots", "ui", page_name)
+    FileUtils.mkdir_p(dir)
+    path = dir.join(filename)
+    page.save_screenshot(path, full: true)
+  end
 end

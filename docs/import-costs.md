@@ -1,13 +1,13 @@
 ---
 title: Importing costs
 summary: Upload cost data with required fields, supported formats, and validation tips.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Imports
 ---
 
 # Importing costs
 
-Cost imports let you track actuals and projections at the contract period level.
+Cost imports let you track labor and material spend that isn’t tied to a single contract.
 
 ## Supported file formats
 
@@ -18,32 +18,32 @@ Cost imports let you track actuals and projections at the contract period level.
 
 Include the following columns (case-insensitive):
 
-- `contract_code`
+- `period_type` (`week` or `month`)
 - `period_start_date`
-- `period_end_date`
-- `labor_cost`
 - `material_cost`
-- `overhead_cost`
+- `other_costs`
 
 ## Recommended fields
 
+- `hours_bam`, `hours_eng`, `hours_mfg_salary`, `hours_mfg_hourly`, `hours_touch`
+- `rate_bam`, `rate_eng`, `rate_mfg_salary`, `rate_mfg_hourly`, `rate_touch`
 - `notes`
-- `cost_category`
 
 ## Upload steps
 
-1. Open the contract and select **Import costs**.
-2. Choose your file and confirm the field mapping.
-3. Review the preview and submit.
-4. Resolve any validation errors before re-uploading.
+1. Open **Cost Hub** from the sidebar.
+2. Select **Import costs**.
+3. Choose your file, optionally select a program, and upload.
+4. Review any validation errors and re-upload if needed.
 
 ## Troubleshooting
 
-- **Missing contract**: Ensure the `contract_code` matches an existing contract exactly.
-- **Date errors**: Use ISO format (`YYYY-MM-DD`) for period dates.
-- **Negative costs**: Costs must be zero or greater.
+- **Date errors**: Use ISO format (`YYYY-MM-DD`) for `period_start_date`.
+- **Period type**: Only `week` or `month` are accepted.
+- **Negative costs**: Numeric values must be zero or greater.
 
 ## Related guides
 
+- [Cost tracking overview](/docs/cost-tracking)
 - [Import milestones](/docs/import-milestones)
 - [Import delivery units](/docs/import-delivery-units)

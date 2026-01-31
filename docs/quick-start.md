@@ -2,7 +2,7 @@
 title: Quick start
 theme: dark
 summary: Sign in, create your first program, add contracts, import delivery data, and review dashboards.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Quick start
 ---
 
@@ -37,7 +37,7 @@ Need more detail? Jump to the [Contract management guide](/docs/contract-managem
 
 PM Copilot supports three import types:
 
-- [Cost imports](/docs/import-costs)
+- [Cost imports](/docs/import-costs) (review in the [Cost Hub](/docs/cost-tracking))
 - [Milestone imports](/docs/import-milestones)
 - [Delivery unit imports](/docs/import-delivery-units)
 

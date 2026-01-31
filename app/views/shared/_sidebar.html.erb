@@ -34,7 +34,7 @@
   <div class="space-y-3">
     <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Imports</p>
     <nav class="space-y-2 sidebar-nav">
-      <%= render "shared/ui/nav_item", label: "Costs", url: programs_path, icon: "currency", active: false %>
+      <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: current_page?(cost_hub_path) %>
       <%= render "shared/ui/nav_item", label: "Milestones", url: programs_path, icon: "flag", active: false %>
       <%= render "shared/ui/nav_item", label: "Delivery units", url: programs_path, icon: "truck", active: false %>
     </nav>

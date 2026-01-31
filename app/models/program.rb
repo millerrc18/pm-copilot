@@ -21,6 +21,7 @@
 class Program < ApplicationRecord
   belongs_to :user
   has_many :contracts, dependent: :destroy
+  has_many :cost_entries, dependent: :nullify
   validates :name, presence: true
 
 end

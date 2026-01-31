@@ -1,26 +1,46 @@
 class CostImportsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_contract
+  before_action :set_program, only: [ :create ]
 
-  def new; end
+  def new
+    @programs = current_user.programs.order(:name)
+  end
 
   def create
+    @programs = current_user.programs.order(:name)
+    return if performed?
+
     if params[:file].blank?
-      redirect_to new_contract_cost_import_path(@contract), alert: "Please choose a file."
+      flash.now[:alert] = "Please choose a file."
+      render :new, status: :unprocessable_entity
       return
     end
 
-    result = CostImportService.new(user: current_user, contract: @contract, file: params[:file]).call
-    redirect_to contract_path(@contract),
-                notice: "Costs imported. Created: #{result[:created]}, updated: #{result[:updated]}."
-  rescue => e
-    redirect_to new_contract_cost_import_path(@contract), alert: "Import failed: #{e.message}"
+    result = CostImportService.new(user: current_user, program: @program, file: params[:file]).call
+
+    if result[:errors].any?
+      flash.now[:alert] = "Import failed: #{result[:errors].join(' ')}"
+      render :new, status: :unprocessable_entity
+    else
+      @import_result = result
+      flash.now[:notice] = "Costs imported. Created: #{result[:created]}."
+      render :new
+    end
+  rescue StandardError => e
+    flash.now[:alert] = "Import failed: #{e.message}"
+    render :new, status: :unprocessable_entity
   end
 
   private
 
-  def set_contract
-    @contract = Contract.find(params[:contract_id])
-    authorize_contract_owner!(@contract)
+  def set_program
+    return if params[:program_id].blank?
+
+    @program = current_user.programs.find_by(id: params[:program_id])
+    return if @program
+
+    @programs = current_user.programs.order(:name)
+    flash.now[:alert] = "Not authorized."
+    render :new, status: :forbidden
   end
 end

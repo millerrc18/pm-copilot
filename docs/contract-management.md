@@ -1,7 +1,7 @@
 ---
 title: Contract management
 summary: Add, update, and remove contracts, plus track delivery and revenue details.
-last_updated: 2025-02-14
+last_updated: 2026-01-31
 category: Contract management
 ---
 
@@ -14,7 +14,7 @@ Contracts represent the commercial scope of a program. Each contract contains de
 1. Open the related program.
 2. Select **Add contract**.
 3. Enter the contract code, start/end dates, fiscal year, and planned quantity.
-4. Save to unlock cost, milestone, and delivery unit imports.
+4. Save to unlock milestone and delivery unit imports.
 
 ## Edit contract information
 
@@ -38,4 +38,4 @@ Use the contract summary to monitor revenue, cost, and margin. Visit [Dashboard 
 ## Related guides
 
 - [Program management](/docs/program-management)
-- [Cost import guide](/docs/import-costs)
+- [Cost hub overview](/docs/cost-tracking)

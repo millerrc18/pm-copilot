@@ -10,7 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_21_121500) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_31_011601) do
+  create_table "cost_entries", force: :cascade do |t|
+    t.string "period_type", null: false
+    t.date "period_start_date", null: false
+    t.decimal "hours_bam", precision: 15, scale: 2
+    t.decimal "hours_eng", precision: 15, scale: 2
+    t.decimal "hours_mfg_salary", precision: 15, scale: 2
+    t.decimal "hours_mfg_hourly", precision: 15, scale: 2
+    t.decimal "hours_touch", precision: 15, scale: 2
+    t.decimal "rate_bam", precision: 15, scale: 2
+    t.decimal "rate_eng", precision: 15, scale: 2
+    t.decimal "rate_mfg_salary", precision: 15, scale: 2
+    t.decimal "rate_mfg_hourly", precision: 15, scale: 2
+    t.decimal "rate_touch", precision: 15, scale: 2
+    t.decimal "material_cost", precision: 15, scale: 2
+    t.decimal "other_costs", precision: 15, scale: 2
+    t.text "notes"
+    t.bigint "program_id"
+    t.bigint "import_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["import_id"], name: "index_cost_entries_on_import_id"
+    t.index ["period_start_date"], name: "index_cost_entries_on_period_start_date"
+    t.index ["program_id"], name: "index_cost_entries_on_program_id"
+  end
+
   create_table "contract_periods", force: :cascade do |t|
     t.bigint "contract_id", null: false
     t.date "period_start_date"
@@ -250,6 +275,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_21_121500) do
 
   add_foreign_key "contract_periods", "contracts"
   add_foreign_key "contracts", "programs"
+  add_foreign_key "cost_entries", "programs"
   add_foreign_key "delivery_milestones", "contracts"
   add_foreign_key "delivery_units", "contracts"
   add_foreign_key "programs", "users"
