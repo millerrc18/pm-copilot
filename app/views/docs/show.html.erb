@@ -1,0 +1,18 @@
+<% content_for :page_title, @doc.title %>
+<% content_for :page_subtitle, @doc.summary %>
+
+<div class="flex flex-wrap items-center gap-3 text-xs text-light-text/50">
+  <%= link_to "← Back to documentation", docs_path, class: "text-light-text/70 hover:text-light-text" %>
+  <span>•</span>
+  <span class="uppercase tracking-[0.2em]"><%= @doc.category %></span>
+  <% if @doc.last_updated_label.present? %>
+    <span>•</span>
+    <span>Updated <%= @doc.last_updated_label %></span>
+  <% end %>
+</div>
+
+<div class="mt-6 panel p-6">
+  <div class="docs-content">
+    <%= docs_sanitize(@doc.html) %>
+  </div>
+</div>

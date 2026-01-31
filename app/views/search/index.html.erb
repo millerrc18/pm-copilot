@@ -1,0 +1,66 @@
+<% content_for :page_title, "Search" %>
+<% content_for :page_subtitle, "Find programs, contracts, and documentation." %>
+
+<div class="panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold">Search the workspace</h2>
+      <p class="mt-1 text-sm text-light-text/60">Type a keyword to match programs, contracts, and documentation guides.</p>
+    </div>
+    <div class="w-full md:w-80">
+      <%= render "shared/ui/input", placeholder: "Search programs & docs", form_action: search_path, value: @query %>
+    </div>
+  </div>
+</div>
+
+<% if @query.present? %>
+  <div class="mt-6 grid gap-6 lg:grid-cols-3">
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Programs</h3>
+      <% if @programs.any? %>
+        <ul class="mt-3 space-y-2 text-sm">
+          <% @programs.each do |program| %>
+            <li>
+              <%= link_to program.name, program_path(program), class: "text-light-text/80 hover:text-light-text" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="mt-3 text-sm text-light-text/50">No program matches.</p>
+      <% end %>
+    </div>
+
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Contracts</h3>
+      <% if @contracts.any? %>
+        <ul class="mt-3 space-y-2 text-sm">
+          <% @contracts.each do |contract| %>
+            <li>
+              <%= link_to contract.contract_code, contract_path(contract), class: "text-light-text/80 hover:text-light-text" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="mt-3 text-sm text-light-text/50">No contract matches.</p>
+      <% end %>
+    </div>
+
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Documentation</h3>
+      <% if @docs.any? %>
+        <ul class="mt-3 space-y-2 text-sm">
+          <% @docs.each do |doc| %>
+            <li>
+              <%= link_to doc.title, doc_path(doc.slug), class: "text-light-text/80 hover:text-light-text" %>
+              <p class="text-xs text-light-text/50"><%= doc.summary %></p>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="mt-3 text-sm text-light-text/50">No docs matched.</p>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <p class="mt-6 text-sm text-light-text/60">Start by searching for a keyword like "contract" or "imports".</p>
+<% end %>

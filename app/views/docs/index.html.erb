@@ -1,0 +1,64 @@
+<% content_for :page_title, "Documentation" %>
+<% content_for :page_subtitle, "Guides, tutorials, and answers for every PM Copilot workflow." %>
+
+<div class="panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold">Find a guide fast</h2>
+      <p class="mt-1 text-sm text-light-text/60">Search the documentation library for topics, workflows, and troubleshooting tips.</p>
+    </div>
+    <div class="w-full md:w-80">
+      <%= render "shared/ui/input", placeholder: "Search documentation", form_action: docs_path, value: @query %>
+    </div>
+  </div>
+  <div class="mt-4 text-xs text-light-text/50">
+    Looking for program data too? Use the global search in the top bar to include documentation results.
+  </div>
+</div>
+
+<% if @query.present? %>
+  <div class="mt-6 panel p-6">
+    <h3 class="text-base font-semibold">Results for "<%= @query %>"</h3>
+    <% if @results.any? %>
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <% @results.each do |doc| %>
+          <%= link_to doc_path(doc.slug), class: "panel-border bg-white/5 p-4 transition hover:border-white/30" do %>
+            <p class="text-sm font-semibold"><%= doc.title %></p>
+            <p class="mt-1 text-xs text-light-text/60"><%= doc.summary %></p>
+            <% if doc.last_updated_label.present? %>
+              <p class="mt-2 text-[11px] text-light-text/40">Updated <%= doc.last_updated_label %></p>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="mt-3 text-sm text-light-text/60">No docs matched that search. Try a shorter keyword like "contracts" or "imports".</p>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="mt-8 grid gap-6">
+  <% @sections.each do |category, docs| %>
+    <div class="panel p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold"><%= category %></h3>
+          <p class="text-sm text-light-text/60">Browse guides and playbooks for <%= category.downcase %>.</p>
+        </div>
+        <span class="text-xs text-light-text/50"><%= pluralize(docs.count, "guide") %></span>
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <% docs.each do |doc| %>
+          <%= link_to doc_path(doc.slug), class: "panel-border bg-white/5 p-4 transition hover:border-white/30" do %>
+            <p class="text-sm font-semibold"><%= doc.title %></p>
+            <p class="mt-1 text-xs text-light-text/60"><%= doc.summary %></p>
+            <% if doc.last_updated_label.present? %>
+              <p class="mt-2 text-[11px] text-light-text/40">Updated <%= doc.last_updated_label %></p>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

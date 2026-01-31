@@ -6,7 +6,9 @@ Rails.application.routes.draw do
     resources :users, only: [:index]
   end
 
-  get "docs", to: "dashboards#docs"
+  get "docs", to: "docs#index"
+  get "docs/:slug", to: "docs#show", as: :doc
+  get "search", to: "search#index"
 
   resources :programs do
     resources :contracts, shallow: true do

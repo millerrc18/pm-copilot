@@ -1,16 +1,41 @@
-<div class="relative flex items-center">
-  <svg class="icon-sm absolute left-3 text-light-text/50" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.1-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
-  </svg>
-  <input
-    type="text"
-    placeholder="<%= local_assigns[:placeholder] || "Search..." %>"
-    aria-label="Search"
-    class="w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
-  />
-  <% if local_assigns[:hotkey].present? %>
-    <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50">
-      <%= local_assigns[:hotkey] %>
-    </span>
+<% input_name = local_assigns[:name] || "q" %>
+<% input_value = local_assigns[:value] %>
+<% wrapper_class = "relative flex items-center" %>
+<% if local_assigns[:form_action].present? %>
+  <%= form_with url: local_assigns[:form_action], method: :get, class: wrapper_class, local: true do |form| %>
+    <svg class="icon-sm absolute left-3 text-light-text/50" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.1-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+    </svg>
+    <%= form.text_field input_name,
+      value: input_value,
+      type: "text",
+      placeholder: local_assigns[:placeholder] || "Search...",
+      aria: { label: "Search" },
+      class: "w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
+    %>
+    <% if local_assigns[:hotkey].present? %>
+      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50">
+        <%= local_assigns[:hotkey] %>
+      </span>
+    <% end %>
   <% end %>
-</div>
+<% else %>
+  <div class="<%= wrapper_class %>">
+    <svg class="icon-sm absolute left-3 text-light-text/50" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.1-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
+    </svg>
+    <input
+      type="text"
+      name="<%= input_name %>"
+      value="<%= input_value %>"
+      placeholder="<%= local_assigns[:placeholder] || "Search..." %>"
+      aria-label="Search"
+      class="w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
+    />
+    <% if local_assigns[:hotkey].present? %>
+      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-light-text/50">
+        <%= local_assigns[:hotkey] %>
+      </span>
+    <% end %>
+  </div>
+<% end %>
