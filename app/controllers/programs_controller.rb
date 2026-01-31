@@ -1,6 +1,7 @@
 class ProgramsController < ApplicationController
   def index
     @programs = current_user.programs.order(:name)
+    @portfolio_metrics = portfolio_metrics
   end
 
   def show
@@ -27,7 +28,7 @@ class ProgramsController < ApplicationController
   end
 
   def update
-  @program = current_user.programs.find(params[:id])
+    @program = current_user.programs.find(params[:id])
 
     if @program.update(program_params)
       redirect_to @program, notice: "Program was successfully updated."
@@ -46,5 +47,31 @@ class ProgramsController < ApplicationController
 
   def program_params
     params.require(:program).permit(:name, :customer, :description)
+  end
+
+  def portfolio_metrics
+    today = Date.current
+    contracts = Contract.joins(:program)
+      .where(programs: { user_id: current_user.id })
+      .includes(:delivery_units)
+
+    milestones = DeliveryMilestone.joins(contract: :program)
+      .where(programs: { user_id: current_user.id })
+
+    at_risk = contracts.count do |contract|
+      contract.end_date.present? &&
+        contract.end_date < today &&
+        contract.planned_quantity.to_i > contract.delivery_units.count
+    end
+
+    total_milestones = milestones.count
+    on_time = total_milestones.zero? ? 0 : milestones.where("due_date >= ?", today).count
+    on_time_rate = total_milestones.zero? ? 0 : ((on_time.to_f / total_milestones) * 100).round
+
+    {
+      active_programs: @programs.count,
+      contracts_at_risk: at_risk,
+      on_time_delivery: on_time_rate
+    }
   end
 end

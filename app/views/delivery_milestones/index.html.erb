@@ -1,0 +1,51 @@
+<% content_for :page_title, "Milestones" %>
+<% content_for :page_subtitle, "Track delivery milestones across programs and contracts." %>
+<% content_for :toolbar do %>
+  <%= render "shared/ui/button", label: "New milestone", variant: "primary", url: new_delivery_milestone_path %>
+<% end %>
+
+<div class="panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-base font-semibold">Milestone register</h2>
+      <p class="mt-1 text-sm text-light-text/60">Review upcoming dates and delivery commitments.</p>
+    </div>
+  </div>
+
+  <div class="mt-4 overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
+        <tr>
+          <th class="pb-3">Program</th>
+          <th class="pb-3">Contract</th>
+          <th class="pb-3">Milestone</th>
+          <th class="pb-3">Due date</th>
+          <th class="pb-3">Quantity due</th>
+          <th class="pb-3">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5">
+        <% if @milestones.any? %>
+          <% today = Date.current %>
+          <% @milestones.each do |milestone| %>
+            <% status = milestone.due_date.present? && milestone.due_date < today ? "Past due" : "Not completed" %>
+            <tr>
+              <td class="py-3"><%= milestone.contract.program.name %></td>
+              <td class="py-3"><%= milestone.contract.contract_code %></td>
+              <td class="py-3 font-semibold"><%= milestone.milestone_ref %></td>
+              <td class="py-3"><%= milestone.due_date %></td>
+              <td class="py-3"><%= milestone.quantity_due.to_i %></td>
+              <td class="py-3">
+                <span class="rounded-full border border-white/10 px-3 py-1 text-xs"><%= status %></span>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="6" class="py-6 text-center text-sm text-light-text/60">No milestones added yet.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

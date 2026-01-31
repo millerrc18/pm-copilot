@@ -30,8 +30,12 @@
       </div>
     <% end %>
 
-    <div class="text-sm text-light-text/60">
+    <div class="text-sm text-light-text/60 space-y-3">
       <%= render "devise/shared/links" %>
+      <p>
+        New to PM Copilot?
+        <%= link_to "Sign up", new_user_registration_path, class: "text-accent-red hover:text-accent-red/80" %>
+      </p>
     </div>
   </div>
 </div>

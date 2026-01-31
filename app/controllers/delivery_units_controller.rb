@@ -1,17 +1,29 @@
 class DeliveryUnitsController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :set_contract, only: %i[index new create]
+  before_action :set_contract, only: %i[index new create], if: -> { params[:contract_id].present? }
   before_action :set_delivery_unit, only: %i[show edit update destroy]
 
   def index
-    @units = @contract.delivery_units.order(:ship_date, :unit_serial)
+    @units = if @contract
+      @contract.delivery_units.order(:ship_date, :unit_serial)
+    else
+      DeliveryUnit.joins(contract: :program)
+        .where(programs: { user_id: current_user.id })
+        .includes(contract: :program)
+        .order("programs.name asc, contracts.contract_code asc, delivery_units.ship_date asc")
+    end
   end
 
   def show
   end
 
   def new
+    unless @contract
+      @contracts = current_user.programs.includes(:contracts).flat_map(&:contracts)
+      return render :new_select
+    end
+
     @delivery_unit = @contract.delivery_units.build
   end
 

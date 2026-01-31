@@ -1,24 +1,57 @@
 <% content_for :page_title, "Contracts" %>
 <% content_for :page_subtitle, "Review contract coverage across all programs." %>
 
-<div class="space-y-6">
-  <% @contracts.each do |contract| %>
-    <div class="panel p-6">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p class="text-xs uppercase tracking-[0.2em] text-light-text/50"><%= contract.program.name %></p>
-          <h2 class="mt-2 text-lg font-semibold"><%= contract.contract_code %></h2>
-          <p class="mt-2 text-sm text-light-text/60">
-            <%= contract.start_date %> → <%= contract.end_date %> · <%= number_to_currency(contract.sell_price_per_unit) %> per unit
-          </p>
-        </div>
-        <div class="flex gap-2">
-          <%= render "shared/ui/button", label: "View", variant: "ghost", url: contract_path(contract) %>
-          <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_contract_path(contract) %>
-        </div>
-      </div>
+<div class="panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-base font-semibold">All contracts</h2>
+      <p class="mt-1 text-sm text-light-text/60">Track contract health, program context, and timelines.</p>
     </div>
-  <% end %>
+    <%= render "shared/ui/button", label: "Add contract", variant: "ghost", url: programs_path %>
+  </div>
 
-  <%= link_to "Back to Programs", programs_path, class: "inline-flex items-center text-sm text-light-text/60 hover:text-light-text focus-ring" %>
+  <div class="mt-4 overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
+        <tr>
+          <th class="pb-3">Contract</th>
+          <th class="pb-3">Program</th>
+          <th class="pb-3">Status</th>
+          <th class="pb-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5">
+        <% if @contracts.any? %>
+          <% today = Date.current %>
+          <% @contracts.each do |contract| %>
+            <% status =
+              if contract.end_date < today
+                "Completed"
+              elsif contract.start_date > today
+                "Upcoming"
+              else
+                "Active"
+              end %>
+            <tr>
+              <td class="py-3 font-semibold"><%= contract.contract_code %></td>
+              <td class="py-3"><%= contract.program.name %></td>
+              <td class="py-3">
+                <span class="rounded-full border border-white/10 px-3 py-1 text-xs"><%= status %></span>
+              </td>
+              <td class="py-3">
+                <div class="flex flex-wrap gap-2">
+                  <%= link_to "View", contract_path(contract), class: "text-accent-red hover:text-accent-red/80" %>
+                  <%= link_to "Edit", edit_contract_path(contract), class: "text-light-text/70 hover:text-light-text" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="py-6 text-center text-sm text-light-text/60">No contracts found yet.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

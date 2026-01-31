@@ -1,11 +1,17 @@
 class ContractsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_program, only: [:index, :new, :create]
+  before_action :set_program, only: [:index, :new, :create], if: -> { params[:program_id].present? }
   before_action :set_contract, only: [:show, :edit, :update, :destroy]
 
   def index
-    # Nested index: /programs/:program_id/contracts
-    @contracts = @program.contracts.order(fiscal_year: :desc, contract_code: :asc)
+    @contracts = if @program
+      @program.contracts.order(fiscal_year: :desc, contract_code: :asc)
+    else
+      Contract.joins(:program)
+        .where(programs: { user_id: current_user.id })
+        .includes(:program)
+        .order("programs.name asc, contracts.contract_code asc")
+    end
   end
 
   def show

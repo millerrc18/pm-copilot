@@ -35,33 +35,79 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
       sell_price_per_unit: 100,
       planned_quantity: 20
     )
-    CostEntry.create!(
-      program: program,
-      period_type: "week",
-      period_start_date: Date.new(2024, 1, 5),
-      material_cost: 100,
-      other_costs: 20
-    )
-    CostEntry.create!(
-      program: program,
-      period_type: "week",
-      period_start_date: Date.new(2024, 1, 12),
-      material_cost: 80,
-      other_costs: 10
-    )
+    3.times do |index|
+      DeliveryUnit.create!(
+        contract: contract,
+        unit_serial: "AUR-#{index + 1}",
+        ship_date: Date.new(2024, 1, 10 + index)
+      )
+    end
+
+    auth_viewports = {
+      "iphone_15_pro" => [ 393, 852 ],
+      "desktop" => [ 1440, 900 ]
+    }
+
+    auth_viewports.each do |device_name, (width, height)|
+      set_viewport(width, height)
+      visit new_user_session_path
+      save_ui_screenshot("sign_in", device_name, "view")
+
+      visit new_user_registration_path
+      save_ui_screenshot("sign_up", device_name, "view")
+    end
 
     visit new_user_session_path
     fill_in "Email", with: user.email
     fill_in "Password", with: "password"
     click_button "Sign in"
 
+    visit new_cost_import_path
+    select program.name, from: "Program (optional)"
+    attach_file "Excel file", Rails.root.join("spec/fixtures/files/costs_import.xlsx")
+    click_button "Import"
+    expect(page).to have_content("Costs imported")
+
+    user_menu_viewports = {
+      "iphone_15_pro" => [ 393, 852 ],
+      "desktop" => [ 1440, 900 ]
+    }
+
+    user_menu_viewports.each do |device_name, (width, height)|
+      set_viewport(width, height)
+      visit programs_path
+
+      if width < 768
+        open_sidebar
+      end
+
+      open_user_menu(user.email)
+      save_ui_screenshot("user_menu", device_name, "open")
+    end
+
     pages = {
       "programs_index" => programs_path,
       "programs_show" => program_path(program),
       "contracts_show" => contract_path(contract),
+      "contracts_index" => contracts_path,
+      "milestones_index" => delivery_milestones_path,
+      "delivery_units_index" => delivery_units_path,
+      "proposals_index" => proposals_path,
+      "proposals_new" => new_proposal_path,
+      "profile" => profile_path,
       "imports_new" => new_cost_import_path,
       "cost_hub" => cost_hub_path,
-      "docs_dashboard" => docs_path
+      "docs_dashboard" => docs_path,
+      "docs_quick_start" => doc_path("quick-start"),
+      "docs_program_templates" => doc_path("program-templates"),
+      "docs_ai_summaries" => doc_path("ai-summaries"),
+      "docs_risk_tracker" => doc_path("risk-tracker"),
+      "docs_portfolio_analytics" => doc_path("portfolio-analytics"),
+      "docs_integrations" => doc_path("integrations"),
+      "docs_risk_opportunities" => doc_path("risk-opportunities"),
+      "docs_planning_hub" => doc_path("planning-hub"),
+      "docs_proposals" => doc_path("proposals"),
+      "docs_documentation_hub" => doc_path("documentation-hub")
     }
 
     pages.each do |page_name, path|
@@ -124,6 +170,10 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
 
   def open_sidebar
     find('button[aria-label="Open menu"]', visible: :all).click
+  end
+
+  def open_user_menu(email)
+    find("summary", text: email, visible: :all).click
   end
 
   def close_sidebar

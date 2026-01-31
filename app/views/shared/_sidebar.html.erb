@@ -25,31 +25,43 @@
   <div class="space-y-3">
     <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Workspace</p>
     <nav class="space-y-2 sidebar-nav">
-      <%= render "shared/ui/nav_item", label: "Programs", url: programs_path, icon: "folder", active: current_page?(programs_path) %>
-      <%= render "shared/ui/nav_item", label: "Docs", url: docs_path, icon: "document", active: current_page?(docs_path) %>
-      <%= render "shared/ui/nav_item", label: "Contracts", url: programs_path, icon: "receipt", active: false %>
+      <%= render "shared/ui/nav_item", label: "Programs", url: programs_path, icon: "folder", active: controller_name == "programs" %>
+      <%= render "shared/ui/nav_item", label: "Docs", url: docs_path, icon: "document", active: request.path.start_with?(docs_path) %>
+      <%= render "shared/ui/nav_item", label: "Contracts", url: contracts_path, icon: "receipt", active: controller_name == "contracts" %>
     </nav>
   </div>
 
   <div class="space-y-3">
     <p class="text-xs uppercase tracking-[0.2em] text-light-text/40">Imports</p>
     <nav class="space-y-2 sidebar-nav">
-      <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: current_page?(cost_hub_path) %>
-      <%= render "shared/ui/nav_item", label: "Milestones", url: programs_path, icon: "flag", active: false %>
-      <%= render "shared/ui/nav_item", label: "Delivery units", url: programs_path, icon: "truck", active: false %>
+      <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: %w[cost_entries cost_imports].include?(controller_name) %>
+      <%= render "shared/ui/nav_item", label: "Milestones", url: delivery_milestones_path, icon: "flag", active: controller_name == "delivery_milestones" %>
+      <%= render "shared/ui/nav_item", label: "Delivery units", url: delivery_units_path, icon: "truck", active: controller_name == "delivery_units" %>
     </nav>
   </div>
 
   <div class="mt-auto space-y-4">
-    <div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3">
-      <div class="h-10 w-10 rounded-full bg-white/10"></div>
-      <div class="flex-1">
-        <p class="text-sm font-semibold"><%= current_user.first_name.presence || "Account" %></p>
-        <p class="text-xs text-light-text/50"><%= current_user.email %></p>
+    <details class="relative group">
+      <summary class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 text-left cursor-pointer focus-ring list-none" aria-label="Account menu">
+        <div class="h-10 w-10 rounded-full bg-white/10"></div>
+        <div class="flex-1">
+          <p class="text-sm font-semibold"><%= current_user.first_name.presence || "Account" %></p>
+          <p class="text-xs text-light-text/50"><%= current_user.email %></p>
+        </div>
+        <svg class="icon-sm text-light-text/50 transition group-open:rotate-180" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+        </svg>
+      </summary>
+      <div class="absolute bottom-full left-0 right-0 mb-3 rounded-2xl border border-white/10 bg-dark-panel-strong p-3 shadow-lg">
+        <div class="space-y-2 text-sm">
+          <%= link_to "Profile", profile_path, class: "flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-light-text/80 hover:text-light-text hover:bg-white/10 focus-ring" %>
+          <%= button_to "Sign out",
+                        destroy_user_session_path,
+                        method: :delete,
+                        form_class: "w-full",
+                        class: "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-left text-sm text-light-text/80 hover:text-light-text hover:bg-white/10 focus-ring" %>
+        </div>
       </div>
-      <svg class="icon-sm text-light-text/50" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
-      </svg>
-    </div>
+    </details>
   </div>
 </aside>

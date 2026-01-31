@@ -1,0 +1,24 @@
+<% content_for :page_title, "New milestone" %>
+<% content_for :page_subtitle, "Choose a contract to add a delivery milestone." %>
+
+<div class="panel p-6">
+  <h2 class="text-base font-semibold">Select a contract</h2>
+  <p class="mt-1 text-sm text-light-text/60">Milestones must belong to a specific contract.</p>
+
+  <div class="mt-4 space-y-3">
+    <% if @contracts.any? %>
+      <% @contracts.each do |contract| %>
+        <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+          <div>
+            <p class="text-xs uppercase tracking-[0.2em] text-light-text/50"><%= contract.program.name %></p>
+            <p class="mt-1 font-semibold"><%= contract.contract_code %></p>
+          </div>
+          <%= link_to "Add milestone", new_contract_delivery_milestone_path(contract), class: "text-accent-red hover:text-accent-red/80" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-sm text-light-text/60">Create a contract first to add milestones.</p>
+      <%= link_to "Go to programs", programs_path, class: "mt-3 inline-flex text-accent-red hover:text-accent-red/80" %>
+    <% end %>
+  </div>
+</div>

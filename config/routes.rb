@@ -6,9 +6,17 @@ Rails.application.routes.draw do
     resources :users, only: [:index]
   end
 
+  get "profile", to: "users#profile"
+  get "account", to: "users#profile"
+
   get "docs", to: "docs#index"
   get "docs/:slug", to: "docs#show", as: :doc
   get "search", to: "search#index"
+
+  resources :contracts, only: [:index]
+  resources :delivery_milestones, only: [:index, :new]
+  resources :delivery_units, only: [:index, :new]
+  resources :proposals, only: [:index, :new]
 
   resources :programs do
     resources :contracts, shallow: true do

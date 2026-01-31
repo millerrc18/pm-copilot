@@ -23,7 +23,7 @@
 - bundle exec brakeman
 - bundle exec bundler-audit check --update
 - bundle exec rspec
-- bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/navigation_spec.rb
+- bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb
 - bin/ui-screenshots
 
 ## UI screenshots (required for UI work)

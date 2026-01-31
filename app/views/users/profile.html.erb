@@ -1,0 +1,34 @@
+<% content_for :page_title, "Profile & account" %>
+<% content_for :page_subtitle, "Review your account details and workspace preferences." %>
+
+<div class="grid gap-6 lg:grid-cols-2">
+  <div class="panel p-6">
+    <h2 class="text-base font-semibold">Account details</h2>
+    <p class="mt-1 text-sm text-light-text/60">These details are tied to your PM Copilot login.</p>
+    <div class="mt-4 space-y-3 text-sm">
+      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <span class="text-light-text/60">Email</span>
+        <span class="font-semibold"><%= @user.email %></span>
+      </div>
+      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <span class="text-light-text/60">Display name</span>
+        <span class="font-semibold"><%= @user.first_name.presence || "Account" %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel p-6">
+    <h2 class="text-base font-semibold">Theme preferences</h2>
+    <p class="mt-1 text-sm text-light-text/60">Personalize how dashboards and reports appear.</p>
+    <div class="mt-4 space-y-3 text-sm">
+      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <span class="text-light-text/60">Theme</span>
+        <span class="font-semibold capitalize"><%= @user.theme.presence || "dark" %></span>
+      </div>
+      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <span class="text-light-text/60">Palette</span>
+        <span class="font-semibold capitalize"><%= @user.palette.presence || "red" %></span>
+      </div>
+    </div>
+  </div>
+</div>

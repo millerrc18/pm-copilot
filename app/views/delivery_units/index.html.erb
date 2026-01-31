@@ -1,0 +1,45 @@
+<% content_for :page_title, "Delivery units" %>
+<% content_for :page_subtitle, "Review shipped units across programs and contracts." %>
+<% content_for :toolbar do %>
+  <%= render "shared/ui/button", label: "Add unit", variant: "primary", url: new_delivery_unit_path %>
+<% end %>
+
+<div class="panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-base font-semibold">Delivered units</h2>
+      <p class="mt-1 text-sm text-light-text/60">Track serials, ship dates, and notes.</p>
+    </div>
+  </div>
+
+  <div class="mt-4 overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
+        <tr>
+          <th class="pb-3">Program</th>
+          <th class="pb-3">Contract</th>
+          <th class="pb-3">Unit serial</th>
+          <th class="pb-3">Shipped at</th>
+          <th class="pb-3">Notes</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5">
+        <% if @units.any? %>
+          <% @units.each do |unit| %>
+            <tr>
+              <td class="py-3"><%= unit.contract.program.name %></td>
+              <td class="py-3"><%= unit.contract.contract_code %></td>
+              <td class="py-3 font-semibold"><%= unit.unit_serial %></td>
+              <td class="py-3"><%= unit.ship_date %></td>
+              <td class="py-3 text-light-text/60"><%= unit.notes.presence || "—" %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="py-6 text-center text-sm text-light-text/60">No delivery units logged yet.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

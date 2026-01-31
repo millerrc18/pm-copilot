@@ -1,11 +1,17 @@
 class DeliveryMilestonesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_contract, only: [:index, :new, :create]
+  before_action :set_contract, only: [:index, :new, :create], if: -> { params[:contract_id].present? }
   before_action :set_delivery_milestone, only: [:show, :edit, :update, :destroy]
 
   def index
-    # You already show milestones on contract show, so just send them there
-    redirect_to contract_path(@contract)
+    @milestones = if @contract
+      @contract.delivery_milestones.order(:due_date)
+    else
+      DeliveryMilestone.joins(contract: :program)
+        .where(programs: { user_id: current_user.id })
+        .includes(contract: :program)
+        .order("programs.name asc, contracts.contract_code asc, delivery_milestones.due_date asc")
+    end
   end
 
   def show
@@ -14,6 +20,11 @@ class DeliveryMilestonesController < ApplicationController
   end
 
   def new
+    unless @contract
+      @contracts = current_user.programs.includes(:contracts).flat_map(&:contracts)
+      return render :new_select
+    end
+
     @delivery_milestone = @contract.delivery_milestones.build
   end
 
