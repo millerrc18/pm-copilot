@@ -9,14 +9,22 @@ class MilestoneImportService
     amendment_code amendment_effective_date amendment_notes
   ].freeze
 
-  def initialize(user:, contract:, file:)
+  def initialize(user:, program:, file:)
     @user = user
-    @contract = contract
+    @program = program
     @file = file
   end
 
   def call
-    authorize!
+    errors = []
+
+    if @program.nil?
+      return { created: 0, updated: 0, errors: [ "Program is required for milestone imports." ] }
+    end
+
+    if @program.user_id != @user.id
+      return { created: 0, updated: 0, errors: [ "Not authorized to import milestones for this program." ] }
+    end
 
     sheet = load_sheet(@file)
     headers = normalize_headers(sheet.row(1))
@@ -40,22 +48,34 @@ class MilestoneImportService
         amendment_effective_date = parse_date(cell(row, index["amendment_effective_date"]))
         amendment_notes = cell(row, index["amendment_notes"]).to_s.strip
 
-        validate_contract_code!(contract_code, row_num)
+        if contract_code.empty?
+          errors << "Row #{row_num}: contract_code is required."
+          next
+        end
+
+        contract = @program.contracts.find_by(contract_code: contract_code)
+        if contract.nil?
+          errors << "Row #{row_num}: contract_code '#{contract_code}' not found for the selected program."
+          next
+        end
 
         if milestone_ref.empty?
-          raise "Row #{row_num}: milestone_ref is required (stable ID like FY25-JAN)."
+          errors << "Row #{row_num}: milestone_ref is required (stable ID like FY25-JAN)."
+          next
         end
 
         if promise_date.nil?
-          raise "Row #{row_num}: promise_date is required."
+          errors << "Row #{row_num}: promise_date is required."
+          next
         end
 
         if quantity_due <= 0
-          raise "Row #{row_num}: quantity_due must be > 0."
+          errors << "Row #{row_num}: quantity_due must be > 0."
+          next
         end
 
         record = DeliveryMilestone.find_or_initialize_by(
-          contract_id: @contract.id,
+          contract_id: contract.id,
           milestone_ref: milestone_ref
         )
         was_new = record.new_record?
@@ -68,22 +88,23 @@ class MilestoneImportService
         record.amendment_effective_date = amendment_effective_date if record.respond_to?(:amendment_effective_date=)
         record.amendment_notes = amendment_notes if record.respond_to?(:amendment_notes=)
 
-        record.save!
-
-        was_new ? created += 1 : updated += 1
+        if record.valid?
+          record.save!
+          was_new ? created += 1 : updated += 1
+        else
+          errors << "Row #{row_num}: #{record.errors.full_messages.to_sentence}."
+        end
+      rescue StandardError => e
+        errors << "Row #{row_num}: #{e.message}."
       end
+
+      raise ActiveRecord::Rollback if errors.any?
     end
 
-    { created: created, updated: updated }
+    { created: errors.any? ? 0 : created, updated: errors.any? ? 0 : updated, errors: errors }
   end
 
   private
-
-  def authorize!
-    unless @contract.program.user_id == @user.id
-      raise "Not authorized for this contract."
-    end
-  end
 
   def load_sheet(file)
     path = file.respond_to?(:tempfile) ? file.tempfile.path : file.path
@@ -126,12 +147,5 @@ class MilestoneImportService
     Integer(v)
   rescue ArgumentError, TypeError
     raise "Invalid integer: #{v}"
-  end
-
-  def validate_contract_code!(contract_code, row_num)
-    return if contract_code.empty?
-    return if contract_code == @contract.contract_code
-
-    raise "Row #{row_num}: contract_code '#{contract_code}' does not match this contract (#{@contract.contract_code})."
   end
 end

@@ -124,6 +124,25 @@ This is a living document that tracks product improvements and refinements acros
   - Screenshots of forms from bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-009 Unified Imports Hub
+
+- **Status**: Done
+- **Why**: Imports were scattered across multiple pages and required contract specific entry points.
+- **Approach**:
+  - Add a single Imports Hub with tabs for costs, milestones, and delivery units.
+  - Generate XLSX templates dynamically and show row level validation feedback.
+  - Scope milestone and unit imports to the selected program via contract codes.
+- **Acceptance criteria**:
+  - Imports Hub renders tabbed sections with program selection.
+  - Template downloads return valid XLSX files with required headers.
+  - Invalid rows are reported and no partial records are created.
+- **Evidence**:
+  - bundle exec rspec.
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - Playwright screenshot browser:/tmp/codex_browser_invocations/3b002a5e598312fe/artifacts/artifacts/imports-hub-costs.png.
+  - bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Proposed
@@ -158,3 +177,4 @@ This is a living document that tracks product improvements and refinements acros
 - IMP-004 Cost Hub visualizations. Evidence in cost hub system spec, screenshots pending due to missing Chrome.
 - IMP-005 Contract visualizations. Evidence in contract charts system spec, screenshots pending due to missing Chrome.
 - IMP-006 Dark theme form control readability. Evidence in cost import system spec, screenshots pending due to missing Chrome.
+- IMP-009 Unified Imports Hub. Evidence in request and system specs, screenshots pending due to missing Chrome.

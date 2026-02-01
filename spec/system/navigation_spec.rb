@@ -9,36 +9,31 @@ RSpec.describe "Navigation", type: :system do
     visit new_user_session_path
     expect(page).to have_no_link("Cost Hub")
 
-    user = User.create!(email: "nav@example.com", password: "password")
+    user = create_ui_user(suffix: "nav")
     Program.create!(name: "Navigation Program", user: user)
 
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     expect(page).to have_link("Cost Hub")
   end
 
   it "groups workspace and knowledge center links in the sidebar" do
-    user = User.create!(email: "nav-groups@example.com", password: "password")
+    user = create_ui_user(suffix: "nav-groups")
     Program.create!(name: "Navigation Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     within("[data-testid='sidebar-group-workspace']") do
       expect(page).to have_link("Programs")
       expect(page).to have_link("Cost Hub")
       expect(page).to have_link("Contracts")
-      expect(page).to have_no_link("Cost Imports")
+      expect(page).to have_no_link("Imports Hub")
       expect(page).to have_no_link("Knowledge Center")
     end
 
     within("[data-testid='sidebar-group-imports']") do
       expect(page).to have_text("Imports")
-      expect(page).to have_link("Cost Imports")
+      expect(page).to have_link("Imports Hub")
     end
 
     within("[data-testid='sidebar-group-registers']") do

@@ -6,7 +6,7 @@ RSpec.describe "Form defaults", type: :system do
   end
 
   it "renders blank fields for new contracts" do
-    user = User.create!(email: "contract-defaults@example.com", password: "password")
+    user = create_ui_user(suffix: "contract-defaults")
     program = Program.create!(name: "Defaults Program", user: user)
 
     sign_in(user)
@@ -22,7 +22,7 @@ RSpec.describe "Form defaults", type: :system do
   end
 
   it "renders blank fields for new milestones and returns on cancel" do
-    user = User.create!(email: "milestone-defaults@example.com", password: "password")
+    user = create_ui_user(suffix: "milestone-defaults")
     program = Program.create!(name: "Milestone Defaults", user: user)
     contract = Contract.create!(
       program: program,
@@ -49,7 +49,7 @@ RSpec.describe "Form defaults", type: :system do
   end
 
   it "renders blank fields for new cost periods" do
-    user = User.create!(email: "period-defaults@example.com", password: "password")
+    user = create_ui_user(suffix: "period-defaults")
     program = Program.create!(name: "Period Defaults", user: user)
     contract = Contract.create!(
       program: program,
@@ -75,9 +75,6 @@ RSpec.describe "Form defaults", type: :system do
   end
 
   def sign_in(user)
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
   end
 end

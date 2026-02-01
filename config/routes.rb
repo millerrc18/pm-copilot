@@ -23,16 +23,19 @@ Rails.application.routes.draw do
       resources :contract_periods, shallow: true
       resources :delivery_milestones
       resources :delivery_units
-      resources :delivery_unit_imports, only: [:new, :create]
-      resources :milestone_imports, only: [:new, :create]
     end
   end
+
+  get "imports", to: "imports_hub#show", as: :imports_hub
+  get "imports/templates/:template", to: "import_templates#show", as: :import_template
 
   get "cost-hub", to: "cost_entries#index", as: :cost_hub
   resources :cost_entries, only: [:index, :new, :create, :edit, :update, :destroy] do
     get :duplicate, on: :member
   end
   resources :cost_imports, only: [:new, :create]
+  resources :milestone_imports, only: [:new, :create]
+  resources :delivery_unit_imports, only: [:new, :create]
 
   root "programs#index"
 end

@@ -1,0 +1,28 @@
+<% content_for :page_title, "Imports Hub" %>
+<% content_for :page_subtitle, "Download templates and upload costs, milestones, and delivery units." %>
+
+<div class="panel space-y-6 p-6">
+  <div class="flex flex-wrap gap-3">
+    <% tabs = {
+      "costs" => "Costs",
+      "milestones" => "Milestones",
+      "delivery_units" => "Delivery units"
+    } %>
+    <% tabs.each do |tab_key, label| %>
+      <% active = @active_tab == tab_key %>
+      <%= link_to label,
+                  imports_hub_path(tab: tab_key, program_id: @selected_program_id),
+                  class: "inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition focus-ring #{active ? "bg-accent-red text-white" : "border border-white/10 bg-white/5 text-light-text/80 hover:bg-white/10"}" %>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <% if @active_tab == "costs" %>
+      <%= render "imports_hub/costs_form" %>
+    <% elsif @active_tab == "milestones" %>
+      <%= render "imports_hub/milestones_form" %>
+    <% else %>
+      <%= render "imports_hub/delivery_units_form" %>
+    <% end %>
+  </div>
+</div>

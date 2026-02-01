@@ -19,6 +19,8 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 gem "roo"
+gem "caxlsx", require: false
+gem "rubyzip", "~> 2.4", require: false
 
 gem "csv"
 gem "net-imap", ">= 0.5.7"
@@ -105,7 +107,6 @@ end
 
 group :development, :test do
   gem "rspec-rails", "~> 7.1.1"
-  gem "grade_runner", "~> 0.0.13"
   gem "sqlite3"
 end
 

@@ -10,6 +10,7 @@ require "rspec/rails"
 require "support/capybara"
 require "support/cuprite"
 require "support/ui_screenshot_helper"
+require "support/ui_auth_helper"
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -42,6 +43,7 @@ RSpec.configure do |config|
   # Devise sign in helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :request
   # Rails 8 issue: https://github.com/heartcombo/devise/issues/5705
   config.before(:each, type: :controller) do
     Rails.application.reload_routes_unless_loaded

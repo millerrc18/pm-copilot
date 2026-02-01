@@ -6,7 +6,7 @@ RSpec.describe "Contract charts", type: :system do
   end
 
   it "renders charts on the contract page" do
-    user = User.create!(email: "charts@example.com", password: "password")
+    user = create_ui_user(suffix: "charts")
     program = Program.create!(name: "Nimbus", user: user)
     contract = Contract.create!(
       program: program,
@@ -27,10 +27,7 @@ RSpec.describe "Contract charts", type: :system do
       other_costs: 10
     )
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     visit contract_path(contract)
 

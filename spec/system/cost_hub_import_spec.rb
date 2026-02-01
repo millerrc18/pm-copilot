@@ -8,7 +8,7 @@ RSpec.describe "Cost Hub imports", type: :system do
   end
 
   it "imports costs and reflects totals in the Cost Hub" do
-    user = User.create!(email: "importer@example.com", password: "password")
+    user = create_ui_user(suffix: "importer")
     program = Program.create!(name: "Import Program", user: user)
     contract = Contract.create!(
       program: program,
@@ -27,15 +27,12 @@ RSpec.describe "Cost Hub imports", type: :system do
       )
     end
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
-    visit new_cost_import_path
+    visit imports_hub_path(tab: "costs")
     select program.name, from: "Program"
     attach_file "Excel file", write_cost_import_fixture.path
-    click_button "Import"
+    click_button "Import costs"
 
     expect(page).to have_content("Costs imported")
 
@@ -49,15 +46,12 @@ RSpec.describe "Cost Hub imports", type: :system do
   end
 
   it "renders a readable program select in dark mode" do
-    user = User.create!(email: "importer-style@example.com", password: "password")
+    user = create_ui_user(suffix: "importer-style")
     program = Program.create!(name: "Import Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
-    visit new_cost_import_path
+    visit imports_hub_path(tab: "costs")
     select_class = "mt-2 w-full appearance-none rounded-2xl border border-white/20 bg-dark-panel-strong px-4 py-3 text-sm text-light-text shadow-sm focus:border-accent-red/70 focus:outline-none focus:ring-2 focus:ring-accent-red/50 focus:ring-offset-0"
 
     expect(page).to have_css("select[name='program_id'][class='#{select_class}']")

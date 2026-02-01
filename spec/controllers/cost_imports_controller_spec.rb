@@ -12,7 +12,7 @@ RSpec.describe CostImportsController, type: :controller do
       post :create, params: { program_id: program.id }
 
       expect(response).to have_http_status(:forbidden)
-      expect(flash[:alert]).to eq("Not authorized.")
+      expect(assigns(:cost_import_errors)).to eq([ "Not authorized." ])
     end
   end
 end

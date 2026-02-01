@@ -8,13 +8,10 @@ RSpec.describe "Search keytips", type: :system, js: true do
   it "shows command keytips on Mac" do
     set_platform(platform: "MacIntel", user_agent: mac_user_agent)
 
-    user = User.create!(email: "keytip-mac@example.com", password: "password")
+    user = create_ui_user(suffix: "keytip-mac")
     Program.create!(name: "Keytip Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     visit programs_path
 
@@ -24,13 +21,10 @@ RSpec.describe "Search keytips", type: :system, js: true do
   it "shows control keytips on non-Mac platforms" do
     set_platform(platform: "Win32", user_agent: windows_user_agent)
 
-    user = User.create!(email: "keytip-win@example.com", password: "password")
+    user = create_ui_user(suffix: "keytip-win")
     Program.create!(name: "Keytip Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     visit programs_path
 

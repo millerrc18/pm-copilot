@@ -36,3 +36,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2025-09-21
 - Notes: Add Chart.js powered charts to Cost Hub and Contract pages with program and period filters.
 - Evidence: spec/system/cost_hub_spec.rb, spec/system/contract_charts_spec.rb, bin/ui-screenshots (pending due to missing Chrome).
+
+## ISS-006 Imports Hub consolidation
+
+- Status: Done
+- Date: 2026-02-01
+- Notes: Added the Imports Hub with program scoped cost, milestone, and delivery unit imports plus dynamic XLSX template downloads and row level validation feedback.
+- Evidence: bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; Playwright screenshot browser:/tmp/codex_browser_invocations/3b002a5e598312fe/artifacts/artifacts/imports-hub-costs.png; bin/ui-screenshots (pending due to missing Chrome).
