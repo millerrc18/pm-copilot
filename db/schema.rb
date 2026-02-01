@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_01_212726) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_01_000000) do
   create_table "contract_periods", force: :cascade do |t|
     t.bigint "contract_id", null: false
     t.date "period_start_date"
@@ -280,8 +280,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_01_212726) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "contracts_view"
-    t.integer "contracts_view_year"
+    t.json "cost_hub_saved_filters", default: {}, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

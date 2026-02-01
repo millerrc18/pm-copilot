@@ -58,8 +58,16 @@ export default class extends Controller {
       maintainAspectRatio: false,
       plugins: {
         legend: {
+          position: "bottom",
+          align: "start",
           labels: {
-            color: "#C9CFDA"
+            color: "#C9CFDA",
+            boxWidth: 10,
+            boxHeight: 10,
+            padding: 12,
+            font: {
+              size: 11
+            }
           }
         },
         tooltip: {
@@ -68,6 +76,12 @@ export default class extends Controller {
           borderWidth: 1,
           titleColor: "#F8FAFC",
           bodyColor: "#E2E8F0"
+        }
+      },
+      layout: {
+        padding: {
+          left: 8,
+          right: 8
         }
       },
       scales: {

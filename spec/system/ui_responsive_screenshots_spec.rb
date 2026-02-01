@@ -105,8 +105,39 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
           open_sidebar
         end
 
-        open_user_menu(user.email)
-        save_ui_screenshot("user_menu", device_name, "open")
+    cost_hub_viewports = {
+      "iphone" => [ 390, 844 ],
+      "ipad" => [ 820, 1180 ],
+      "desktop" => [ 1440, 900 ]
+    }
+
+    cost_hub_viewports.each do |device_name, (width, height)|
+      set_viewport(width, height)
+      visit cost_hub_path(start_date: "2024-01-01", end_date: "2024-01-31")
+      expect(page).to have_css("tbody tr", count: 2)
+      save_ui_screenshot("cost_hub/default", device_name, "closed")
+
+      if width < 768
+        open_sidebar
+        save_ui_screenshot("cost_hub/default", device_name, "open")
+        close_sidebar
+      end
+
+      user.update!(
+        cost_hub_saved_filters: {
+          "start_date" => "2024-01-01",
+          "end_date" => "2024-01-31",
+          "program_id" => program.id
+        }
+      )
+      visit cost_hub_path
+      expect(page).to have_css("tbody tr", count: 2)
+      save_ui_screenshot("cost_hub/saved_view_applied", device_name, "closed")
+
+      if width < 768
+        open_sidebar
+        save_ui_screenshot("cost_hub/saved_view_applied", device_name, "open")
+        close_sidebar
       end
 
       pages = {
