@@ -143,6 +143,22 @@ This is a living document that tracks product improvements and refinements acros
   - bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-010 Contracts saved views and active year default
+
+- **Status**: Done
+- **Why**: Contracts should default to the active year and let users save a preferred view for later visits.
+- **Approach**:
+  - Add active year scopes with overlap logic.
+  - Add contracts index filter controls for active this year, next year, specific year, and all.
+  - Persist the selected view per user.
+- **Acceptance criteria**:
+  - Contracts index defaults to active contracts in the current year.
+  - Users can switch views and see the preference persist across sessions.
+- **Evidence**:
+  - bundle exec rspec.
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - browser screenshot browser:/tmp/codex_browser_invocations/36ed1ebb3756a3d0/artifacts/artifacts/contracts-index.png.
+
 ### IMP-010 Cost Hub saved views and chart polish
 
 - **Status**: Done
@@ -197,4 +213,5 @@ This is a living document that tracks product improvements and refinements acros
 - IMP-005 Contract visualizations. Evidence in contract charts system spec, screenshots pending due to missing Chrome.
 - IMP-006 Dark theme form control readability. Evidence in cost import system spec, screenshots pending due to missing Chrome.
 - IMP-009 Unified Imports Hub. Evidence in request and system specs, screenshots pending due to missing Chrome.
+- IMP-010 Contracts saved views and active year default. Evidence in contracts system spec, screenshots pending due to missing Chrome.
 - IMP-010 Cost Hub saved views and chart polish. Evidence in system specs, screenshots pending due to missing Chrome.

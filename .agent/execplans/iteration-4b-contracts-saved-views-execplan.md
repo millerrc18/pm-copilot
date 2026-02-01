@@ -10,28 +10,28 @@ Default Contracts list to only contracts active in the current year, and allow u
 
 ## Progress
 
-- [ ] (YYYY-MM-DD HH:MM) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 1.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 2.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 3.
-- [ ] (YYYY-MM-DD HH:MM) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
+- [x] (2026-02-01 21:22) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
+- [x] (2026-02-01 21:46) Complete Milestone 1.
+- [x] (2026-02-01 22:03) Complete Milestone 2.
+- [x] (2026-02-01 22:20) Complete Milestone 3.
+- [x] (2026-02-01 22:53) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
 
 ## Surprises & Discoveries
 
-- Observation:  
-  Evidence:  
+- Observation: Running `bin/rails db:migrate` invoked rails-erd checks and failed due to missing GraphViz.
+  Evidence: `bin/rails db:migrate` output noted missing `dot` executable.
 
 ## Decision Log
 
-- Decision:  
-  Rationale:  
-  Date/Author:  
+- Decision: Store contracts saved view preferences on the user record using view and year columns.
+  Rationale: Keeps preferences per user without adding extra tables.
+  Date/Author: 2026-02-01 / Codex
 
 ## Outcomes & Retrospective
 
-- Outcome:  
-  Gaps:  
-  Lessons learned:  
+- Outcome: Contracts default to the active year, with saved views and updated coverage.
+  Gaps: bin/ui-screenshots remains pending due to missing Chrome, but a Playwright screenshot was captured.
+  Lessons learned: Build Tailwind assets before running UI focused system specs.
 
 ## Context and Orientation
 
@@ -107,4 +107,3 @@ Acceptance:
 ## Artifacts and Notes
 
 Include concise terminal transcripts and key diffs as indented blocks.
-

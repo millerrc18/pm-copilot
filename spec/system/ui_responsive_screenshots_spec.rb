@@ -3,6 +3,7 @@ require "securerandom"
 
 RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   include UiScreenshotHelper
+  include ActiveSupport::Testing::TimeHelpers
 
   before do
     skip "Chrome is not available for UI screenshots." unless browser_available?
@@ -20,135 +21,89 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   end
 
   it "captures screenshots across Apple viewports" do
-    user = create_ui_user(suffix: "ui-#{SecureRandom.hex(6)}")
-    program = Program.create!(
-      name: "Aurora",
-      customer: "Lumen Labs",
-      description: "AI-driven fulfillment pilot.",
-      user: user
-    )
-    contract = Contract.create!(
-      program: program,
-      contract_code: "AUR-2024",
-      start_date: Date.new(2024, 1, 1),
-      end_date: Date.new(2024, 12, 31),
-      sell_price_per_unit: 100,
-      planned_quantity: 20
-    )
-    3.times do |index|
-      DeliveryUnit.create!(
-        contract: contract,
-        unit_serial: "AUR-#{index + 1}",
-        ship_date: Date.new(2024, 1, 10 + index)
+    travel_to Date.new(2024, 6, 15) do
+      user = create_ui_user(suffix: "ui-#{SecureRandom.hex(6)}")
+      program = Program.create!(
+        name: "Aurora",
+        customer: "Lumen Labs",
+        description: "AI-driven fulfillment pilot.",
+        user: user
       )
-    end
-    cost_entry = CostEntry.create!(
-      program: program,
-      period_type: "week",
-      period_start_date: Date.new(2024, 1, 5),
-      hours_bam: 2,
-      rate_bam: 50,
-      material_cost: 100,
-      other_costs: 25
-    )
+      contract = Contract.create!(
+        program: program,
+        contract_code: "AUR-2024",
+        start_date: Date.new(2024, 1, 1),
+        end_date: Date.new(2024, 12, 31),
+        sell_price_per_unit: 100,
+        planned_quantity: 20
+      )
+      Contract.create!(
+        program: program,
+        contract_code: "AUR-2025",
+        start_date: Date.new(2025, 1, 1),
+        end_date: Date.new(2025, 12, 31),
+        sell_price_per_unit: 110,
+        planned_quantity: 18
+      )
+      Contract.create!(
+        program: program,
+        contract_code: "AUR-2023",
+        start_date: Date.new(2023, 1, 1),
+        end_date: Date.new(2023, 12, 31),
+        sell_price_per_unit: 90,
+        planned_quantity: 12
+      )
+      3.times do |index|
+        DeliveryUnit.create!(
+          contract: contract,
+          unit_serial: "AUR-#{index + 1}",
+          ship_date: Date.new(2024, 1, 10 + index)
+        )
+      end
+      cost_entry = CostEntry.create!(
+        program: program,
+        period_type: "week",
+        period_start_date: Date.new(2024, 1, 5),
+        hours_bam: 2,
+        rate_bam: 50,
+        material_cost: 100,
+        other_costs: 25
+      )
 
-    auth_viewports = {
-      "iphone_15_pro" => [ 393, 852 ],
-      "desktop" => [ 1440, 900 ]
-    }
+      auth_viewports = {
+        "iphone_15_pro" => [ 393, 852 ],
+        "desktop" => [ 1440, 900 ]
+      }
 
-    auth_viewports.each do |device_name, (width, height)|
-      set_viewport(width, height)
-      visit new_user_session_path
-      save_ui_screenshot("sign_in", device_name, "view")
+      auth_viewports.each do |device_name, (width, height)|
+        set_viewport(width, height)
+        visit new_user_session_path
+        save_ui_screenshot("sign_in", device_name, "view")
 
-      visit new_user_registration_path
-      save_ui_screenshot("sign_up", device_name, "view")
-    end
-
-    sign_in_ui_user(email: user.email)
-
-    visit imports_hub_path(tab: "costs")
-    select program.name, from: "Program"
-    attach_file "Excel file", Rails.root.join("spec/fixtures/files/costs_import.xlsx")
-    click_button "Import costs"
-    expect(page).to have_content("Costs imported")
-
-    user_menu_viewports = {
-      "iphone_15_pro" => [ 393, 852 ],
-      "desktop" => [ 1440, 900 ]
-    }
-
-    user_menu_viewports.each do |device_name, (width, height)|
-      set_viewport(width, height)
-      visit programs_path
-
-      if width < 768
-        open_sidebar
+        visit new_user_registration_path
+        save_ui_screenshot("sign_up", device_name, "view")
       end
 
-      open_user_menu(user.email)
-      save_ui_screenshot("user_menu", device_name, "open")
-    end
+      sign_in_ui_user(email: user.email)
 
-    pages = {
-      "programs_index" => programs_path,
-      "programs_show" => program_path(program),
-      "contracts_show" => contract_path(contract),
-      "contracts_index" => contracts_path,
-      "milestones_index" => delivery_milestones_path,
-      "delivery_units_index" => delivery_units_path,
-      "proposals_index" => proposals_path,
-      "proposals_new" => new_proposal_path,
-      "profile" => profile_path,
-      "imports_hub" => imports_hub_path,
-      "cost_hub" => cost_hub_path,
-      "docs_dashboard" => docs_path,
-      "docs_quick_start" => doc_path("quick-start"),
-      "docs_program_templates" => doc_path("program-templates"),
-      "docs_ai_summaries" => doc_path("ai-summaries"),
-      "docs_risk_tracker" => doc_path("risk-tracker"),
-      "docs_portfolio_analytics" => doc_path("portfolio-analytics"),
-      "docs_integrations" => doc_path("integrations"),
-      "docs_risk_opportunities" => doc_path("risk-opportunities"),
-      "docs_planning_hub" => doc_path("planning-hub"),
-      "docs_proposals" => doc_path("proposals"),
-      "docs_documentation_hub" => doc_path("documentation-hub")
-    }
+      visit imports_hub_path(tab: "costs")
+      select program.name, from: "Program"
+      attach_file "Excel file", Rails.root.join("spec/fixtures/files/costs_import.xlsx")
+      click_button "Import costs"
+      expect(page).to have_content("Costs imported")
 
-    pages.each do |page_name, path|
-      APPLE_VIEWPORTS.each do |device_name, (width, height)|
+      user_menu_viewports = {
+        "iphone_15_pro" => [ 393, 852 ],
+        "desktop" => [ 1440, 900 ]
+      }
+
+      user_menu_viewports.each do |device_name, (width, height)|
         set_viewport(width, height)
-        visit path
-        expect(page).to have_css(".sidebar")
-        assert_sidebar_nav_stacks_vertically!
-        assert_sidebar_icon_bounds!
+        visit programs_path
 
         if width < 768
-          expect(page).to have_css("nav[aria-label='Bottom navigation']")
-          within("nav[aria-label='Bottom navigation']") do
-            expect(page).to have_link("Programs")
-            expect(page).to have_link("Cost Hub")
-            expect(page).to have_link("Knowledge")
-            expect(page).to have_no_link("Panel")
-          end
-          expect(sidebar_offscreen?).to be(true)
-          save_ui_screenshot(page_name, device_name, "closed")
-
           open_sidebar
-          expect(page).to have_css(".sidebar.translate-x-0")
-          expect(page).to have_css("[data-sidebar-target='backdrop'].opacity-100")
-          save_ui_screenshot(page_name, device_name, "open")
-
-          close_sidebar
-          expect(page).to have_css(".sidebar.-translate-x-full")
-        else
-          expect(page).to have_no_css("nav[aria-label='Bottom navigation']")
-          expect(sidebar_offscreen?).to be(false)
-          save_ui_screenshot(page_name, device_name, "closed")
         end
-      end
-    end
 
     cost_hub_viewports = {
       "iphone" => [ 390, 844 ],
@@ -185,49 +140,146 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
         close_sidebar
       end
 
-      visit imports_hub_path(tab: "costs")
-      save_ui_screenshot("imports/costs", device_name, "closed")
+      pages = {
+        "programs_index" => programs_path,
+        "programs_show" => program_path(program),
+        "contracts_show" => contract_path(contract),
+        "contracts_index" => contracts_path,
+        "milestones_index" => delivery_milestones_path,
+        "delivery_units_index" => delivery_units_path,
+        "proposals_index" => proposals_path,
+        "proposals_new" => new_proposal_path,
+        "profile" => profile_path,
+        "imports_hub" => imports_hub_path,
+        "cost_hub" => cost_hub_path,
+        "docs_dashboard" => docs_path,
+        "docs_quick_start" => doc_path("quick-start"),
+        "docs_program_templates" => doc_path("program-templates"),
+        "docs_ai_summaries" => doc_path("ai-summaries"),
+        "docs_risk_tracker" => doc_path("risk-tracker"),
+        "docs_portfolio_analytics" => doc_path("portfolio-analytics"),
+        "docs_integrations" => doc_path("integrations"),
+        "docs_risk_opportunities" => doc_path("risk-opportunities"),
+        "docs_planning_hub" => doc_path("planning-hub"),
+        "docs_proposals" => doc_path("proposals"),
+        "docs_documentation_hub" => doc_path("documentation-hub")
+      }
 
-      if width < 768
-        open_sidebar
-        save_ui_screenshot("imports/costs", device_name, "open")
-        close_sidebar
+      pages.each do |page_name, path|
+        APPLE_VIEWPORTS.each do |device_name, (width, height)|
+          set_viewport(width, height)
+          visit path
+          expect(page).to have_css(".sidebar")
+          assert_sidebar_nav_stacks_vertically!
+          assert_sidebar_icon_bounds!
+
+          if width < 768
+            expect(page).to have_css("nav[aria-label='Bottom navigation']")
+            within("nav[aria-label='Bottom navigation']") do
+              expect(page).to have_link("Programs")
+              expect(page).to have_link("Cost Hub")
+              expect(page).to have_link("Knowledge")
+              expect(page).to have_no_link("Panel")
+            end
+            expect(sidebar_offscreen?).to be(true)
+            save_ui_screenshot(page_name, device_name, "closed")
+
+            open_sidebar
+            expect(page).to have_css(".sidebar.translate-x-0")
+            expect(page).to have_css("[data-sidebar-target='backdrop'].opacity-100")
+            save_ui_screenshot(page_name, device_name, "open")
+
+            close_sidebar
+            expect(page).to have_css(".sidebar.-translate-x-full")
+          else
+            expect(page).to have_no_css("nav[aria-label='Bottom navigation']")
+            expect(sidebar_offscreen?).to be(false)
+            save_ui_screenshot(page_name, device_name, "closed")
+          end
+        end
       end
 
-      visit imports_hub_path(tab: "milestones")
-      save_ui_screenshot("imports/milestones", device_name, "closed")
+      contracts_viewports = {
+        "iphone" => [ 390, 844 ],
+        "ipad" => [ 820, 1180 ],
+        "desktop" => [ 1440, 900 ]
+      }
 
-      if width < 768
-        open_sidebar
-        save_ui_screenshot("imports/milestones", device_name, "open")
-        close_sidebar
+      contracts_viewports.each do |device_name, (width, height)|
+        user.update!(contracts_view: nil, contracts_view_year: nil)
+        set_viewport(width, height)
+        visit contracts_path
+        save_ui_screenshot("contracts/default_active_year", device_name, "closed")
+
+        visit contracts_path(view: "active_next_year")
+        save_ui_screenshot("contracts/filtered_next_year", device_name, "closed")
+
+        visit contracts_path(view: "all")
+        save_ui_screenshot("contracts/filtered_all", device_name, "closed")
       end
 
-      visit imports_hub_path(tab: "delivery_units")
-      save_ui_screenshot("imports/delivery_units", device_name, "closed")
+      cost_hub_viewports = {
+        "iphone" => [ 390, 844 ],
+        "ipad" => [ 820, 1180 ],
+        "desktop" => [ 1440, 900 ]
+      }
 
-      if width < 768
-        open_sidebar
-        save_ui_screenshot("imports/delivery_units", device_name, "open")
-        close_sidebar
-      end
+      cost_hub_viewports.each do |device_name, (width, height)|
+        set_viewport(width, height)
+        visit cost_hub_path(start_date: "2024-01-01", end_date: "2024-01-31")
+        expect(page).to have_css("tbody tr", count: 2)
+        save_ui_screenshot("cost_hub", device_name, "closed")
 
-      visit new_cost_entry_path
-      save_ui_screenshot("cost_entries_new", device_name, "closed")
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("cost_hub", device_name, "open")
+          close_sidebar
+        end
 
-      if width < 768
-        open_sidebar
-        save_ui_screenshot("cost_entries_new", device_name, "open")
-        close_sidebar
-      end
+        visit imports_hub_path(tab: "costs")
+        save_ui_screenshot("imports/costs", device_name, "closed")
 
-      visit edit_cost_entry_path(cost_entry)
-      save_ui_screenshot("cost_entries_edit", device_name, "closed")
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("imports/costs", device_name, "open")
+          close_sidebar
+        end
 
-      if width < 768
-        open_sidebar
-        save_ui_screenshot("cost_entries_edit", device_name, "open")
-        close_sidebar
+        visit imports_hub_path(tab: "milestones")
+        save_ui_screenshot("imports/milestones", device_name, "closed")
+
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("imports/milestones", device_name, "open")
+          close_sidebar
+        end
+
+        visit imports_hub_path(tab: "delivery_units")
+        save_ui_screenshot("imports/delivery_units", device_name, "closed")
+
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("imports/delivery_units", device_name, "open")
+          close_sidebar
+        end
+
+        visit new_cost_entry_path
+        save_ui_screenshot("cost_entries_new", device_name, "closed")
+
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("cost_entries_new", device_name, "open")
+          close_sidebar
+        end
+
+        visit edit_cost_entry_path(cost_entry)
+        save_ui_screenshot("cost_entries_edit", device_name, "closed")
+
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("cost_entries_edit", device_name, "open")
+          close_sidebar
+        end
       end
     end
   end
