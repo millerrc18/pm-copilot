@@ -6,10 +6,15 @@ class CostEntriesController < ApplicationController
 
   def index
     @programs = current_user.programs.order(:name)
-    @program = current_user.programs.find_by(id: params[:program_id]) if params[:program_id].present?
+    @saved_filters = normalized_saved_filters
+    filter_params = params.permit(:start_date, :end_date, :program_id)
+    @using_saved_filters = filter_params.values.all?(&:blank?) && @saved_filters.present?
+    effective_filters = @using_saved_filters ? @saved_filters : filter_params.to_h
 
-    @start_date = parsed_date(params[:start_date]) || Date.current.beginning_of_month
-    @end_date = parsed_date(params[:end_date]) || Date.current
+    @program = current_user.programs.find_by(id: effective_filters["program_id"]) if effective_filters["program_id"].present?
+
+    @start_date = parsed_date(effective_filters["start_date"]) || Date.current.beginning_of_month
+    @end_date = parsed_date(effective_filters["end_date"]) || Date.current
 
     if @start_date > @end_date
       flash.now[:alert] = "Start date cannot be after end date."
@@ -19,6 +24,11 @@ class CostEntriesController < ApplicationController
 
     @sort = %w[date program].include?(params[:sort]) ? params[:sort] : "date"
     @direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+    @filter_params = {
+      start_date: @start_date,
+      end_date: @end_date,
+      program_id: @program&.id
+    }.compact
 
     @entries = CostEntry.includes(:program)
                         .joins(:program)
@@ -137,6 +147,15 @@ class CostEntriesController < ApplicationController
 
     scope.left_joins(:program)
          .order("programs.name #{@direction}, cost_entries.period_start_date #{@direction}")
+  end
+
+  def normalized_saved_filters
+    raw = current_user.cost_hub_saved_filters || {}
+    {
+      "start_date" => raw["start_date"],
+      "end_date" => raw["end_date"],
+      "program_id" => raw["program_id"]
+    }.compact_blank
   end
 
   def build_chart_data(entries)

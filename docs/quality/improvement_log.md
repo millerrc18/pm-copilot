@@ -143,6 +143,25 @@ This is a living document that tracks product improvements and refinements acros
   - bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-010 Cost Hub saved views and chart polish
+
+- **Status**: Done
+- **Why**: Users need a default Cost Hub view and charts should stay readable on iPhone layouts.
+- **Approach**:
+  - Persist Cost Hub filters per user and apply them on load.
+  - Add Save as default and Reset saved view controls.
+  - Tighten chart layout spacing and legend sizing for small viewports.
+- **Acceptance criteria**:
+  - Saved filter selections apply automatically on the next visit.
+  - Reset removes saved defaults and returns to standard date range.
+  - Charts stay within panel bounds on iPhone layouts.
+- **Evidence**:
+  - System spec covering saved view persistence.
+  - bundle exec rspec.
+  - Playwright screenshot browser:/tmp/codex_browser_invocations/4d890c96fdf758fa/artifacts/artifacts/cost-hub-saved-view.png.
+  - bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Proposed
@@ -178,3 +197,4 @@ This is a living document that tracks product improvements and refinements acros
 - IMP-005 Contract visualizations. Evidence in contract charts system spec, screenshots pending due to missing Chrome.
 - IMP-006 Dark theme form control readability. Evidence in cost import system spec, screenshots pending due to missing Chrome.
 - IMP-009 Unified Imports Hub. Evidence in request and system specs, screenshots pending due to missing Chrome.
+- IMP-010 Cost Hub saved views and chart polish. Evidence in system specs, screenshots pending due to missing Chrome.

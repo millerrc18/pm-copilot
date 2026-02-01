@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get "imports/templates/:template", to: "import_templates#show", as: :import_template
 
   get "cost-hub", to: "cost_entries#index", as: :cost_hub
+  resource :cost_hub_saved_view, only: [ :create, :destroy ]
   resources :cost_entries, only: [:index, :new, :create, :edit, :update, :destroy] do
     get :duplicate, on: :member
   end
