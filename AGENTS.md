@@ -1,12 +1,18 @@
-# AGENTS.md
+# PM Copilot - AGENTS.md
+
+This file provides project guidance for coding agents (Codex, Copilot, Cursor, etc).
+Codex reads AGENTS.md before doing work and may also read nested AGENTS.md files depending on where it is invoked. See discovery notes below.
 
 ## Project rules
 - Do not use em dashes in any text output or docs.
 - Do not introduce or store real credentials. Use seeds or test fixtures only.
 - Keep tasks small and verifiable. If the scope is large, propose a 3–7 step plan first.
+- If the prompt references an iteration ExecPlan, follow it verbatim, update its Progress/Decision Log/Surprises, and commit in small steps.
+- Some platforms and agent flows fail when binary files are included in PR content.
 
 # ExecPlans
 When writing complex features or significant refactors, use an ExecPlan (as described in .agent/PLANS.md) from design to implementation.
+ExecPlans live in: `.agent/execplans/`
 
 ## Local setup (Codex must follow)
 - bundle install
@@ -21,6 +27,25 @@ When writing complex features or significant refactors, use an ExecPlan (as desc
 - For any UI change, update system tests and capture screenshots (see below).
 - Run all validation commands in the Tests section and report pass/fail.
 
+## Quality logs
+
+Maintain these logs during each iteration:
+- `docs/quality/issue_log.md` (bugs and defects observed during inspection/testing)
+- `docs/quality/improvement_log.md` (polish ideas, UX improvements, future enhancements)
+
+For each meaningful change:
+- add an entry with: date, page/area, what changed, why, and evidence (test output or screenshot path)
+
+## Environment and credentials for UI system tests
+
+Do not hardcode credentials in the repository.
+
+UI login credentials must be provided via environment variables:
+- `UI_TEST_EMAIL`
+- `UI_TEST_PASSWORD`
+
+System tests and `bin/ui-screenshots` should read from these env vars.
+
 ## Tests (must run after changes)
 - bundle exec rubocop
 - bundle exec brakeman
@@ -31,14 +56,17 @@ When writing complex features or significant refactors, use an ExecPlan (as desc
 
 ## UI screenshots (required for UI work)
 ### Required pages
-- Cost Hub page
-- Import Costs page
-- Programs index page (smoke check that global layout is sane)
+- Cost Hub
+- Imports Hub (Costs, Milestones, Delivery Units)
+- Contracts
+- Programs
+- Account/Profile
+- Knowledge Center
 
 ### Required viewports
-- Desktop: 1440x900
-- iPad: 834x1194
-- iPhone: 393x852
+- iPhone: 390x844 (or closest available in your driver config)
+- iPad: 820x1180 (or closest available)
+- Desktop: 1440x900 (or closest available)
 
 ### Output locations (deterministic)
 - tmp/screenshots/ui/cost_hub/<viewport>__closed.png
@@ -55,3 +83,13 @@ If a mobile drawer exists:
 
 ## Notes for Codex prompts
 - Treat each prompt like a GitHub issue: context, expected behavior, acceptance criteria, and validation steps.
+
+## Codex discovery notes (for reliability)
+
+Codex builds an instruction chain when it starts:
+- Global scope files in the Codex home directory may apply first
+- Then project scope files are discovered from the repo root down to the working directory
+
+This means:
+- Keep this `AGENTS.md` at repo root
+- If needed, add nested AGENTS.md files only for subprojects with special commands
