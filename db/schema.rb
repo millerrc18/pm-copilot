@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_31_011601) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_01_000000) do
   create_table "contract_periods", force: :cascade do |t|
     t.bigint "contract_id", null: false
     t.date "period_start_date"
@@ -51,17 +51,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_31_011601) do
     t.index ["program_id"], name: "index_contracts_on_program_id"
   end
 
-  create_table "cost_imports", force: :cascade do |t|
-    t.bigint "program_id", null: false
-    t.bigint "user_id", null: false
-    t.string "source_filename"
-    t.integer "entries_count", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["program_id"], name: "index_cost_imports_on_program_id"
-    t.index ["user_id"], name: "index_cost_imports_on_user_id"
-  end
-
   create_table "cost_entries", force: :cascade do |t|
     t.string "period_type", null: false
     t.date "period_start_date", null: false
@@ -85,6 +74,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_31_011601) do
     t.index ["import_id"], name: "index_cost_entries_on_import_id"
     t.index ["period_start_date"], name: "index_cost_entries_on_period_start_date"
     t.index ["program_id"], name: "index_cost_entries_on_program_id"
+  end
+
+  create_table "cost_imports", force: :cascade do |t|
+    t.bigint "program_id", null: false
+    t.bigint "user_id", null: false
+    t.string "source_filename"
+    t.integer "entries_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id"], name: "index_cost_imports_on_program_id"
+    t.index ["user_id"], name: "index_cost_imports_on_user_id"
   end
 
   create_table "delivery_milestones", force: :cascade do |t|
@@ -280,6 +280,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_31_011601) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "cost_hub_saved_filters", default: {}, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
