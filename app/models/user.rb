@@ -19,6 +19,7 @@
 class User < ApplicationRecord
   THEME_OPTIONS = %w[light dark].freeze
   PALETTE_OPTIONS = %w[blue teal purple].freeze
+  CONTRACTS_VIEW_OPTIONS = Contract::VIEW_OPTIONS
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -29,6 +30,7 @@ class User < ApplicationRecord
 
   validates :theme, inclusion: { in: THEME_OPTIONS }
   validates :palette, inclusion: { in: PALETTE_OPTIONS }
+  validates :contracts_view, inclusion: { in: CONTRACTS_VIEW_OPTIONS }, allow_nil: true
   validates :first_name, :last_name, :job_title, :company, length: { maximum: 120 }, allow_blank: true
   validates :bio, length: { maximum: 600 }, allow_blank: true
 
@@ -36,5 +38,9 @@ class User < ApplicationRecord
     raw = ENV["ADMIN_EMAILS"].presence || ENV["ADMIN_EMAIL"].to_s
     admins = raw.split(/[,\s]+/).map { |e| e.strip.downcase }.reject(&:blank?)
     admins.include?(email.to_s.downcase)
+  end
+
+  def contracts_view_preference
+    CONTRACTS_VIEW_OPTIONS.include?(contracts_view) ? contracts_view : nil
   end
 end

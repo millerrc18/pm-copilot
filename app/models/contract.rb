@@ -23,6 +23,8 @@
 #  fk_rails_...  (program_id => programs.id)
 #
 class Contract < ApplicationRecord
+  VIEW_OPTIONS = %w[active_this_year active_next_year active_in_year all].freeze
+
   belongs_to :program
   has_many :contract_periods, dependent: :destroy
   has_many :delivery_milestones, dependent: :destroy
@@ -30,6 +32,14 @@ class Contract < ApplicationRecord
 
   validates :contract_code, :start_date, :end_date, :sell_price_per_unit, presence: true
   validates :contract_code, uniqueness: true
+
+  scope :active_in_year, ->(year) {
+    year_start = Date.new(year, 1, 1)
+    year_end = year_start.end_of_year
+    where("start_date <= ? AND end_date >= ?", year_end, year_start)
+  }
+  scope :active_this_year, -> { active_in_year(Date.current.year) }
+  scope :active_next_year, -> { active_in_year(Date.current.year + 1) }
 
   # aggregated helpers
   def units_delivered_to_date(as_of: Date.current)
