@@ -20,7 +20,7 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
   end
 
   it "captures screenshots across Apple viewports" do
-    user = User.create!(email: "ui-#{SecureRandom.hex(6)}@example.com", password: "password")
+    user = create_ui_user(suffix: "ui-#{SecureRandom.hex(6)}")
     program = Program.create!(
       name: "Aurora",
       customer: "Lumen Labs",
@@ -66,15 +66,12 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
       save_ui_screenshot("sign_up", device_name, "view")
     end
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
-    visit new_cost_import_path
+    visit imports_hub_path(tab: "costs")
     select program.name, from: "Program"
     attach_file "Excel file", Rails.root.join("spec/fixtures/files/costs_import.xlsx")
-    click_button "Import"
+    click_button "Import costs"
     expect(page).to have_content("Costs imported")
 
     user_menu_viewports = {
@@ -104,7 +101,7 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
       "proposals_index" => proposals_path,
       "proposals_new" => new_proposal_path,
       "profile" => profile_path,
-      "imports_new" => new_cost_import_path,
+      "imports_hub" => imports_hub_path,
       "cost_hub" => cost_hub_path,
       "docs_dashboard" => docs_path,
       "docs_quick_start" => doc_path("quick-start"),
@@ -154,8 +151,8 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
     end
 
     cost_hub_viewports = {
-      "iphone" => [ 393, 852 ],
-      "ipad" => [ 834, 1194 ],
+      "iphone" => [ 390, 844 ],
+      "ipad" => [ 820, 1180 ],
       "desktop" => [ 1440, 900 ]
     }
 
@@ -171,12 +168,30 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
         close_sidebar
       end
 
-      visit new_cost_import_path
-      save_ui_screenshot("cost_imports", device_name, "closed")
+      visit imports_hub_path(tab: "costs")
+      save_ui_screenshot("imports/costs", device_name, "closed")
 
       if width < 768
         open_sidebar
-        save_ui_screenshot("cost_imports", device_name, "open")
+        save_ui_screenshot("imports/costs", device_name, "open")
+        close_sidebar
+      end
+
+      visit imports_hub_path(tab: "milestones")
+      save_ui_screenshot("imports/milestones", device_name, "closed")
+
+      if width < 768
+        open_sidebar
+        save_ui_screenshot("imports/milestones", device_name, "open")
+        close_sidebar
+      end
+
+      visit imports_hub_path(tab: "delivery_units")
+      save_ui_screenshot("imports/delivery_units", device_name, "closed")
+
+      if width < 768
+        open_sidebar
+        save_ui_screenshot("imports/delivery_units", device_name, "open")
         close_sidebar
       end
 

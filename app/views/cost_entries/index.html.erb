@@ -8,7 +8,7 @@
   </div>
   <div class="flex flex-wrap gap-3">
     <%= link_to "New cost entry", new_cost_entry_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
-    <%= link_to "Import costs", new_cost_import_path, class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+    <%= link_to "Import costs", imports_hub_path(tab: "costs"), class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
   </div>
 </div>
 

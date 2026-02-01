@@ -7,7 +7,7 @@ RSpec.describe "Sidebar navigation", type: :system do
   end
 
   it "routes to each primary section and updates active state" do
-    user = User.create!(email: "nav-#{SecureRandom.hex(4)}@example.com", password: "password")
+    user = create_ui_user(suffix: "nav-#{SecureRandom.hex(4)}")
     program = Program.create!(name: "Navigation Program", user: user)
     contract = Contract.create!(
       program: program,
@@ -20,10 +20,7 @@ RSpec.describe "Sidebar navigation", type: :system do
     DeliveryMilestone.create!(contract: contract, milestone_ref: "MS-1", due_date: Date.new(2024, 2, 1), quantity_due: 5)
     DeliveryUnit.create!(contract: contract, unit_serial: "NAV-UNIT-1", ship_date: Date.new(2024, 1, 15))
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     sections = [
       [ "Programs", "Dashboard", programs_path ],
@@ -31,7 +28,7 @@ RSpec.describe "Sidebar navigation", type: :system do
       [ "Milestones", "Milestones", delivery_milestones_path ],
       [ "Delivery units", "Delivery units", delivery_units_path ],
       [ "Cost Hub", "Cost Hub", cost_hub_path ],
-      [ "Cost Imports", "Import costs", new_cost_import_path ],
+      [ "Imports Hub", "Imports Hub", imports_hub_path ],
       [ "Knowledge Center", "Documentation", docs_path ]
     ]
 
@@ -49,13 +46,10 @@ RSpec.describe "Sidebar navigation", type: :system do
   end
 
   it "opens documentation cards for new product areas" do
-    user = User.create!(email: "docs-#{SecureRandom.hex(4)}@example.com", password: "password")
+    user = create_ui_user(suffix: "docs-#{SecureRandom.hex(4)}")
     Program.create!(name: "Docs Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     doc_titles = [
       "Quick start",
@@ -88,13 +82,10 @@ RSpec.describe "Sidebar navigation", type: :system do
   end
 
   it "shows proposal placeholders with a stub form" do
-    user = User.create!(email: "proposal-#{SecureRandom.hex(4)}@example.com", password: "password")
+    user = create_ui_user(suffix: "proposal-#{SecureRandom.hex(4)}")
     Program.create!(name: "Proposal Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     visit proposals_path
     expect(page).to have_content("Active proposals")

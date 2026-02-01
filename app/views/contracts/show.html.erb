@@ -152,7 +152,16 @@
 
 <div class="mt-6 flex flex-wrap gap-3">
   <%= render "shared/ui/button", label: "Back to program", variant: "ghost", url: program_path(@contract.program) %>
-  <%= render "shared/ui/button", label: "Import delivery units", variant: "secondary", url: new_contract_delivery_unit_import_path(@contract) %>
-  <%= render "shared/ui/button", label: "Import costs", variant: "secondary", url: new_cost_import_path %>
-  <%= render "shared/ui/button", label: "Import milestones", variant: "secondary", url: new_contract_milestone_import_path(@contract) %>
+  <%= render "shared/ui/button",
+             label: "Import delivery units",
+             variant: "secondary",
+             url: imports_hub_path(tab: "delivery_units", program_id: @contract.program_id) %>
+  <%= render "shared/ui/button",
+             label: "Import costs",
+             variant: "secondary",
+             url: imports_hub_path(tab: "costs", program_id: @contract.program_id) %>
+  <%= render "shared/ui/button",
+             label: "Import milestones",
+             variant: "secondary",
+             url: imports_hub_path(tab: "milestones", program_id: @contract.program_id) %>
 </div>

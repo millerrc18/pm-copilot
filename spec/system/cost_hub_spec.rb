@@ -6,7 +6,7 @@ RSpec.describe "Cost Hub", type: :system do
   end
 
   it "shows totals and filters by program" do
-    user = User.create!(email: "costhub@example.com", password: "password")
+    user = create_ui_user(suffix: "costhub")
     program_a = Program.create!(name: "Atlas", user: user)
     program_b = Program.create!(name: "Borealis", user: user)
 
@@ -46,10 +46,7 @@ RSpec.describe "Cost Hub", type: :system do
     DeliveryUnit.create!(contract: contract_a, unit_serial: "A-002", ship_date: Date.new(2024, 1, 11))
     DeliveryUnit.create!(contract: contract_b, unit_serial: "B-001", ship_date: Date.new(2024, 1, 12))
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     visit cost_hub_path(start_date: "2024-01-01", end_date: "2024-01-31")
 

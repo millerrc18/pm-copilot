@@ -7,13 +7,10 @@ RSpec.describe "Account management", type: :system do
   end
 
   it "allows signing out from the user menu" do
-    user = User.create!(email: "menu@example.com", password: "password")
+    user = create_ui_user(suffix: "menu")
     Program.create!(name: "Sign Out Program", user: user)
 
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
 
     find("summary", text: user.email, visible: :all).click
     find_button("Sign out", visible: :all).click
@@ -31,10 +28,10 @@ RSpec.describe "Account management", type: :system do
       click_link "Sign up"
     end
 
-    email = "new-user-#{SecureRandom.hex(4)}@example.com"
+    email = ui_test_email("new-user-#{SecureRandom.hex(4)}")
     fill_in "Email", with: email
-    fill_in "Password", with: "password"
-    fill_in "Password confirmation", with: "password"
+    fill_in "Password", with: ui_test_password
+    fill_in "Password confirmation", with: ui_test_password
     click_button "Create account"
 
     expect(page).to have_current_path(root_path)
