@@ -5,6 +5,7 @@
     <title>PM Copilot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0A0D13">
+    <%= favicon_link_tag "favicon.svg", rel: "icon", type: "image/svg+xml" %>
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -63,6 +64,14 @@
           </div>
         </nav>
       <% end %>
+    </div>
+
+    <div id="global-loading" aria-hidden="true">
+      <div class="global-loading__backdrop"></div>
+      <div class="global-loading__content" role="status" aria-live="polite">
+        <span class="global-loading__spinner"></span>
+        <span class="sr-only">Loading</span>
+      </div>
     </div>
   </body>
 </html>
