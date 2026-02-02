@@ -1,25 +1,48 @@
 class MilestoneImportsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_contract
 
-  def new; end
+  def new
+    redirect_to imports_hub_path(tab: "milestones")
+  end
 
   def create
-    if params[:file].blank?
-      redirect_to new_contract_milestone_import_path(@contract), alert: "Please choose a file."
+    @programs = current_user.programs.order(:name)
+    @active_tab = "milestones"
+    @selected_program_id = params[:program_id]
+
+    if params[:program_id].blank?
+      @milestone_import_errors = [ "Please select a program." ]
+      render "imports_hub/show", status: :unprocessable_entity
       return
     end
 
-    result = MilestoneImportService.new(user: current_user, contract: @contract, file: params[:file]).call
-    redirect_to contract_path(@contract), notice: "Milestones imported. Created: #{result[:created]}, updated: #{result[:updated]}."
-  rescue => e
-    redirect_to new_contract_milestone_import_path(@contract), alert: "Import failed: #{e.message}"
+    @program = current_user.programs.find_by(id: params[:program_id])
+    unless @program
+      @milestone_import_errors = [ "Not authorized." ]
+      render "imports_hub/show", status: :forbidden
+      return
+    end
+
+    if params[:file].blank?
+      @milestone_import_errors = [ "Please choose a file." ]
+      render "imports_hub/show", status: :unprocessable_entity
+      return
+    end
+
+    result = MilestoneImportService.new(user: current_user, program: @program, file: params[:file]).call
+
+    if result[:errors].any?
+      @milestone_import_errors = result[:errors]
+      render "imports_hub/show", status: :unprocessable_entity
+    else
+      @milestone_import_result = result
+      flash.now[:notice] = "Milestones imported. Created: #{result[:created]}, updated: #{result[:updated]}."
+      render "imports_hub/show"
+    end
+  rescue StandardError => e
+    @milestone_import_errors = [ "Import failed: #{e.message}" ]
+    render "imports_hub/show", status: :unprocessable_entity
   end
 
   private
-
-  def set_contract
-    @contract = Contract.find(params[:contract_id])
-    authorize_contract_owner!(@contract)
-  end
 end

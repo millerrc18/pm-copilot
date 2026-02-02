@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    profile_fields = %i[first_name last_name job_title company bio theme palette]
+    profile_fields = %i[first_name last_name job_title company bio theme]
     devise_parameter_sanitizer.permit(:sign_up, keys: profile_fields)
     devise_parameter_sanitizer.permit(:account_update, keys: profile_fields)
   end

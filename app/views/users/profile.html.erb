@@ -1,34 +1,131 @@
-<% content_for :page_title, "Profile & account" %>
-<% content_for :page_subtitle, "Review your account details and workspace preferences." %>
+<% content_for :page_title, "Account" %>
+<% content_for :page_subtitle, "Review your profile, stats, and appearance settings." %>
 
-<div class="grid gap-6 lg:grid-cols-2">
-  <div class="panel p-6">
-    <h2 class="text-base font-semibold">Account details</h2>
-    <p class="mt-1 text-sm text-light-text/60">These details are tied to your PM Copilot login.</p>
-    <div class="mt-4 space-y-3 text-sm">
-      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-        <span class="text-light-text/60">Email</span>
-        <span class="font-semibold"><%= @user.email %></span>
+<% full_name = [@user.first_name, @user.last_name].map(&:presence).compact.join(" ").presence || "Account owner" %>
+<% initials = [@user.first_name, @user.last_name].map { |name| name.to_s.first }.join.upcase.presence || "AC" %>
+<% theme_cards = [
+  {
+    value: "dark-coral",
+    name: "Dark coral",
+    description: "Warm accents with a deep slate backdrop.",
+    swatch: "bg-[#e06469]"
+  },
+  {
+    value: "dark-blue",
+    name: "Dark blue",
+    description: "Cool blue highlights for focused work.",
+    swatch: "bg-[#5b8def]"
+  },
+  {
+    value: "light",
+    name: "Light",
+    description: "Bright canvas with soft contrast.",
+    swatch: "bg-[#f8fafc] border border-black/10"
+  }
+] %>
+
+<div class="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+  <div class="space-y-6">
+    <div class="panel p-6">
+      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center gap-4">
+          <% if @user.avatar.attached? %>
+            <%= image_tag @user.avatar, alt: "#{full_name} avatar", class: "h-20 w-20 rounded-full object-cover border border-white/10" %>
+          <% else %>
+            <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-lg font-semibold text-light-text">
+              <%= initials %>
+            </div>
+          <% end %>
+          <div>
+            <p class="text-sm text-light-text/60">Profile</p>
+            <h2 class="text-xl font-semibold"><%= full_name %></h2>
+            <p class="mt-1 text-sm text-light-text/70"><%= @user.email %></p>
+            <% if @user.job_title.present? || @user.company.present? %>
+              <p class="text-sm text-light-text/70">
+                <%= [@user.job_title.presence, @user.company.presence].compact.join(" at ") %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <%= link_to "Edit profile", edit_user_registration_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-light-text transition hover:bg-white/10 focus-ring" %>
+        </div>
       </div>
-      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-        <span class="text-light-text/60">Display name</span>
-        <span class="font-semibold"><%= @user.first_name.presence || "Account" %></span>
+
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div class="panel-border p-4">
+          <p class="text-xs uppercase tracking-wide text-light-text/60">Member since</p>
+          <p class="mt-2 text-base font-semibold"><%= @user.created_at.strftime("%b %d, %Y") %></p>
+        </div>
+        <div class="panel-border p-4">
+          <p class="text-xs uppercase tracking-wide text-light-text/60">Bio</p>
+          <p class="mt-2 text-sm text-light-text/80"><%= @user.bio.presence || "Add a short bio in your profile settings." %></p>
+        </div>
       </div>
+    </div>
+
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Avatar</h3>
+      <p class="mt-1 text-sm text-light-text/60">Upload a square image for your account profile.</p>
+      <%= form_with model: @user, url: profile_path, method: :patch, html: { multipart: true, class: "mt-4 space-y-4" } do |f| %>
+        <div>
+          <%= f.label :avatar, "Avatar", class: "text-sm font-semibold" %>
+          <%= f.file_field :avatar, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text file:mr-4 file:rounded-full file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-light-text hover:file:bg-white/20" %>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <%= f.submit "Upload avatar", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+        </div>
+      <% end %>
     </div>
   </div>
 
-  <div class="panel p-6">
-    <h2 class="text-base font-semibold">Theme preferences</h2>
-    <p class="mt-1 text-sm text-light-text/60">Personalize how dashboards and reports appear.</p>
-    <div class="mt-4 space-y-3 text-sm">
-      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-        <span class="text-light-text/60">Theme</span>
-        <span class="font-semibold capitalize"><%= @user.theme.presence || "dark" %></span>
+  <div class="space-y-6">
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Lifetime stats</h3>
+      <p class="mt-1 text-sm text-light-text/60">Your cumulative activity across programs and costs.</p>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <div class="panel-border p-4">
+          <p class="text-xs uppercase tracking-wide text-light-text/60">Programs</p>
+          <p class="mt-2 text-2xl font-semibold"><%= number_with_delimiter(@stats[:programs_count]) %></p>
+        </div>
+        <div class="panel-border p-4">
+          <p class="text-xs uppercase tracking-wide text-light-text/60">Contracts</p>
+          <p class="mt-2 text-2xl font-semibold"><%= number_with_delimiter(@stats[:contracts_count]) %></p>
+        </div>
+        <div class="panel-border p-4">
+          <p class="text-xs uppercase tracking-wide text-light-text/60">Cost entries</p>
+          <p class="mt-2 text-2xl font-semibold"><%= number_with_delimiter(@stats[:cost_entries_count]) %></p>
+        </div>
+        <div class="panel-border p-4">
+          <p class="text-xs uppercase tracking-wide text-light-text/60">Total cost</p>
+          <p class="mt-2 text-2xl font-semibold"><%= number_to_currency(@stats[:total_cost], precision: 0) %></p>
+        </div>
       </div>
-      <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-        <span class="text-light-text/60">Palette</span>
-        <span class="font-semibold capitalize"><%= @user.palette.presence || "red" %></span>
-      </div>
+    </div>
+
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Theme</h3>
+      <p class="mt-1 text-sm text-light-text/60">Select one of three fixed themes for the workspace.</p>
+      <%= form_with model: @user, url: theme_preference_path, method: :patch, class: "mt-4 space-y-4" do |f| %>
+        <div class="space-y-3">
+          <% theme_cards.each do |card| %>
+            <% field_id = "theme_#{card[:value]}" %>
+            <div>
+              <%= f.radio_button :theme, card[:value], id: field_id, class: "peer sr-only" %>
+              <%= label_tag field_id, class: "flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm transition hover:bg-white/10 peer-checked:border-accent-red/70 peer-checked:bg-white/10" do %>
+                <span class="mt-1 h-4 w-4 rounded-full <%= card[:swatch] %>"></span>
+                <span>
+                  <span class="block text-base font-semibold"><%= card[:name] %></span>
+                  <span class="mt-1 block text-sm text-light-text/60"><%= card[:description] %></span>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <%= f.submit "Update theme", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

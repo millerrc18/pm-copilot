@@ -6,7 +6,7 @@ RSpec.describe "Cost entries", type: :system do
   end
 
   it "creates a cost entry and updates totals" do
-    user = User.create!(email: "manual@example.com", password: "password")
+    user = create_ui_user(suffix: "manual")
     program = Program.create!(name: "Atlas", user: user)
     contract = Contract.create!(
       program: program,
@@ -39,7 +39,7 @@ RSpec.describe "Cost entries", type: :system do
   end
 
   it "edits a cost entry and recalculates totals" do
-    user = User.create!(email: "editor@example.com", password: "password")
+    user = create_ui_user(suffix: "editor")
     program = Program.create!(name: "Borealis", user: user)
     contract = Contract.create!(
       program: program,
@@ -72,7 +72,7 @@ RSpec.describe "Cost entries", type: :system do
   end
 
   it "deletes a cost entry from the Cost Hub" do
-    user = User.create!(email: "deleter@example.com", password: "password")
+    user = create_ui_user(suffix: "deleter")
     program = Program.create!(name: "Cascade", user: user)
     contract = Contract.create!(
       program: program,
@@ -106,7 +106,7 @@ RSpec.describe "Cost entries", type: :system do
   end
 
   it "duplicates a cost entry and updates totals" do
-    user = User.create!(email: "duper@example.com", password: "password")
+    user = create_ui_user(suffix: "duper")
     program = Program.create!(name: "Drift", user: user)
 
     entry = CostEntry.create!(
@@ -135,9 +135,6 @@ RSpec.describe "Cost entries", type: :system do
   end
 
   def sign_in(user)
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
   end
 end

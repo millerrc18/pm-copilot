@@ -29,14 +29,11 @@
     </div>
 
     <div>
-      <h3 class="text-lg font-semibold">Theme & palette</h3>
+      <h3 class="text-lg font-semibold">Theme</h3>
       <p class="text-sm text-light-text/60">Choose how the application looks for you.</p>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <%= f.input :theme,
                     collection: User::THEME_OPTIONS.map { |option| [option.titleize, option] },
-                    include_blank: false %>
-        <%= f.input :palette,
-                    collection: User::PALETTE_OPTIONS.map { |option| [option.titleize, option] },
                     include_blank: false %>
       </div>
     </div>

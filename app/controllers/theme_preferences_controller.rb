@@ -3,11 +3,9 @@ class ThemePreferencesController < ApplicationController
 
   def update
     theme = params.dig(:user, :theme)
-    palette = params.dig(:user, :palette)
 
     updates = {}
     updates[:theme] = theme if User::THEME_OPTIONS.include?(theme)
-    updates[:palette] = palette if User::PALETTE_OPTIONS.include?(palette)
 
     if updates.any?
       current_user.update(updates)

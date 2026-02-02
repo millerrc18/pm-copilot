@@ -6,7 +6,7 @@ RSpec.describe "Global registers", type: :system do
   end
 
   it "edits and deletes delivery units from the register" do
-    user = User.create!(email: "units-register@example.com", password: "password")
+    user = create_ui_user(suffix: "units-register")
     program = Program.create!(name: "Register Program", user: user)
     contract = Contract.create!(
       program: program,
@@ -44,7 +44,7 @@ RSpec.describe "Global registers", type: :system do
   end
 
   it "edits and deletes milestones from the register" do
-    user = User.create!(email: "milestones-register@example.com", password: "password")
+    user = create_ui_user(suffix: "milestones-register")
     program = Program.create!(name: "Milestone Register", user: user)
     contract = Contract.create!(
       program: program,
@@ -87,9 +87,6 @@ RSpec.describe "Global registers", type: :system do
   end
 
   def sign_in(user)
-    visit new_user_session_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "password"
-    click_button "Sign in"
+    sign_in_ui_user(email: user.email)
   end
 end

@@ -17,8 +17,9 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class User < ApplicationRecord
-  THEME_OPTIONS = %w[light dark].freeze
+  THEME_OPTIONS = %w[dark-coral dark-blue light].freeze
   PALETTE_OPTIONS = %w[blue teal purple].freeze
+  CONTRACTS_VIEW_OPTIONS = Contract::VIEW_OPTIONS
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -26,15 +27,37 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :programs, dependent: :destroy
+  has_one_attached :avatar
 
   validates :theme, inclusion: { in: THEME_OPTIONS }
   validates :palette, inclusion: { in: PALETTE_OPTIONS }
+  validates :contracts_view, inclusion: { in: CONTRACTS_VIEW_OPTIONS }, allow_nil: true
   validates :first_name, :last_name, :job_title, :company, length: { maximum: 120 }, allow_blank: true
   validates :bio, length: { maximum: 600 }, allow_blank: true
+  validate :avatar_format
 
   def admin?
     raw = ENV["ADMIN_EMAILS"].presence || ENV["ADMIN_EMAIL"].to_s
     admins = raw.split(/[,\s]+/).map { |e| e.strip.downcase }.reject(&:blank?)
     admins.include?(email.to_s.downcase)
+  end
+
+  def contracts_view_preference
+    CONTRACTS_VIEW_OPTIONS.include?(contracts_view) ? contracts_view : nil
+  end
+
+  private
+
+  def avatar_format
+    return unless avatar.attached?
+
+    acceptable_types = %w[image/png image/jpeg image/webp]
+    unless acceptable_types.include?(avatar.content_type)
+      errors.add(:avatar, "must be a PNG, JPEG, or WEBP")
+    end
+
+    return if avatar.byte_size <= 2.megabytes
+
+    errors.add(:avatar, "must be smaller than 2 MB")
   end
 end

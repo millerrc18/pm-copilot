@@ -124,6 +124,78 @@ This is a living document that tracks product improvements and refinements acros
   - Screenshots of forms from bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-009 Unified Imports Hub
+
+- **Status**: Done
+- **Why**: Imports were scattered across multiple pages and required contract specific entry points.
+- **Approach**:
+  - Add a single Imports Hub with tabs for costs, milestones, and delivery units.
+  - Generate XLSX templates dynamically and show row level validation feedback.
+  - Scope milestone and unit imports to the selected program via contract codes.
+- **Acceptance criteria**:
+  - Imports Hub renders tabbed sections with program selection.
+  - Template downloads return valid XLSX files with required headers.
+  - Invalid rows are reported and no partial records are created.
+- **Evidence**:
+  - bundle exec rspec.
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - Playwright screenshot browser:/tmp/codex_browser_invocations/3b002a5e598312fe/artifacts/artifacts/imports-hub-costs.png.
+  - bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
+### IMP-010 Contracts saved views and active year default
+
+- **Status**: Done
+- **Why**: Contracts should default to the active year and let users save a preferred view for later visits.
+- **Approach**:
+  - Add active year scopes with overlap logic.
+  - Add contracts index filter controls for active this year, next year, specific year, and all.
+  - Persist the selected view per user.
+- **Acceptance criteria**:
+  - Contracts index defaults to active contracts in the current year.
+  - Users can switch views and see the preference persist across sessions.
+- **Evidence**:
+  - bundle exec rspec.
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - browser screenshot browser:/tmp/codex_browser_invocations/36ed1ebb3756a3d0/artifacts/artifacts/contracts-index.png.
+
+### IMP-010 Cost Hub saved views and chart polish
+
+- **Status**: Done
+- **Why**: Users need a default Cost Hub view and charts should stay readable on iPhone layouts.
+- **Approach**:
+  - Persist Cost Hub filters per user and apply them on load.
+  - Add Save as default and Reset saved view controls.
+  - Tighten chart layout spacing and legend sizing for small viewports.
+- **Acceptance criteria**:
+  - Saved filter selections apply automatically on the next visit.
+  - Reset removes saved defaults and returns to standard date range.
+  - Charts stay within panel bounds on iPhone layouts.
+- **Evidence**:
+  - System spec covering saved view persistence.
+  - bundle exec rspec.
+  - Playwright screenshot browser:/tmp/codex_browser_invocations/4d890c96fdf758fa/artifacts/artifacts/cost-hub-saved-view.png.
+  - bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
+### IMP-011 Account profile overhaul
+
+- **Status**: Done
+- **Why**: The account page needed a dedicated profile view with stats, avatar, and a fixed theme selector.
+- **Approach**:
+  - Add Active Storage for avatar uploads and surface a profile summary panel.
+  - Show lifetime stats for programs, contracts, cost entries, and total cost.
+  - Replace palette settings with a three option theme selector that persists per user.
+- **Acceptance criteria**:
+  - Account page shows profile, avatar upload, lifetime stats, and theme cards.
+  - Theme selection persists and updates the page theme.
+  - Avatar uploads attach successfully in system tests.
+- **Evidence**:
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec.
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Done
@@ -175,5 +247,8 @@ This is a living document that tracks product improvements and refinements acros
 - IMP-004 Cost Hub visualizations. Evidence in cost hub system spec, screenshots pending due to missing Chrome.
 - IMP-005 Contract visualizations. Evidence in contract charts system spec, screenshots pending due to missing Chrome.
 - IMP-006 Dark theme form control readability. Evidence in cost import system spec, screenshots pending due to missing Chrome.
+- IMP-009 Unified Imports Hub. Evidence in request and system specs, screenshots pending due to missing Chrome.
+- IMP-010 Contracts saved views and active year default. Evidence in contracts system spec, screenshots pending due to missing Chrome.
+- IMP-010 Cost Hub saved views and chart polish. Evidence in system specs, screenshots pending due to missing Chrome.
 - IMP-007 Search keytips cross-platform. Evidence in view spec, screenshots pending due to missing Chrome.
 - IMP-009 Global loading feedback and favicon polish. Evidence in request spec, screenshots pending due to missing Chrome.

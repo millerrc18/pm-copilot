@@ -3,20 +3,59 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
     --dark-bg: #0a0d13;
     --dark-panel: rgba(17, 20, 29, 0.72);
     --dark-panel-strong: rgba(17, 20, 29, 0.92);
     --light-text: #f8f9fa;
     --accent-red: #e06469;
     --gray-muted: #6c7280;
-    --turbo-progress-color: var(--accent-red);
-    --turbo-progress-glow: rgba(224, 100, 105, 0.45);
-    --loading-backdrop: rgba(10, 13, 19, 0.55);
-    --loading-surface: rgba(17, 20, 29, 0.75);
-    --loading-surface-border: rgba(255, 255, 255, 0.16);
-    --loading-spinner: var(--accent-red);
-    --loading-spinner-track: rgba(248, 249, 250, 0.2);
+    --border-base: rgba(248, 249, 250, 0.16);
+    --panel-border: rgba(248, 249, 250, 0.12);
+    --page-gradient-1: rgba(224, 100, 105, 0.12);
+    --page-gradient-2: rgba(108, 114, 128, 0.18);
+    color-scheme: dark;
+  }
+
+  [data-theme="dark-coral"] {
+    --dark-bg: #0a0d13;
+    --dark-panel: rgba(17, 20, 29, 0.72);
+    --dark-panel-strong: rgba(17, 20, 29, 0.92);
+    --light-text: #f8f9fa;
+    --accent-red: #e06469;
+    --gray-muted: #6c7280;
+    --border-base: rgba(248, 249, 250, 0.16);
+    --panel-border: rgba(248, 249, 250, 0.12);
+    --page-gradient-1: rgba(224, 100, 105, 0.14);
+    --page-gradient-2: rgba(108, 114, 128, 0.2);
+    color-scheme: dark;
+  }
+
+  [data-theme="dark-blue"] {
+    --dark-bg: #0b1120;
+    --dark-panel: rgba(15, 23, 42, 0.72);
+    --dark-panel-strong: rgba(15, 23, 42, 0.92);
+    --light-text: #f1f5f9;
+    --accent-red: #5b8def;
+    --gray-muted: #7b8aa1;
+    --border-base: rgba(241, 245, 249, 0.16);
+    --panel-border: rgba(241, 245, 249, 0.12);
+    --page-gradient-1: rgba(91, 141, 239, 0.18);
+    --page-gradient-2: rgba(122, 139, 189, 0.18);
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    --dark-bg: #f8fafc;
+    --dark-panel: rgba(255, 255, 255, 0.9);
+    --dark-panel-strong: rgba(255, 255, 255, 0.98);
+    --light-text: #0f172a;
+    --accent-red: #d25b5f;
+    --gray-muted: #5b6475;
+    --border-base: rgba(15, 23, 42, 0.12);
+    --panel-border: rgba(15, 23, 42, 0.08);
+    --page-gradient-1: rgba(210, 91, 95, 0.08);
+    --page-gradient-2: rgba(99, 102, 241, 0.08);
+    color-scheme: light;
   }
 
   html {
@@ -26,12 +65,12 @@
   body {
     @apply bg-dark-bg text-light-text min-h-screen;
     background-image:
-      radial-gradient(800px 400px at 10% -10%, rgba(224, 100, 105, 0.12), transparent 60%),
-      radial-gradient(600px 300px at 90% 0%, rgba(108, 114, 128, 0.18), transparent 55%);
+      radial-gradient(800px 400px at 10% -10%, var(--page-gradient-1), transparent 60%),
+      radial-gradient(600px 300px at 90% 0%, var(--page-gradient-2), transparent 55%);
   }
 
   * {
-    @apply border-white/10;
+    border-color: var(--border-base);
   }
 
   a {
@@ -142,15 +181,18 @@
 
 @layer components {
   .panel {
-    @apply bg-dark-panel border border-white/10 rounded-2xl shadow-panel backdrop-blur-[18px];
+    @apply bg-dark-panel border rounded-2xl shadow-panel backdrop-blur-[18px];
+    border-color: var(--panel-border);
   }
 
   .panel-strong {
-    @apply bg-dark-panel-strong border border-white/10 rounded-2xl shadow-panel backdrop-blur-[18px];
+    @apply bg-dark-panel-strong border rounded-2xl shadow-panel backdrop-blur-[18px];
+    border-color: var(--panel-border);
   }
 
   .panel-border {
-    @apply border border-white/10 rounded-2xl;
+    @apply border rounded-2xl;
+    border-color: var(--panel-border);
   }
 
   .interactive {

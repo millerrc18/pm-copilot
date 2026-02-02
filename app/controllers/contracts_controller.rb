@@ -4,13 +4,24 @@ class ContractsController < ApplicationController
   before_action :set_contract, only: [:show, :edit, :update, :destroy]
 
   def index
-    @contracts = if @program
-      @program.contracts.order(fiscal_year: :desc, contract_code: :asc)
+    base_scope = if @program
+      @program.contracts
     else
       Contract.joins(:program)
         .where(programs: { user_id: current_user.id })
         .includes(:program)
-        .order("programs.name asc, contracts.contract_code asc")
+    end
+
+    @contracts_view = resolve_contracts_view
+    @contracts_view_year = resolve_contracts_view_year(@contracts_view)
+    persist_contracts_view_preference(@contracts_view, @contracts_view_year)
+
+    @contracts = apply_contracts_view(base_scope, @contracts_view, @contracts_view_year)
+
+    @contracts = if @program
+      @contracts.order(fiscal_year: :desc, contract_code: :asc)
+    else
+      @contracts.order("programs.name asc, contracts.contract_code asc")
     end
   end
 
@@ -72,6 +83,39 @@ class ContractsController < ApplicationController
       :sell_price_per_unit,
       :notes
     )
+  end
+
+  def resolve_contracts_view
+    raw_view = params[:view].presence || current_user.contracts_view_preference
+    Contract::VIEW_OPTIONS.include?(raw_view) ? raw_view : "active_this_year"
+  end
+
+  def resolve_contracts_view_year(view)
+    return Date.current.year + 1 if view == "active_next_year"
+    return Date.current.year unless view == "active_in_year"
+
+    raw_year = params[:year].presence || current_user.contracts_view_year
+    raw_year.to_i.positive? ? raw_year.to_i : Date.current.year
+  end
+
+  def persist_contracts_view_preference(view, year)
+    return if params[:view].blank? && params[:year].blank?
+
+    preference_year = view == "active_in_year" ? year : nil
+    current_user.update!(contracts_view: view, contracts_view_year: preference_year)
+  end
+
+  def apply_contracts_view(scope, view, year)
+    case view
+    when "active_this_year"
+      scope.active_this_year
+    when "active_next_year"
+      scope.active_next_year
+    when "active_in_year"
+      scope.active_in_year(year)
+    else
+      scope
+    end
   end
 
   def build_chart_data

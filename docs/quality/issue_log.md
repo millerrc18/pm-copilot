@@ -37,6 +37,32 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Notes: Add Chart.js powered charts to Cost Hub and Contract pages with program and period filters.
 - Evidence: spec/system/cost_hub_spec.rb, spec/system/contract_charts_spec.rb, bin/ui-screenshots (pending due to missing Chrome).
 
+## ISS-006 Imports Hub consolidation
+
+- Status: Done
+- Date: 2026-02-01
+- Notes: Added the Imports Hub with program scoped cost, milestone, and delivery unit imports plus dynamic XLSX template downloads and row level validation feedback.
+- Evidence: bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; Playwright screenshot browser:/tmp/codex_browser_invocations/3b002a5e598312fe/artifacts/artifacts/imports-hub-costs.png; bin/ui-screenshots (pending due to missing Chrome).
+
+## ISS-007 Contracts default active year and saved views
+
+- Status: Done
+- Date: 2026-02-01
+- Notes: Added year based contracts filtering, a saved view selector, and a default active year filter on the contracts index.
+- Evidence: bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; browser screenshot browser:/tmp/codex_browser_invocations/36ed1ebb3756a3d0/artifacts/artifacts/contracts-index.png; bin/ui-screenshots (pending due to missing Chrome).
+## ISS-007 Cost Hub saved view persistence
+
+- Status: Done
+- Date: 2026-02-01
+- Notes: Persisted Cost Hub filters per user, added save and reset controls, and adjusted chart layout to avoid iPhone overflow.
+- Evidence: bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; Playwright screenshot browser:/tmp/codex_browser_invocations/4d890c96fdf758fa/artifacts/artifacts/cost-hub-saved-view.png; bin/ui-screenshots (pending due to missing Chrome).
+
+## ISS-008 Account page overhaul
+
+- Status: Done
+- Date: 2026-02-02
+- Notes: Rebuilt the account page with avatar upload, lifetime stats, and a three theme selector with user persistence.
+- Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending due to missing Chrome).
 ## ISS-006 Loading feedback, favicon, and keytips
 
 - Status: Done

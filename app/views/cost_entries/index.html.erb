@@ -8,7 +8,7 @@
   </div>
   <div class="flex flex-wrap gap-3">
     <%= link_to "New cost entry", new_cost_entry_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
-    <%= link_to "Import costs", new_cost_import_path, class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+    <%= link_to "Import costs", imports_hub_path(tab: "costs"), class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
   </div>
 </div>
 
@@ -33,6 +33,23 @@
       <%= f.submit "Apply filters", class: "inline-flex w-full items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
     </div>
   <% end %>
+
+  <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-light-text/70">
+    <%= button_to "Save as default",
+                  cost_hub_saved_view_path,
+                  method: :post,
+                  params: { start_date: @start_date, end_date: @end_date, program_id: @program&.id },
+                  class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    <% if @saved_filters.present? %>
+      <%= button_to "Reset saved view",
+                    cost_hub_saved_view_path,
+                    method: :delete,
+                    class: "inline-flex items-center justify-center rounded-full border border-white/10 px-4 py-2 font-semibold text-light-text/70 hover:bg-white/10 focus-ring" %>
+      <span><%= @using_saved_filters ? "Saved view applied." : "Saved view is ready to apply on your next visit." %></span>
+    <% else %>
+      <span>Save the applied filters as your default view.</span>
+    <% end %>
+  </div>
 </div>
 
 <div class="mt-6 grid gap-6 lg:grid-cols-3">
@@ -58,9 +75,9 @@
         <p class="mt-1 text-sm text-light-text/60">Weekly and monthly totals for the selected range.</p>
       </div>
     </div>
-    <div class="mt-4 h-64">
+    <div class="mt-4 h-56 overflow-hidden sm:h-64">
       <canvas
-        class="h-full w-full"
+        class="h-full w-full max-w-full"
         data-controller="chart"
         data-chart-type-value="line"
         data-chart-labels-value="<%= @chart_labels.to_json %>"
@@ -74,9 +91,9 @@
         <p class="mt-1 text-sm text-light-text/60">Labor, material, and other spend by period.</p>
       </div>
     </div>
-    <div class="mt-4 h-64">
+    <div class="mt-4 h-56 overflow-hidden sm:h-64">
       <canvas
-        class="h-full w-full"
+        class="h-full w-full max-w-full"
         data-controller="chart"
         data-chart-type-value="bar"
         data-chart-stacked-value="true"
@@ -98,7 +115,7 @@
     <table class="w-full text-sm">
       <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
         <tr>
-          <% base_params = params.permit(:start_date, :end_date, :program_id) %>
+          <% base_params = @filter_params || params.permit(:start_date, :end_date, :program_id) %>
           <th class="pb-3">
             <%= link_to "Date",
                         cost_hub_path(base_params.merge(sort: "date", direction: sort_direction_for("date"))),
