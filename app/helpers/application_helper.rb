@@ -18,9 +18,6 @@ module ApplicationHelper
   end
 
   def search_keytip
-    user_agent = request&.user_agent.to_s
-    return "⌘ K" if user_agent.match?(/Mac|iPhone|iPad/i)
-
-    "Ctrl K"
+    "Ctrl K / ⌘ K"
   end
 end
