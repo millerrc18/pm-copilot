@@ -106,12 +106,23 @@
     <div class="panel p-6">
       <h3 class="text-base font-semibold">Theme</h3>
       <p class="mt-1 text-sm text-light-text/60">Select one of three fixed themes for the workspace.</p>
-      <%= form_with model: @user, url: theme_preference_path, method: :patch, class: "mt-4 space-y-4" do |f| %>
+      <%= form_with model: @user,
+                    url: theme_preference_path,
+                    method: :patch,
+                    class: "mt-4 space-y-4",
+                    data: { turbo_frame: "_top", controller: "theme-switcher" } do |f| %>
         <div class="space-y-3">
           <% theme_cards.each do |card| %>
             <% field_id = "theme_#{card[:value]}" %>
             <div>
-              <%= f.radio_button :theme, card[:value], id: field_id, class: "peer sr-only" %>
+              <%= f.radio_button :theme,
+                                 card[:value],
+                                 id: field_id,
+                                 class: "peer sr-only",
+                                 data: {
+                                   theme_switcher_target: "input",
+                                   action: "change->theme-switcher#change"
+                                 } %>
               <%= label_tag field_id, class: "flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm transition hover:bg-white/10 peer-checked:border-accent-red/70 peer-checked:bg-white/10" do %>
                 <span class="mt-1 h-4 w-4 rounded-full <%= card[:swatch] %>"></span>
                 <span>
