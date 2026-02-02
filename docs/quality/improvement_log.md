@@ -126,15 +126,32 @@ This is a living document that tracks product improvements and refinements acros
 
 ### IMP-007 Search keytips cross-platform
 
-- **Status**: Proposed
+- **Status**: Done
 - **Why**: Current hint is Mac-specific.
 - **Approach**:
-  - Show Cmd+K on Mac and Ctrl+K on Windows/Linux, or show a neutral hint.
+  - Show Ctrl K and Command K together with kbd styling.
 - **Acceptance criteria**:
   - Hint is not misleading for Windows users.
-- **Evidence required**:
-  - System spec if feasible.
-  - Screenshot evidence.
+- **Evidence**:
+  - View spec covering the keytip markup.
+  - Browser sign-in screenshot and bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
+### IMP-009 Global loading feedback and favicon polish
+
+- **Status**: Done
+- **Why**: Users need clearer navigation feedback and consistent branding.
+- **Approach**:
+  - Add a favicon SVG that wraps the PNG source.
+  - Style the Turbo progress bar and add a global loading overlay tied to aria-busy.
+- **Acceptance criteria**:
+  - Layout includes the SVG favicon link tag.
+  - Turbo progress bar is styled and visible during navigation delays.
+  - Global loading overlay appears when aria-busy is true.
+- **Evidence**:
+  - Request spec covering the favicon link.
+  - Browser sign-in screenshot and bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
 
 ### IMP-008 Cost Hub period type filter
 
@@ -158,3 +175,5 @@ This is a living document that tracks product improvements and refinements acros
 - IMP-004 Cost Hub visualizations. Evidence in cost hub system spec, screenshots pending due to missing Chrome.
 - IMP-005 Contract visualizations. Evidence in contract charts system spec, screenshots pending due to missing Chrome.
 - IMP-006 Dark theme form control readability. Evidence in cost import system spec, screenshots pending due to missing Chrome.
+- IMP-007 Search keytips cross-platform. Evidence in view spec, screenshots pending due to missing Chrome.
+- IMP-009 Global loading feedback and favicon polish. Evidence in request spec, screenshots pending due to missing Chrome.
