@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   end
 
   get "profile", to: "users#profile"
+  patch "profile", to: "users#update"
   get "account", to: "users#profile"
+  patch "account", to: "users#update"
 
   get "docs", to: "docs#index"
   get "docs/:slug", to: "docs#show", as: :doc

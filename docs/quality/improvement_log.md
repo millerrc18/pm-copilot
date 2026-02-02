@@ -178,6 +178,24 @@ This is a living document that tracks product improvements and refinements acros
   - bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-011 Account profile overhaul
+
+- **Status**: Done
+- **Why**: The account page needed a dedicated profile view with stats, avatar, and a fixed theme selector.
+- **Approach**:
+  - Add Active Storage for avatar uploads and surface a profile summary panel.
+  - Show lifetime stats for programs, contracts, cost entries, and total cost.
+  - Replace palette settings with a three option theme selector that persists per user.
+- **Acceptance criteria**:
+  - Account page shows profile, avatar upload, lifetime stats, and theme cards.
+  - Theme selection persists and updates the page theme.
+  - Avatar uploads attach successfully in system tests.
+- **Evidence**:
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec.
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - bin/ui-screenshots (pending due to missing Chrome).
+  - PR: pending.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Proposed
