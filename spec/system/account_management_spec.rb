@@ -1,5 +1,6 @@
 require "rails_helper"
 require "securerandom"
+require "base64"
 
 RSpec.describe "Account management", type: :system do
   before do
@@ -36,5 +37,48 @@ RSpec.describe "Account management", type: :system do
 
     expect(page).to have_current_path(root_path)
     expect(page).to have_content("Dashboard")
+  end
+
+  it "allows avatar uploads from the account page" do
+    user = create_ui_user(suffix: "avatar")
+    sign_in_ui_user(email: user.email)
+
+    visit profile_path
+
+    avatar = build_avatar_file
+    attach_file "Avatar", avatar.path
+    click_button "Upload avatar"
+
+    expect(page).to have_content("Avatar updated.")
+    expect(user.reload.avatar).to be_attached
+  ensure
+    avatar&.close
+    avatar&.unlink
+  end
+
+  it "persists theme selection from the account page" do
+    user = create_ui_user(suffix: "theme")
+    sign_in_ui_user(email: user.email)
+
+    visit profile_path
+    find("label", text: "Dark blue").click
+    click_button "Update theme"
+
+    expect(page).to have_content("Appearance updated.")
+    expect(user.reload.theme).to eq("dark-blue")
+
+    visit programs_path
+    expect(page).to have_css("html[data-theme='dark-blue']", visible: :all)
+  end
+
+  def build_avatar_file
+    png_data = Base64.decode64(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
+    )
+    file = Tempfile.new([ "avatar", ".png" ])
+    file.binmode
+    file.write(png_data)
+    file.rewind
+    file
   end
 end

@@ -10,28 +10,28 @@ Rebuild the account page into a user profile center with avatar upload, lifetime
 
 ## Progress
 
-- [ ] (YYYY-MM-DD HH:MM) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 1.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 2.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 3.
-- [ ] (YYYY-MM-DD HH:MM) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
+- [x] (2026-02-02 01:10) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
+- [x] (2026-02-02 01:15) Complete Milestone 1.
+- [x] (2026-02-02 01:22) Complete Milestone 2.
+- [x] (2026-02-02 01:34) Complete Milestone 3.
+- [x] (2026-02-02 01:50) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
 
 ## Surprises & Discoveries
 
-- Observation:  
-  Evidence:  
+- Observation: Chrome was not available for UI screenshots, so the screenshot spec remained pending.
+  Evidence: bin/ui-screenshots reported Chrome is not available for UI screenshots.
 
 ## Decision Log
 
-- Decision:  
-  Rationale:  
-  Date/Author:  
+- Decision: Use a single theme field with values dark-coral, dark-blue, and light while leaving the palette column unchanged for legacy data.
+  Rationale: This matches the fixed three theme requirement while avoiding a data drop migration.
+  Date/Author: 2026-02-02 / Codex
 
 ## Outcomes & Retrospective
 
-- Outcome:  
-  Gaps:  
-  Lessons learned:  
+- Outcome: Account page now includes avatar upload, profile summary, lifetime stats, and theme selection with persistence plus new tests and migrations.
+  Gaps: UI screenshots could not be captured because Chrome was unavailable.
+  Lessons learned: Provide explicit theme mapping migrations when replacing earlier theme fields.
 
 ## Context and Orientation
 
@@ -107,4 +107,3 @@ Acceptance:
 ## Artifacts and Notes
 
 Include concise terminal transcripts and key diffs as indented blocks.
-
