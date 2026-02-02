@@ -76,3 +76,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-03
 - Notes: Ensured Devise treats turbo stream submissions as navigational so sign in and sign up redirect correctly.
 - Evidence: bundle exec rspec spec/initializers/devise_spec.rb.
+
+## ISS-010 OS specific search keytips
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Added OS detection for search keytips so macOS and iPadOS show Command K, Windows and Linux show Control K, and touch only devices show none.
+- Evidence: spec/requests/search_keytips_spec.rb; spec/system/search_keytip_spec.rb; bundle exec rspec (fails due to missing UI_TEST_EMAIL); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails due to missing UI_TEST_EMAIL); bin/ui-screenshots (Chrome not available); browser:/tmp/codex_browser_invocations/9670e816eb8a1339/artifacts/artifacts/os-keytip-programs.png.

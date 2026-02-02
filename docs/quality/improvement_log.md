@@ -159,6 +159,26 @@ This is a living document that tracks product improvements and refinements acros
   - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
   - browser screenshot browser:/tmp/codex_browser_invocations/36ed1ebb3756a3d0/artifacts/artifacts/contracts-index.png.
 
+### IMP-011 OS specific search keytips
+
+- **Status**: Done
+- **Why**: The search hint should match the user's platform and hide on touch only devices.
+- **Approach**:
+  - Add a Stimulus controller that detects Apple platforms and touch only devices.
+  - Render mac and non mac keytips hidden by default and reveal the right hint.
+- **Acceptance criteria**:
+  - macOS and iPadOS show Command K only.
+  - Windows and Linux show Control K only.
+  - Touch only devices do not show keytips.
+- **Evidence**:
+  - spec/requests/search_keytips_spec.rb.
+  - spec/system/search_keytip_spec.rb.
+  - bundle exec rspec (fails due to missing UI_TEST_EMAIL).
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails due to missing UI_TEST_EMAIL).
+  - bin/ui-screenshots (Chrome not available).
+  - browser:/tmp/codex_browser_invocations/9670e816eb8a1339/artifacts/artifacts/os-keytip-programs.png.
+  - PR: pending.
+
 ### IMP-010 Cost Hub saved views and chart polish
 
 - **Status**: Done

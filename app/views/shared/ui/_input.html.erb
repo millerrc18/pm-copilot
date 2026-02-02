@@ -14,16 +14,18 @@
       class: "w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
     %>
     <% if local_assigns[:hotkey].present? %>
-      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] text-light-text/50">
+      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] text-light-text/50" data-controller="os-detect">
         <% if local_assigns[:search_keytip] %>
-          <span class="search-keytip" aria-hidden="true">
-            <kbd>Ctrl</kbd>
-            <kbd>K</kbd>
-            <span class="search-keytip__divider">/</span>
+          <span class="search-keytip hidden" aria-hidden="true" data-os-detect-target="mac" data-search-keytip>
             <kbd>⌘</kbd>
             <kbd>K</kbd>
           </span>
-          <span class="sr-only">Ctrl K or Command K</span>
+          <span class="search-keytip hidden" aria-hidden="true" data-os-detect-target="nonMac" data-search-keytip>
+            <kbd>Ctrl</kbd>
+            <kbd>K</kbd>
+          </span>
+          <span class="sr-only hidden" data-os-detect-target="mac">Command K</span>
+          <span class="sr-only hidden" data-os-detect-target="nonMac">Control K</span>
         <% else %>
           <%= local_assigns[:hotkey] %>
         <% end %>
@@ -44,16 +46,18 @@
       class="w-full rounded-full border border-white/10 bg-white/5 py-2 pl-10 pr-16 text-sm text-light-text placeholder:text-light-text/40 focus-ring"
     />
     <% if local_assigns[:hotkey].present? %>
-      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] text-light-text/50">
+      <span class="absolute right-3 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] text-light-text/50" data-controller="os-detect">
         <% if local_assigns[:search_keytip] %>
-          <span class="search-keytip" aria-hidden="true">
-            <kbd>Ctrl</kbd>
-            <kbd>K</kbd>
-            <span class="search-keytip__divider">/</span>
+          <span class="search-keytip hidden" aria-hidden="true" data-os-detect-target="mac" data-search-keytip>
             <kbd>⌘</kbd>
             <kbd>K</kbd>
           </span>
-          <span class="sr-only">Ctrl K or Command K</span>
+          <span class="search-keytip hidden" aria-hidden="true" data-os-detect-target="nonMac" data-search-keytip>
+            <kbd>Ctrl</kbd>
+            <kbd>K</kbd>
+          </span>
+          <span class="sr-only hidden" data-os-detect-target="mac">Command K</span>
+          <span class="sr-only hidden" data-os-detect-target="nonMac">Control K</span>
         <% else %>
           <%= local_assigns[:hotkey] %>
         <% end %>
