@@ -6,6 +6,19 @@ module ApplicationHelper
     User::THEME_OPTIONS.include?(theme) ? theme : "dark-coral"
   end
 
+  def theme_root_class(user = current_user)
+    theme = user&.theme.presence || "dark-coral"
+
+    case theme
+    when "dark-blue"
+      "theme-dark-blue"
+    when "light"
+      "theme-light"
+    else
+      "theme-dark-coral"
+    end
+  end
+
   def theme_meta_color(theme = current_theme)
     case theme
     when "dark-blue"

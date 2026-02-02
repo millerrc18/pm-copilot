@@ -124,6 +124,22 @@ This is a living document that tracks product improvements and refinements acros
   - Screenshots of forms from bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-007 Instant account theme switching
+
+- **Status**: Done
+- **Why**: Theme changes should apply immediately without a manual refresh and persist across navigation.
+- **Approach**:
+  - Apply a root theme class in the layout and update it on selection change.
+  - Target the theme update form at the top frame so the full document refreshes.
+  - Add a Stimulus controller for instant preview.
+- **Acceptance criteria**:
+  - Selecting a theme updates the UI immediately.
+  - Navigating or reloading preserves the chosen theme.
+- **Evidence**:
+  - Request and system specs for theme class and persistence.
+  - Screenshots captured after theme change in browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/.
+  - Issue: ISS-011.
+
 ### IMP-009 Unified Imports Hub
 
 - **Status**: Done

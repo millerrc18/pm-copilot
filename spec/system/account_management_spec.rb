@@ -61,14 +61,15 @@ RSpec.describe "Account management", type: :system do
     sign_in_ui_user(email: user.email)
 
     visit profile_path
-    find("label", text: "Dark blue").click
+    find("label", text: "Light").click
     click_button "Update theme"
 
     expect(page).to have_content("Appearance updated.")
-    expect(user.reload.theme).to eq("dark-blue")
+    expect(user.reload.theme).to eq("light")
+    expect(page).to have_css("html.theme-light", visible: :all)
 
     visit programs_path
-    expect(page).to have_css("html[data-theme='dark-blue']", visible: :all)
+    expect(page).to have_css("html.theme-light", visible: :all)
   end
 
   def build_avatar_file

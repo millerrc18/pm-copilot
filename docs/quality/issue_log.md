@@ -83,3 +83,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-03
 - Notes: Added OS detection for search keytips so macOS and iPadOS show Command K, Windows and Linux show Control K, and touch only devices show none.
 - Evidence: spec/requests/search_keytips_spec.rb; spec/system/search_keytip_spec.rb; bundle exec rspec (fails due to missing UI_TEST_EMAIL); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails due to missing UI_TEST_EMAIL); bin/ui-screenshots (Chrome not available); browser:/tmp/codex_browser_invocations/9670e816eb8a1339/artifacts/artifacts/os-keytip-programs.png.
+
+## ISS-011 Account theme updates without refresh
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Apply theme classes on the root element, target the theme form at the top frame, and add instant theme switching on the account page.
+- Evidence: spec/requests/theme_preferences_spec.rb; spec/system/account_management_spec.rb; browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/theme-dark-coral.png; browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/theme-dark-blue.png; browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/theme-light.png; bin/ui-screenshots (pending).
