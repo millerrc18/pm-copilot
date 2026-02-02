@@ -69,3 +69,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-02
 - Notes: Added favicon SVG, styled the Turbo progress bar, added a global loading overlay, and updated search keytips to show Ctrl and Command.
 - Evidence: spec/requests/layout_spec.rb, spec/views/shared/ui/input_spec.rb, bundle exec rspec, browser sign-in screenshot, bin/ui-screenshots (pending due to missing Chrome).
+
+## ISS-009 Sign in and sign up turbo handling
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Ensured Devise treats turbo stream submissions as navigational so sign in and sign up redirect correctly.
+- Evidence: bundle exec rspec spec/initializers/devise_spec.rb.

@@ -196,6 +196,20 @@ This is a living document that tracks product improvements and refinements acros
   - bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-012 Authentication turbo navigation
+
+- **Status**: Done
+- **Why**: Turbo form submissions for Devise should redirect properly to avoid stalled sign in or sign up flows.
+- **Approach**:
+  - Add turbo stream to Devise navigational formats.
+  - Cover the configuration with a spec.
+- **Acceptance criteria**:
+  - Devise navigational formats include turbo stream.
+  - Sign in and sign up redirects behave as navigational requests.
+- **Evidence**:
+  - bundle exec rspec spec/initializers/devise_spec.rb.
+  - PR: pending.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Done
