@@ -330,6 +330,22 @@ This is a living document that tracks product improvements and refinements acros
   - spec/mailers/export_notification_mailer_spec.rb.
   - PR: pending.
 
+### IMP-018 Prawn matrix dependency for Ruby 3.4 deploy
+
+- **Status**: Done
+- **Date**: 2026-02-04
+- **Why**: Ruby 3.4 no longer guarantees matrix in the default stdlib set, which caused prawn to fail on boot.
+- **Approach**:
+  - Add matrix to the production bundle.
+  - Upgrade prawn to a release that declares matrix as a runtime dependency.
+- **Acceptance criteria**:
+  - bundle exec ruby -e "require 'prawn'; require 'matrix'; puts 'ok'" succeeds.
+  - Rails boots without matrix load errors.
+- **Evidence**:
+  - bundle exec ruby -e "require 'prawn'; require 'matrix'; puts 'ok'".
+  - bundle exec rails runner "puts 'boot ok'".
+  - Issue: ISS-014.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Done
