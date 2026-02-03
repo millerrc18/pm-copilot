@@ -2,7 +2,7 @@
 title: Dashboard metrics
 summary: Learn what each dashboard KPI means and how to interpret alerts.
 last_updated: 2026-01-31
-category: Dashboard metrics
+category: Analytics
 ---
 
 # Dashboard metrics

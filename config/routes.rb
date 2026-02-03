@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   resources :delivery_milestones, only: [:index, :new]
   resources :delivery_units, only: [:index, :new]
   resources :proposals, only: [:index, :new]
+  resources :risks
+  get "planning-hub", to: "planning_hub#index", as: :planning_hub
+  get "exports/cost-hub(.:format)", to: "exports#cost_hub", as: :cost_hub_export
+  get "exports/risks(.:format)", to: "exports#risks", as: :risks_export
 
   resources :programs do
     resources :contracts, shallow: true do

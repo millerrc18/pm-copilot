@@ -53,7 +53,7 @@ RSpec.describe "Cost Hub", type: :system do
     expect(page).to have_content("$185.00")
     expect(page).to have_content("Units delivered")
     expect(page).to have_content("3")
-    expect(page).to have_css("canvas[data-controller='chart']", count: 2)
+    expect(page).to have_css("canvas[data-controller='chart']", count: 4)
 
     select program_a.name, from: "Program"
     click_button "Apply filters"

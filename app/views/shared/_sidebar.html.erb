@@ -32,6 +32,7 @@
       <%= render "shared/ui/nav_item", label: "Programs", url: programs_path, icon: "folder", active: controller_name == "programs" %>
       <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: controller_name == "cost_entries" %>
       <%= render "shared/ui/nav_item", label: "Contracts", url: contracts_path, icon: "receipt", active: controller_name == "contracts" %>
+      <%= render "shared/ui/nav_item", label: "Planning Hub", url: planning_hub_path, icon: "document", active: controller_name == "planning_hub" %>
     </nav>
   </div>
 
@@ -51,6 +52,7 @@
     <nav class="space-y-2 sidebar-nav">
       <%= render "shared/ui/nav_item", label: "Milestones", url: delivery_milestones_path, icon: "flag", active: controller_name == "delivery_milestones" %>
       <%= render "shared/ui/nav_item", label: "Delivery units", url: delivery_units_path, icon: "truck", active: controller_name == "delivery_units" %>
+      <%= render "shared/ui/nav_item", label: "Risk & Opportunities", url: risks_path, icon: "alert", active: controller_name == "risks" %>
     </nav>
   </div>
 

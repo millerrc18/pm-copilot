@@ -10,28 +10,28 @@ Deliver a Risk/Opportunity register with CRUD, scoring, filters and summary widg
 
 ## Progress
 
-- [ ] (YYYY-MM-DD HH:MM) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 1.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 2.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 3.
-- [ ] (YYYY-MM-DD HH:MM) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
+- [x] (2026-02-03 17:00) Read `AGENTS.md` and confirmed required commands and screenshot expectations.
+- [x] (2026-02-03 17:10) Complete Milestone 1.
+- [x] (2026-02-03 17:20) Complete Milestone 2.
+- [x] (2026-02-03 17:30) Complete Milestone 3.
+- [x] (2026-02-03 17:45) Final validation: run required commands, attempted screenshots, updated logs.
 
 ## Surprises & Discoveries
 
-- Observation:  
-  Evidence:  
+- Observation: Risk register links conflicted with doc links in navigation specs and required disambiguation.
+  Evidence: spec/system/navigation_routes_spec.rb.
 
 ## Decision Log
 
-- Decision:  
-  Rationale:  
-  Date/Author:  
+- Decision: Enforce program or contract scoping with a single Risk model and summary panels on program and contract pages.
+  Rationale: Keeps ownership aligned with existing scoping and avoids duplicate models.
+  Date/Author: 2026-02-03 Codex
 
 ## Outcomes & Retrospective
 
-- Outcome:  
-  Gaps:  
-  Lessons learned:  
+- Outcome: Risk register CRUD, summary widgets, and exports implemented with tests.
+  Gaps: UI screenshots are pending due to missing Chrome.
+  Lessons learned: System specs should target main content to avoid sidebar collisions.
 
 ## Context and Orientation
 
@@ -106,4 +106,3 @@ Acceptance:
 ## Artifacts and Notes
 
 Include concise terminal transcripts and key diffs as indented blocks.
-

@@ -8,6 +8,7 @@ class ProgramsController < ApplicationController
     @program = current_user.programs.find(params[:id])
     @dashboard = ProgramDashboard.new(@program).call
     @contracts = @program.contracts
+    @risk_summary = RiskSummary.new(Risk.for_user(current_user).for_program_context(@program)).call
   end
 
   def new

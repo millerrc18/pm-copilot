@@ -27,6 +27,7 @@ RSpec.describe "Navigation", type: :system do
       expect(page).to have_link("Programs")
       expect(page).to have_link("Cost Hub")
       expect(page).to have_link("Contracts")
+      expect(page).to have_link("Planning Hub")
       expect(page).to have_no_link("Imports Hub")
       expect(page).to have_no_link("Knowledge Center")
     end
@@ -40,6 +41,7 @@ RSpec.describe "Navigation", type: :system do
       expect(page).to have_text("Registers")
       expect(page).to have_link("Milestones")
       expect(page).to have_link("Delivery units")
+      expect(page).to have_link("Risk & Opportunities")
       expect(page).to have_no_link("Cost Hub")
     end
 

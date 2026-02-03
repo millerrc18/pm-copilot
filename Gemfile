@@ -20,6 +20,7 @@ gem "jbuilder"
 
 gem "roo"
 gem "caxlsx", require: false
+gem "prawn"
 gem "rubyzip", "~> 2.4", require: false
 
 gem "csv"

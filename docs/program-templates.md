@@ -3,7 +3,7 @@ title: Program templates
 theme: dark
 summary: Reusable blueprints that speed up program setup and standardize delivery plans.
 last_updated: 2026-02-01
-category: Roadmap
+category: Workspace
 ---
 
 # Program templates

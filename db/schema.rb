@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_02_130500) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -149,6 +149,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_02_130500) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_programs_on_user_id"
+  end
+
+  create_table "risks", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.string "risk_type", null: false
+    t.integer "probability", default: 1, null: false
+    t.integer "impact", default: 1, null: false
+    t.integer "severity_score", default: 1, null: false
+    t.string "status", default: "open", null: false
+    t.string "owner"
+    t.date "due_date"
+    t.integer "program_id"
+    t.integer "contract_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_risks_on_contract_id"
+    t.index ["program_id"], name: "index_risks_on_program_id"
+    t.index ["risk_type"], name: "index_risks_on_risk_type"
+    t.index ["status"], name: "index_risks_on_status"
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -326,6 +346,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_02_130500) do
   add_foreign_key "delivery_milestones", "contracts"
   add_foreign_key "delivery_units", "contracts"
   add_foreign_key "programs", "users"
+  add_foreign_key "risks", "contracts"
+  add_foreign_key "risks", "programs"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

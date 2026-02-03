@@ -29,6 +29,7 @@ class Contract < ApplicationRecord
   has_many :contract_periods, dependent: :destroy
   has_many :delivery_milestones, dependent: :destroy
   has_many :delivery_units, dependent: :destroy
+  has_many :risks, dependent: :destroy
 
   validates :contract_code, :start_date, :end_date, :sell_price_per_unit, presence: true
   validates :contract_code, uniqueness: true

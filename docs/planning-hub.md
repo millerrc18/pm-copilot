@@ -3,17 +3,20 @@ title: Planning hub
 theme: dark
 summary: Centralized planning for bids, resources, and delivery schedules.
 last_updated: 2026-02-01
-category: Roadmap
+category: Workspace
 ---
 
 # Planning hub
 
-The Planning Hub will centralize early-stage planning tasks so teams can move from proposal to delivery without losing context.
+The Planning Hub consolidates contract, milestone, and delivery unit timelines into a single view.
 
-## Planned capabilities
+## What you can do
 
-- Build bid/proposal schedules with key milestones.
-- Assign resources and track availability by role.
-- Align budgets with planned delivery phases.
+- Filter the timeline by program or item type.
+- Review contract windows alongside milestone due dates and shipment activity.
+- Edit contract, milestone, or delivery unit details from the timeline view.
 
-**Status:** Coming soon. Initial planning templates are being drafted.
+## Tips
+
+- Use the program filter to focus on a single delivery stream.
+- Keep milestone quantities current to avoid surprises in delivery reviews.

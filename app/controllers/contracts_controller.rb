@@ -29,6 +29,7 @@ class ContractsController < ApplicationController
     @periods    = @contract.contract_periods.order(:period_start_date)
     @milestones = @contract.delivery_milestones.order(:due_date)
     @units      = @contract.delivery_units.order(:ship_date, :unit_serial)
+    @risk_summary = RiskSummary.new(Risk.for_user(current_user).for_contract(@contract.id)).call
     build_chart_data
   end
 
@@ -49,7 +50,7 @@ class ContractsController < ApplicationController
 
   def update
     if @contract.update(contract_params)
-      redirect_to @contract, notice: "Contract was successfully updated."
+      redirect_to(safe_return_to || @contract, notice: "Contract was successfully updated.")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -118,6 +119,13 @@ class ContractsController < ApplicationController
     end
   end
 
+  def safe_return_to
+    return unless params[:return_to].present?
+    return unless params[:return_to] == planning_hub_path
+
+    params[:return_to]
+  end
+
   def build_chart_data
     periods_for_chart = @periods.select { |period| period.period_start_date.present? }
     @period_chart_labels = periods_for_chart.map { |period| period.period_start_date.strftime("%b %-d") }
@@ -138,6 +146,18 @@ class ContractsController < ApplicationController
         data: periods_for_chart.map { |period| period.revenue_total.to_d.to_f },
         backgroundColor: "#38BDF8",
         borderColor: "#38BDF8"
+      }
+    ]
+    @cost_revenue_dataset = [
+      {
+        label: "Revenue",
+        data: periods_for_chart.map { |period| period.revenue_total.to_d.to_f },
+        backgroundColor: "#38BDF8"
+      },
+      {
+        label: "Cost",
+        data: periods_for_chart.map { |period| period.total_cost.to_d.to_f },
+        backgroundColor: "#F97316"
       }
     ]
   end

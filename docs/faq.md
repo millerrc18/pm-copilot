@@ -2,7 +2,7 @@
 title: FAQ
 summary: Answers to common questions about PM Copilot workflows and troubleshooting.
 last_updated: 2025-02-14
-category: FAQ
+category: Reference
 ---
 
 # Frequently asked questions

@@ -3,7 +3,7 @@ title: Portfolio analytics
 theme: dark
 summary: Consolidated performance dashboards across programs, regions, and customers.
 last_updated: 2026-02-01
-category: Roadmap
+category: Analytics
 ---
 
 # Portfolio analytics

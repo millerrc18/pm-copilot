@@ -2,7 +2,7 @@
 title: Release notes
 summary: Highlights of recent PM Copilot updates.
 last_updated: 2026-01-31
-category: Release notes
+category: Updates
 ---
 
 # Release notes

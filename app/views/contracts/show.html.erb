@@ -9,6 +9,10 @@
   <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_contract_path(@contract) %>
 <% end %>
 
+<p class="text-xs text-light-text/50">
+  <%= link_to "Contract guide", doc_path("contract-management"), class: "text-light-text/70 hover:text-light-text" %>
+</p>
+
 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
   <div class="panel p-5">
     <p class="text-sm text-light-text/60">Units delivered</p>
@@ -35,7 +39,15 @@
   </div>
 </div>
 
-<div class="mt-6 grid gap-6 lg:grid-cols-2">
+<div class="mt-6">
+  <%= render "risks/summary_panel",
+             title: "Risks and opportunities",
+             subtitle: "Items linked to this contract",
+             summary: @risk_summary,
+             link: risks_path(contract_id: @contract.id) %>
+</div>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-3">
   <div class="panel p-6">
     <div>
       <h2 class="text-lg font-semibold">Delivered units trend</h2>
@@ -62,6 +74,47 @@
         data-chart-type-value="bar"
         data-chart-labels-value="<%= @period_chart_labels.to_json %>"
         data-chart-datasets-value="<%= @revenue_chart_dataset.to_json %>"></canvas>
+    </div>
+  </div>
+  <div class="panel p-6">
+    <div>
+      <h2 class="text-lg font-semibold">Cost vs revenue</h2>
+      <p class="text-sm text-light-text/60">Compare period costs with revenue totals.</p>
+    </div>
+    <div class="mt-4 h-64">
+      <canvas
+        class="h-full w-full"
+        data-controller="chart"
+        data-chart-type-value="bar"
+        data-chart-labels-value="<%= @period_chart_labels.to_json %>"
+        data-chart-datasets-value="<%= @cost_revenue_dataset.to_json %>"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="mt-6 panel p-6" id="contract-summary-export">
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold">Contract summary</h2>
+      <p class="text-sm text-light-text/60">Export-ready snapshot for reporting.</p>
+    </div>
+  </div>
+  <div class="mt-4 grid gap-4 md:grid-cols-2">
+    <div>
+      <p class="text-xs uppercase tracking-[0.2em] text-light-text/50">Total revenue</p>
+      <p class="mt-2 text-xl font-semibold"><%= number_to_currency(@contract.total_revenue) %></p>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-[0.2em] text-light-text/50">Total cost</p>
+      <p class="mt-2 text-xl font-semibold"><%= number_to_currency(@contract.total_cost) %></p>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-[0.2em] text-light-text/50">Total margin</p>
+      <p class="mt-2 text-xl font-semibold"><%= number_to_currency(@contract.total_margin) %></p>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-[0.2em] text-light-text/50">Avg margin per unit</p>
+      <p class="mt-2 text-xl font-semibold"><%= number_to_currency(@contract.avg_margin_per_unit) %></p>
     </div>
   </div>
 </div>

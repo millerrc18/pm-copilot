@@ -10,28 +10,28 @@ Provide a Planning Hub timeline that aggregates contract periods, milestones and
 
 ## Progress
 
-- [ ] (YYYY-MM-DD HH:MM) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 1.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 2.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 3.
-- [ ] (YYYY-MM-DD HH:MM) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
+- [x] (2026-02-03 17:00) Read `AGENTS.md` and confirmed required commands and screenshot expectations.
+- [x] (2026-02-03 17:15) Complete Milestone 1.
+- [x] (2026-02-03 17:25) Complete Milestone 2.
+- [x] (2026-02-03 17:35) Complete Milestone 3.
+- [x] (2026-02-03 17:45) Final validation: run required commands, attempted screenshots, updated logs.
 
 ## Surprises & Discoveries
 
-- Observation:  
-  Evidence:  
+- Observation: Modal edits required a safe return path back to the Planning Hub.
+  Evidence: app/controllers/contracts_controller.rb, app/controllers/delivery_milestones_controller.rb, app/controllers/delivery_units_controller.rb.
 
 ## Decision Log
 
-- Decision:  
-  Rationale:  
-  Date/Author:  
+- Decision: Use dialog based modal forms with a return_to parameter for updates.
+  Rationale: Keeps edits in context without changing existing CRUD flows.
+  Date/Author: 2026-02-03 Codex
 
 ## Outcomes & Retrospective
 
-- Outcome:  
-  Gaps:  
-  Lessons learned:  
+- Outcome: Planning Hub timeline and modal edit workflows implemented with tests.
+  Gaps: UI screenshots are pending due to missing Chrome.
+  Lessons learned: Return paths are needed when adding modal edits to existing controllers.
 
 ## Context and Orientation
 
@@ -106,4 +106,3 @@ Acceptance:
 ## Artifacts and Notes
 
 Include concise terminal transcripts and key diffs as indented blocks.
-

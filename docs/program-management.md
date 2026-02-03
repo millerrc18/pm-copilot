@@ -2,7 +2,7 @@
 title: Program management
 summary: Create, edit, archive, and monitor programs across their lifecycle.
 last_updated: 2026-01-31
-category: Program management
+category: Workspace
 ---
 
 # Program management

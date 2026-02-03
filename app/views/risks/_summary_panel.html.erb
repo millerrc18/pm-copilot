@@ -1,0 +1,27 @@
+<div class="panel p-6">
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <h3 class="text-sm font-semibold"><%= title %></h3>
+      <p class="mt-1 text-xs text-light-text/50"><%= subtitle %></p>
+    </div>
+    <%= render "shared/ui/button", label: "View register", variant: "ghost", url: link %>
+  </div>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+    <div>
+      <p class="text-xs text-light-text/50">Open</p>
+      <p class="mt-1 text-lg font-semibold"><%= summary[:open_items] %></p>
+    </div>
+    <div>
+      <p class="text-xs text-light-text/50">Monitoring</p>
+      <p class="mt-1 text-lg font-semibold"><%= summary[:monitoring] %></p>
+    </div>
+    <div>
+      <p class="text-xs text-light-text/50">High severity</p>
+      <p class="mt-1 text-lg font-semibold"><%= summary[:high_severity] %></p>
+    </div>
+    <div>
+      <p class="text-xs text-light-text/50">Opportunities</p>
+      <p class="mt-1 text-lg font-semibold"><%= summary[:opportunities] %></p>
+    </div>
+  </div>
+</div>

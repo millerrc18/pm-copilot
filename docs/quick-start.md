@@ -3,7 +3,7 @@ title: Quick start
 theme: dark
 summary: Sign in, create your first program, add contracts, import delivery data, and review dashboards.
 last_updated: 2026-01-31
-category: Quick start
+category: Getting started
 ---
 
 # Quick start guide

@@ -165,6 +165,8 @@ class CostEntriesController < ApplicationController
 
     @cost_line_datasets = cost_line_datasets(entries_by_date)
     @cost_stack_datasets = cost_stack_datasets(entries_by_date)
+    @cost_composition_labels, @cost_composition_dataset = cost_composition_dataset(entries)
+    @cost_per_unit_dataset = cost_per_unit_dataset(entries_by_date)
   end
 
   def cost_line_datasets(entries_by_date)
@@ -215,6 +217,60 @@ class CostEntriesController < ApplicationController
         borderColor: series_item[:color]
       }
     end
+  end
+
+  def cost_composition_dataset(entries)
+    series = [
+      { key: :bam, label: "BAM", color: "#F87171" },
+      { key: :eng, label: "ENG", color: "#FBBF24" },
+      { key: :mfg_salary, label: "MFG Salary", color: "#34D399" },
+      { key: :mfg_hourly, label: "MFG Hourly", color: "#60A5FA" },
+      { key: :touch, label: "Touch", color: "#A78BFA" },
+      { key: :material_cost, label: "Material", color: "#38BDF8" },
+      { key: :other_costs, label: "Other", color: "#F472B6" }
+    ]
+
+    labels = series.map { |item| item[:label] }
+    data_points = series.map { |item| sum_costs(entries, item[:key]).to_f }
+    colors = series.map { |item| item[:color] }
+
+    dataset = [
+      {
+        label: "Total cost",
+        data: data_points,
+        backgroundColor: colors,
+        borderColor: colors
+      }
+    ]
+
+    [ labels, dataset ]
+  end
+
+  def cost_per_unit_dataset(entries_by_date)
+    units_scope = DeliveryUnit.joins(contract: :program)
+      .where(programs: { user_id: current_user.id })
+      .where(ship_date: @start_date..@end_date)
+
+    units_scope = units_scope.where(programs: { id: @program.id }) if @program
+    units_by_date = units_scope.group_by(&:ship_date)
+
+    data_points = @chart_dates.map do |date|
+      total_cost = entries_by_date.fetch(date, []).sum(&:total_cost).to_d
+      units = units_by_date.fetch(date, []).count
+      units.zero? ? 0 : (total_cost / units).to_f
+    end
+
+    [
+      {
+        label: "Cost per unit",
+        data: data_points,
+        borderColor: "#34D399",
+        backgroundColor: "#34D399",
+        tension: 0.3,
+        pointRadius: 3,
+        pointHoverRadius: 4
+      }
+    ]
   end
 
   def sum_costs(entries, key)

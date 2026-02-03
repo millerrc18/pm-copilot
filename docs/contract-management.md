@@ -2,7 +2,7 @@
 title: Contract management
 summary: Add, update, and remove contracts, plus track delivery and revenue details.
 last_updated: 2026-01-31
-category: Contract management
+category: Workspace
 ---
 
 # Contract management
