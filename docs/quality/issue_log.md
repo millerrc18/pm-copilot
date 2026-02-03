@@ -104,3 +104,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-03
 - Notes: bin/ui-screenshots skipped because Chrome was not available in the environment.
 - Evidence: bin/ui-screenshots output (pending).
+
+## ISS-014 Render deploy fails to load prawn matrix dependency
+
+- Status: Done
+- Date: 2026-02-04
+- Notes: Added matrix to the production bundle and upgraded prawn to ensure matrix is declared as a runtime dependency on Ruby 3.4.1.
+- Evidence: bundle exec ruby -e "require 'prawn'; require 'matrix'; puts 'ok'"; bundle exec rails runner "puts 'boot ok'"; bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots.

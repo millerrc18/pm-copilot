@@ -20,7 +20,8 @@ gem "jbuilder"
 
 gem "roo"
 gem "caxlsx", require: false
-gem "prawn"
+gem "prawn", "~> 2.5"
+gem "matrix", "~> 0.4"
 gem "rubyzip", "~> 2.4", require: false
 
 gem "csv"
