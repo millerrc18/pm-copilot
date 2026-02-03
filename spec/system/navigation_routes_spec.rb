@@ -27,9 +27,11 @@ RSpec.describe "Sidebar navigation", type: :system do
       [ "Contracts", "Contracts", contracts_path ],
       [ "Milestones", "Milestones", delivery_milestones_path ],
       [ "Delivery units", "Delivery units", delivery_units_path ],
+      [ "Risk & Opportunities", "Risk & Opportunities", risks_path ],
       [ "Cost Hub", "Cost Hub", cost_hub_path ],
       [ "Imports Hub", "Imports Hub", imports_hub_path ],
-      [ "Knowledge Center", "Documentation", docs_path ]
+      [ "Planning Hub", "Planning Hub", planning_hub_path ],
+      [ "Knowledge Center", "Knowledge Center", docs_path ]
     ]
 
     sections.each do |label, heading, path|
@@ -66,14 +68,16 @@ RSpec.describe "Sidebar navigation", type: :system do
 
     descriptive_expectations = {
       "Risk & Opportunities" => "mitigation",
-      "Planning hub" => "proposal schedules",
+      "Planning hub" => "timeline",
       "Proposals & bidding" => "New proposal",
       "Documentation hub" => "Create programs and contracts"
     }
 
     doc_titles.each do |title|
       visit docs_path
-      click_link title
+      within("main") do
+        click_link title
+      end
       expect(page).to have_css("h1", text: title)
       expect(page).to have_css(".docs-content")
       expectation = descriptive_expectations[title]

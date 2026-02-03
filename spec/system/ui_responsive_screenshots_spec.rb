@@ -185,7 +185,9 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
           "docs_risk_opportunities" => doc_path("risk-opportunities"),
           "docs_planning_hub" => doc_path("planning-hub"),
           "docs_proposals" => doc_path("proposals"),
-          "docs_documentation_hub" => doc_path("documentation-hub")
+          "docs_documentation_hub" => doc_path("documentation-hub"),
+          "planning_hub_index" => planning_hub_path,
+          "risks_index" => risks_path
         }
 
         pages.each do |page_name, path|
@@ -201,7 +203,7 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
               within("nav[aria-label='Bottom navigation']") do
                 expect(page).to have_link("Programs")
                 expect(page).to have_link("Cost Hub")
-                expect(page).to have_link("Knowledge")
+                expect(page).to have_link("Knowledge Center")
                 expect(page).to have_no_link("Panel")
               end
               expect(sidebar_offscreen?).to be(true)

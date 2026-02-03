@@ -32,6 +32,7 @@ RSpec.describe "Contract charts", type: :system do
     visit contract_path(contract)
 
     expect(page).to have_content("Delivered units trend")
-    expect(page).to have_css("canvas[data-controller='chart']", count: 2)
+    expect(page).to have_content("Cost vs revenue")
+    expect(page).to have_css("canvas[data-controller='chart']", count: 3)
   end
 end

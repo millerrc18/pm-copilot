@@ -3,7 +3,7 @@ title: Proposals & bidding
 theme: dark
 summary: Track quotes, proposals, and bid activity before contracts are signed.
 last_updated: 2026-02-01
-category: Roadmap
+category: Workspace
 ---
 
 # Proposals, quotes, and bidding

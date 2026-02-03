@@ -43,7 +43,7 @@ class DeliveryMilestonesController < ApplicationController
 
   def update
     if @delivery_milestone.update(delivery_milestone_params)
-      redirect_to contract_path(@contract), notice: "Milestone updated."
+      redirect_to(safe_return_to || contract_path(@contract), notice: "Milestone updated.")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -80,5 +80,12 @@ class DeliveryMilestonesController < ApplicationController
       :amendment_effective_date,
       :amendment_notes
     )
+  end
+
+  def safe_return_to
+    return unless params[:return_to].present?
+    return unless params[:return_to] == planning_hub_path
+
+    params[:return_to]
   end
 end

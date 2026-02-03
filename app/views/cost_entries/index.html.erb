@@ -5,10 +5,19 @@
   <div>
     <h2 class="text-lg font-semibold">Cost summary</h2>
     <p class="mt-1 text-sm text-light-text/60">Review costs, delivered units, and average cost per unit.</p>
+    <p class="mt-2 text-xs text-light-text/50">
+      <%= link_to "Cost Hub guide", doc_path("cost-tracking"), class: "text-light-text/70 hover:text-light-text" %>
+    </p>
   </div>
   <div class="flex flex-wrap gap-3">
     <%= link_to "New cost entry", new_cost_entry_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
     <%= link_to "Import costs", imports_hub_path(tab: "costs"), class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+    <%= link_to "Export XLSX",
+                cost_hub_export_path(format: :xlsx, start_date: @start_date, end_date: @end_date, program_id: @program&.id),
+                class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    <%= link_to "Export PDF",
+                cost_hub_export_path(format: :pdf, start_date: @start_date, end_date: @end_date, program_id: @program&.id),
+                class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
   </div>
 </div>
 
@@ -99,6 +108,41 @@
         data-chart-stacked-value="true"
         data-chart-labels-value="<%= @chart_labels.to_json %>"
         data-chart-datasets-value="<%= @cost_stack_datasets.to_json %>"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <div class="panel p-6">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h3 class="text-base font-semibold">Cost per unit trend</h3>
+        <p class="mt-1 text-sm text-light-text/60">Average cost per delivered unit by period.</p>
+      </div>
+    </div>
+    <div class="mt-4 h-56 overflow-hidden sm:h-64">
+      <canvas
+        class="h-full w-full max-w-full"
+        data-controller="chart"
+        data-chart-type-value="line"
+        data-chart-labels-value="<%= @chart_labels.to_json %>"
+        data-chart-datasets-value="<%= @cost_per_unit_dataset.to_json %>"></canvas>
+    </div>
+  </div>
+  <div class="panel p-6">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h3 class="text-base font-semibold">Cost composition</h3>
+        <p class="mt-1 text-sm text-light-text/60">Total cost by labor and spend category.</p>
+      </div>
+    </div>
+    <div class="mt-4 h-56 overflow-hidden sm:h-64">
+      <canvas
+        class="h-full w-full max-w-full"
+        data-controller="chart"
+        data-chart-type-value="bar"
+        data-chart-labels-value="<%= @cost_composition_labels.to_json %>"
+        data-chart-datasets-value="<%= @cost_composition_dataset.to_json %>"></canvas>
     </div>
   </div>
 </div>

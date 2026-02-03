@@ -3,7 +3,7 @@ title: Integrations
 theme: dark
 summary: Connect PM Copilot with ERP, finance, and delivery systems.
 last_updated: 2026-02-01
-category: Roadmap
+category: Reference
 ---
 
 # Integrations

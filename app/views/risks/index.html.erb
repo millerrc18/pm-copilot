@@ -1,0 +1,135 @@
+<% content_for :page_title, "Risk & Opportunities" %>
+<% content_for :page_subtitle, "Track risks and opportunities across programs and contracts." %>
+<% content_for :toolbar do %>
+  <%= render "shared/ui/button", label: "New item", variant: "primary", url: new_risk_path %>
+  <%= render "shared/ui/button",
+             label: "Export XLSX",
+             variant: "secondary",
+             url: risks_export_path(format: :xlsx, program_id: @filters[:program_id], contract_id: @filters[:contract_id]) %>
+  <%= render "shared/ui/button",
+             label: "Export PDF",
+             variant: "secondary",
+             url: risks_export_path(format: :pdf, program_id: @filters[:program_id], contract_id: @filters[:contract_id]) %>
+<% end %>
+
+<p class="text-xs text-light-text/50">
+  <%= link_to "Risk tracker guide", doc_path("risk-opportunities"), class: "text-light-text/70 hover:text-light-text" %>
+</p>
+
+<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Total items</p>
+    <p class="mt-3 text-2xl font-semibold"><%= @summary[:total] %></p>
+  </div>
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Open</p>
+    <p class="mt-3 text-2xl font-semibold"><%= @summary[:open_items] %></p>
+  </div>
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Monitoring</p>
+    <p class="mt-3 text-2xl font-semibold"><%= @summary[:monitoring] %></p>
+  </div>
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">High severity</p>
+    <p class="mt-3 text-2xl font-semibold"><%= @summary[:high_severity] %></p>
+  </div>
+  <div class="panel p-5">
+    <p class="text-sm text-light-text/60">Opportunities</p>
+    <p class="mt-3 text-2xl font-semibold"><%= @summary[:opportunities] %></p>
+  </div>
+</div>
+
+<div class="mt-6 panel p-6">
+  <h2 class="text-lg font-semibold">Filters</h2>
+  <%= form_with url: risks_path, method: :get, local: true, class: "mt-4 grid gap-4 md:grid-cols-3" do |form| %>
+    <div>
+      <%= form.label :program_id, "Program", class: "text-sm font-semibold" %>
+      <%= form.select :program_id,
+                      options_from_collection_for_select(@programs, :id, :name, @filters[:program_id]),
+                      { include_blank: "All programs" },
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :contract_id, "Contract", class: "text-sm font-semibold" %>
+      <%= form.select :contract_id,
+                      options_from_collection_for_select(@contracts, :id, :contract_code, @filters[:contract_id]),
+                      { include_blank: "All contracts" },
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :risk_type, "Type", class: "text-sm font-semibold" %>
+      <%= form.select :risk_type,
+                      [["All types", ""], ["Risk", "risk"], ["Opportunity", "opportunity"]],
+                      { selected: @filters[:risk_type] },
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :status, class: "text-sm font-semibold" %>
+      <%= form.select :status,
+                      [["All statuses", ""]] + Risk::STATUSES.map { |status| [status.titleize, status] },
+                      { selected: @filters[:status] },
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :owner, class: "text-sm font-semibold" %>
+      <%= form.text_field :owner, value: @filters[:owner], placeholder: "Owner name", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div class="flex items-end gap-2">
+      <%= form.submit "Apply filters", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+      <%= link_to "Reset", risks_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-6 panel p-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold">Register</h2>
+      <p class="text-sm text-light-text/60">Review and update risk mitigation status.</p>
+    </div>
+    <%= render "shared/ui/button", label: "New item", variant: "secondary", url: new_risk_path %>
+  </div>
+
+  <% if @risks.any? %>
+    <div class="mt-4 space-y-3">
+      <% @risks.each do |risk| %>
+        <div class="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div>
+            <p class="text-sm font-semibold"><%= risk.title %></p>
+            <p class="mt-1 text-xs text-light-text/50">
+              <%= risk.risk_type.titleize %> · <%= risk.status.titleize %>
+              <% if risk.owner.present? %>
+                · Owner: <%= risk.owner %>
+              <% end %>
+            </p>
+            <% if risk.description.present? %>
+              <p class="mt-2 text-sm text-light-text/70"><%= risk.description %></p>
+            <% end %>
+            <p class="mt-2 text-xs text-light-text/50">
+              Scope:
+              <% if risk.program %>
+                <%= risk.program.name %>
+              <% elsif risk.contract %>
+                <%= risk.contract.contract_code %>
+              <% end %>
+              <% if risk.due_date.present? %>
+                · Due <%= risk.due_date.strftime("%b %-d, %Y") %>
+              <% end %>
+            </p>
+          </div>
+          <div class="text-right text-xs text-light-text/50">
+            <p class="text-sm font-semibold"><%= risk.severity_label %></p>
+            <p class="mt-1">Score <%= risk.severity_score %></p>
+            <p class="mt-1">Impact <%= risk.impact %> · Probability <%= risk.probability %></p>
+            <div class="mt-3 flex flex-wrap justify-end gap-2">
+              <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_risk_path(risk) %>
+              <%= button_to "Delete", risk_path(risk), method: :delete, data: { turbo_confirm: "Delete this item?" }, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-accent-red transition hover:bg-white/10 focus-ring" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="mt-4 text-sm text-light-text/60">No risks or opportunities yet. Add one to get started.</p>
+  <% end %>
+</div>

@@ -110,6 +110,12 @@
       <p class="mt-2 text-sm text-light-text/60">Based on delivered units</p>
     </div>
 
+    <%= render "risks/summary_panel",
+               title: "Risks and opportunities",
+               subtitle: "Program and contract items",
+               summary: @risk_summary,
+               link: risks_path(program_id: @program.id) %>
+
     <div class="panel p-6">
       <h3 class="text-sm font-semibold">Program actions</h3>
       <div class="mt-4 space-y-3">

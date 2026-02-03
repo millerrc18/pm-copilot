@@ -3,7 +3,7 @@ title: AI summaries
 theme: dark
 summary: Auto-generated briefs that summarize program health, delivery risks, and cost changes.
 last_updated: 2026-02-01
-category: Roadmap
+category: Workspace
 ---
 
 # AI summaries

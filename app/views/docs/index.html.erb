@@ -1,25 +1,28 @@
-<% content_for :page_title, "Documentation" %>
-<% content_for :page_subtitle, "Guides, tutorials, and answers for every PM Copilot workflow." %>
+<% content_for :page_title, "Knowledge Center" %>
+<% content_for :page_subtitle, "Guides, playbooks, and answers for every PM Copilot workflow." %>
 
 <div class="panel p-6">
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
       <h2 class="text-lg font-semibold">Find a guide fast</h2>
-      <p class="mt-1 text-sm text-light-text/60">Search the documentation library for topics, workflows, and troubleshooting tips.</p>
+      <p class="mt-1 text-sm text-light-text/60">Search the Knowledge Center for topics, workflows, and troubleshooting tips.</p>
     </div>
     <div class="w-full md:w-80">
-      <%= render "shared/ui/input", placeholder: "Search documentation", form_action: docs_path, value: @query %>
+      <%= render "shared/ui/input", placeholder: "Search Knowledge Center", form_action: docs_path, value: @query %>
     </div>
   </div>
   <div class="mt-4 text-xs text-light-text/50">
-    Looking for program data too? Use the global search in the top bar to include documentation results.
+    Looking for program data too? Use the global search in the top bar to include Knowledge Center results.
     Shortcut: press ⌘ K on Mac or Ctrl K on Windows or Linux.
   </div>
 </div>
 
 <% if @query.present? %>
   <div class="mt-6 panel p-6">
-    <h3 class="text-base font-semibold">Results for "<%= @query %>"</h3>
+    <h3 class="text-base font-semibold">
+      Results for "<%= @query %>"
+      <span class="text-xs text-light-text/50">(<%= @results.count %>)</span>
+    </h3>
     <% if @results.any? %>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <% @results.each do |doc| %>

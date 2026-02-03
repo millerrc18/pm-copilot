@@ -246,6 +246,90 @@ This is a living document that tracks product improvements and refinements acros
   - bundle exec rspec spec/initializers/devise_spec.rb.
   - PR: pending.
 
+### IMP-013 Risk and opportunity register
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Teams need a structured place to log risks and opportunities with ownership and severity scoring.
+- **Approach**:
+  - Add a Risk model with scoring, status tracking, and program or contract scoping.
+  - Add a register with filters, summary widgets, and program or contract summary panels.
+  - Add export buttons for register snapshots.
+- **Acceptance criteria**:
+  - Users can create, edit, and delete risk items.
+  - Severity score updates based on probability and impact.
+  - Program and contract pages show risk summaries.
+- **Evidence**:
+  - spec/models/risk_spec.rb.
+  - spec/system/risk_register_spec.rb.
+  - PR: pending.
+
+### IMP-014 Planning Hub timeline
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Planning workflows need a single view of contracts, milestones, and delivery units.
+- **Approach**:
+  - Build a timeline aggregator and render it in the Planning Hub.
+  - Add modal edit forms with return navigation to the hub.
+- **Acceptance criteria**:
+  - Timeline items appear for contracts, milestones, and delivery units.
+  - Edits from the Planning Hub persist and return to the hub.
+- **Evidence**:
+  - spec/services/planning/timeline_builder_spec.rb.
+  - spec/system/planning_hub_spec.rb.
+  - PR: pending.
+
+### IMP-015 Visualization upgrades for Cost Hub and Contracts
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Additional charts improve insight and reporting.
+- **Approach**:
+  - Add cost composition and cost per unit trend charts in Cost Hub.
+  - Add a cost vs revenue chart and summary export panel for contracts.
+- **Acceptance criteria**:
+  - Cost Hub shows four charts and correct data.
+  - Contract page shows three charts and summary metrics.
+- **Evidence**:
+  - spec/system/cost_hub_spec.rb.
+  - spec/system/contract_charts_spec.rb.
+  - PR: pending.
+
+### IMP-016 Knowledge Center search and IA refresh
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Documentation needed clearer categories and more relevant search results.
+- **Approach**:
+  - Normalize documentation categories and update key guides.
+  - Rank search results by title, summary, and content matches.
+  - Add contextual help links on hubs.
+- **Acceptance criteria**:
+  - Knowledge Center search returns ranked results.
+  - Core pages include help links.
+- **Evidence**:
+  - spec/system/knowledge_center_search_spec.rb.
+  - spec/requests/search_spec.rb.
+  - PR: pending.
+
+### IMP-017 Export and notification support
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Stakeholders need quick XLSX and PDF exports with notifications.
+- **Approach**:
+  - Add exporters for Cost Hub and risk register.
+  - Send export notification emails via a job.
+- **Acceptance criteria**:
+  - Export endpoints return XLSX and PDF files.
+  - Export notification job sends email.
+- **Evidence**:
+  - spec/requests/exports_spec.rb.
+  - spec/jobs/export_notification_job_spec.rb.
+  - spec/mailers/export_notification_mailer_spec.rb.
+  - PR: pending.
+
 ### IMP-007 Search keytips cross-platform
 
 - **Status**: Done

@@ -3,7 +3,7 @@ title: Documentation hub
 theme: dark
 summary: Step-by-step guides for setting up programs, importing data, and reviewing cost insights.
 last_updated: 2026-02-01
-category: Guides
+category: Getting started
 ---
 
 # Documentation hub
@@ -25,7 +25,7 @@ Use this hub as your starting point for core PM Copilot workflows.
 
 Learn how to interpret totals, unit delivery rates, and average cost per unit in the [Cost tracking guide](/docs/cost-tracking).
 
-## Upcoming risk tracker and planning hub
+## Risk and planning workflows
 
-- Preview the [Risk & Opportunities tracker](/docs/risk-opportunities).
-- Explore the [Planning hub roadmap](/docs/planning-hub).
+- Review the [Risk & Opportunities tracker](/docs/risk-opportunities).
+- Use the [Planning hub guide](/docs/planning-hub) to align schedules.

@@ -1,0 +1,87 @@
+<%= form_with(model: risk, local: true, class: "space-y-6") do |form| %>
+  <% if risk.errors.any? %>
+    <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
+      <p class="font-semibold"><%= pluralize(risk.errors.count, "error") %> prohibited this record from being saved:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-light-text/80">
+        <% risk.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :risk_type, "Type", class: "text-sm font-semibold" %>
+      <%= form.select :risk_type,
+                      [["Risk", "risk"], ["Opportunity", "opportunity"]],
+                      {},
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :status, class: "text-sm font-semibold" %>
+      <%= form.select :status,
+                      Risk::STATUSES.map { |status| [status.titleize, status] },
+                      {},
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :title, class: "text-sm font-semibold" %>
+    <%= form.text_field :title, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "text-sm font-semibold" %>
+    <%= form.text_area :description, rows: 3, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :program_id, "Program scope", class: "text-sm font-semibold" %>
+      <%= form.select :program_id,
+                      options_from_collection_for_select(@programs, :id, :name, risk.program_id),
+                      { include_blank: "Select a program" },
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :contract_id, "Contract scope", class: "text-sm font-semibold" %>
+      <%= form.select :contract_id,
+                      options_from_collection_for_select(@contracts, :id, :contract_code, risk.contract_id),
+                      { include_blank: "Select a contract" },
+                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      <p class="mt-2 text-xs text-light-text/50">Choose either a program or a contract.</p>
+    </div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :probability, class: "text-sm font-semibold" %>
+      <%= form.number_field :probability, min: 1, max: 5, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      <p class="mt-2 text-xs text-light-text/50">1 low to 5 high likelihood.</p>
+    </div>
+    <div>
+      <%= form.label :impact, class: "text-sm font-semibold" %>
+      <%= form.number_field :impact, min: 1, max: 5, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      <p class="mt-2 text-xs text-light-text/50">1 low to 5 high impact.</p>
+    </div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :owner, class: "text-sm font-semibold" %>
+      <%= form.text_field :owner, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= form.label :due_date, class: "text-sm font-semibold" %>
+      <%= form.date_field :due_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <%= form.submit(risk.persisted? ? "Save changes" : "Create risk item",
+                    class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
+    <%= link_to "Cancel", risks_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+  </div>
+<% end %>

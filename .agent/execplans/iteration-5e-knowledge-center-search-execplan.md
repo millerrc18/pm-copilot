@@ -10,28 +10,28 @@ Improve documentation usability by restructuring Knowledge Center, adding search
 
 ## Progress
 
-- [ ] (YYYY-MM-DD HH:MM) Read `.agent/AGENTS.md` and confirm required commands and screenshot expectations.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 1.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 2.
-- [ ] (YYYY-MM-DD HH:MM) Complete Milestone 3.
-- [ ] (YYYY-MM-DD HH:MM) Final validation: run all required commands; capture screenshots; update logs; prepare PR.
+- [x] (2026-02-03 17:00) Read `AGENTS.md` and confirmed required commands and screenshot expectations.
+- [x] (2026-02-03 17:25) Complete Milestone 1.
+- [x] (2026-02-03 17:35) Complete Milestone 2.
+- [x] (2026-02-03 17:40) Complete Milestone 3.
+- [x] (2026-02-03 17:45) Final validation: run required commands, attempted screenshots, updated logs.
 
 ## Surprises & Discoveries
 
-- Observation:  
-  Evidence:  
+- Observation: Global search used case sensitive ILIKE and required cross database adjustments.
+  Evidence: app/controllers/search_controller.rb.
 
 ## Decision Log
 
-- Decision:  
-  Rationale:  
-  Date/Author:  
+- Decision: Rank Knowledge Center results by title, summary, and content matches.
+  Rationale: Provides consistent ordering without adding a full text search dependency.
+  Date/Author: 2026-02-03 Codex
 
 ## Outcomes & Retrospective
 
-- Outcome:  
-  Gaps:  
-  Lessons learned:  
+- Outcome: Knowledge Center categories refreshed with ranked search and contextual help links.
+  Gaps: UI screenshots are pending due to missing Chrome.
+  Lessons learned: Contextual help links reduce navigation confusion for new pages.
 
 ## Context and Orientation
 
@@ -106,4 +106,3 @@ Acceptance:
 ## Artifacts and Notes
 
 Include concise terminal transcripts and key diffs as indented blocks.
-

@@ -42,7 +42,7 @@ class DeliveryUnitsController < ApplicationController
 
   def update
     if @delivery_unit.update(delivery_unit_params)
-      redirect_to contract_path(@contract), notice: "Delivered unit updated."
+      redirect_to(safe_return_to || contract_path(@contract), notice: "Delivered unit updated.")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -71,5 +71,12 @@ class DeliveryUnitsController < ApplicationController
 
   def delivery_unit_params
     params.require(:delivery_unit).permit(:unit_serial, :ship_date, :notes)
+  end
+
+  def safe_return_to
+    return unless params[:return_to].present?
+    return unless params[:return_to] == planning_hub_path
+
+    params[:return_to]
   end
 end

@@ -90,3 +90,17 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-03
 - Notes: Apply theme classes on the root element, target the theme form at the top frame, and add instant theme switching on the account page.
 - Evidence: spec/requests/theme_preferences_spec.rb; spec/system/account_management_spec.rb; browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/theme-dark-coral.png; browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/theme-dark-blue.png; browser:/tmp/codex_browser_invocations/823a3fcf41050f9e/artifacts/tmp/screenshots/ui/account_theme/theme-light.png; bin/ui-screenshots (pending).
+
+## ISS-012 Search results not scoped to the signed in user
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Scope global search results to the signed in user for programs and contracts.
+- Evidence: spec/requests/search_spec.rb.
+
+## ISS-013 UI screenshots require Chrome
+
+- Status: Blocked
+- Date: 2026-02-03
+- Notes: bin/ui-screenshots skipped because Chrome was not available in the environment.
+- Evidence: bin/ui-screenshots output (pending).

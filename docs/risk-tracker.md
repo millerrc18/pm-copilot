@@ -3,17 +3,21 @@ title: Risk tracker
 theme: dark
 summary: Log, assess, and monitor risk items alongside delivery plans.
 last_updated: 2026-02-01
-category: Roadmap
+category: Workspace
 ---
 
 # Risk tracker
 
-The risk tracker will give PMs a dedicated space to log delivery risks, track ownership, and monitor mitigation progress.
+Use the risk tracker to log delivery risks, align on ownership, and keep mitigation actions visible.
 
-## Planned workflow
+## How to use it
 
-- Capture risk statements with an owner and target date.
-- Score likelihood and impact to prioritize mitigation work.
-- Review trendlines alongside milestone performance.
+- Create a risk item and describe the impact in plain language.
+- Assign an owner and set a due date for mitigation.
+- Score probability and impact to see severity.
+- Update status as mitigation work progresses.
 
-**Status:** Coming soon. Prototype views are in progress.
+## Related workflows
+
+- Review risk items during program reviews.
+- Link contract specific risks from the contract detail page.

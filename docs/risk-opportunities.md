@@ -3,18 +3,21 @@ title: Risk & Opportunities
 theme: dark
 summary: A unified tracker for risks and opportunities with ownership and mitigation actions.
 last_updated: 2026-02-01
-category: Roadmap
+category: Workspace
 ---
 
 # Risk & Opportunities tracker
 
-The upcoming Risk & Opportunities tracker will help PMs log issues and upside opportunities in one place, alongside delivery and cost data.
+Use the Risk & Opportunities register to log delivery risks and upside opportunities in one shared view.
 
-## What the tracker will include
+## Core workflow
 
-- A register to log risks and opportunities with clear descriptions.
-- Assignment of owners and due dates.
-- Likelihood and impact scoring to prioritize mitigation.
-- A mitigation log to capture actions taken and results.
+- Create a risk or opportunity item with a short title and description.
+- Assign an owner, due date, and status.
+- Score probability and impact to generate a severity score.
+- Filter by program, contract, type, and status to focus mitigation work.
 
-**Status:** Coming soon. We are validating workflows with early users.
+## Tips
+
+- Keep ownership current so follow up actions are easy to track.
+- Use the register filters for weekly reviews with program leads.

@@ -2,7 +2,7 @@
 title: Search and filters
 summary: Use workspace search, filters, and keywords to find programs, contracts, and docs.
 last_updated: 2025-02-14
-category: Program management
+category: Workspace
 ---
 
 # Search and filters
