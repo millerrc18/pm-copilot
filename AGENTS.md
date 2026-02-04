@@ -84,6 +84,10 @@ If a mobile drawer exists:
 ## Notes for Codex prompts
 - Treat each prompt like a GitHub issue: context, expected behavior, acceptance criteria, and validation steps.
 
+## Troubleshooting notes
+- Devise auth pages disable Turbo Drive on forms to avoid fetch failures when a network appliance redirects to an external block page.
+- Chart.js importmap requires a pinned @kurkle/color dependency to prevent module resolution errors.
+
 ## Codex discovery notes (for reliability)
 
 Codex builds an instruction chain when it starts:

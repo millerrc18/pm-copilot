@@ -4,7 +4,7 @@ import "controllers"
 
 // Allow Turbo Drive for navigation and form submissions
 Turbo.session.drive = true
-Turbo.setProgressBarDelay(75)
+Turbo.config.drive.progressBarDelay = 75
 
 // Allow UJS alongside Turbo
 import jquery from "jquery";

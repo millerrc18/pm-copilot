@@ -1,8 +1,8 @@
 require "rails_helper"
 
-RSpec.describe "Contract charts", type: :system do
+RSpec.describe "Contract charts", type: :system, js: true do
   before do
-    driven_by(:rack_test)
+    driven_by(:cuprite)
   end
 
   it "renders charts on the contract page" do
