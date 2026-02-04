@@ -139,3 +139,24 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-03
 - Notes: Programs dashboard overview now includes Profit, Return on Sales, and Return on Cost metrics with zero denominator handling for ratios.
 - Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; browser:/tmp/codex_browser_invocations/61ee250103d76e2c/artifacts/artifacts/program-metrics.png; bin/ui-screenshots (pending Chrome).
+
+## ISS-019 Devise auth Turbo fetch blocked by external redirects
+
+- Status: Done
+- Date: 2026-02-06
+- Notes: Disabled Turbo Drive on Devise forms to avoid fetch failures when a network appliance redirects to an external block page.
+- Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; RAILS_ENV=test bin/rails db:prepare; RAILS_ENV=test bin/rails tailwindcss:build; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec (fails because Chrome is not available for Cuprite); UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending Chrome).
+
+## ISS-020 Turbo progress bar deprecation warning
+
+- Status: Done
+- Date: 2026-02-06
+- Notes: Replaced deprecated Turbo progress bar delay API with Turbo.config.drive.progressBarDelay.
+- Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; RAILS_ENV=test bin/rails db:prepare; RAILS_ENV=test bin/rails tailwindcss:build; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec (fails because Chrome is not available for Cuprite); UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending Chrome).
+
+## ISS-021 Chart.js importmap missing @kurkle/color
+
+- Status: Done
+- Date: 2026-02-06
+- Notes: Added Chart.js importmap pins and updated the chart controller to import from chart.js/auto so the @kurkle/color dependency resolves.
+- Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; RAILS_ENV=test bin/rails db:prepare; RAILS_ENV=test bin/rails tailwindcss:build; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec (fails because Chrome is not available for Cuprite); UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending Chrome).

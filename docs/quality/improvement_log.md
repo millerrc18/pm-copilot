@@ -457,6 +457,28 @@ This is a living document that tracks product improvements and refinements acros
   - browser:/tmp/codex_browser_invocations/61ee250103d76e2c/artifacts/artifacts/program-metrics.png.
   - bin/ui-screenshots (pending Chrome).
 
+### IMP-023 Auth Turbo mitigation and Chart.js importmap stability
+
+- **Status**: Done
+- **Date**: 2026-02-06
+- **Why**: Auth forms and charts needed resilient behavior across network filters and importmap module resolution.
+- **Approach**:
+  - Disable Turbo Drive on Devise forms to avoid fetch failures on external redirect block pages.
+  - Update Turbo progress bar configuration and pin Chart.js dependencies in importmap.
+  - Add system coverage and update screenshot automation targets for auth and chart pages.
+- **Acceptance criteria**:
+  - Devise auth forms render with data-turbo disabled.
+  - Chart pages render without module resolution errors for @kurkle/color.
+- **Evidence**:
+  - bundle exec rubocop.
+  - bundle exec brakeman.
+  - bundle exec bundler-audit check --update.
+  - RAILS_ENV=test bin/rails db:prepare.
+  - RAILS_ENV=test bin/rails tailwindcss:build.
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec (fails because Chrome is not available for Cuprite).
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - bin/ui-screenshots (pending Chrome).
+
 ## Completed improvements
 
 - IMP-001 Program scoped costs. Evidence in system and model specs, screenshots pending due to missing Chrome.

@@ -112,20 +112,32 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
       )
 
       auth_viewports = {
-        "iphone_15_pro" => [ 393, 852 ],
+        "iphone" => [ 390, 844 ],
         "desktop" => [ 1440, 900 ]
       }
 
       auth_viewports.each do |device_name, (width, height)|
         set_viewport(width, height)
         visit new_user_session_path
-        save_ui_screenshot("sign_in", device_name, "view")
+        save_named_screenshot("auth/sign_in", "#{device_name}.png")
 
         visit new_user_registration_path
-        save_ui_screenshot("sign_up", device_name, "view")
+        save_named_screenshot("auth/sign_up", "#{device_name}.png")
       end
 
       sign_in_ui_user(email: user.email)
+
+      chart_viewports = {
+        "iphone" => [ 390, 844 ],
+        "desktop" => [ 1440, 900 ]
+      }
+
+      chart_viewports.each do |device_name, (width, height)|
+        set_viewport(width, height)
+        visit contract_path(contract)
+        expect(page).to have_css("canvas[data-controller='chart']", count: 3)
+        save_named_screenshot("charts/contracts_show", "#{device_name}.png")
+      end
 
       visit imports_hub_path(tab: "costs")
       select program.name, from: "Program"
