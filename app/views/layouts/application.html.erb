@@ -4,7 +4,16 @@
     <title>PM Copilot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0A0D13">
-    <%= favicon_link_tag "favicon.svg", rel: "icon", type: "image/svg+xml" %>
+    <%= favicon_link_tag "branding/black-favicon.png", rel: "icon", type: "image/png" %>
+    <%= tag.link rel: "icon",
+                 type: "image/png",
+                 href: asset_path("branding/white-favicon.png"),
+                 media: "(prefers-color-scheme: dark)" %>
+    <%= tag.link rel: "icon",
+                 type: "image/png",
+                 href: asset_path("branding/black-favicon.png"),
+                 media: "(prefers-color-scheme: light)" %>
+    <%= favicon_link_tag "branding/black-favicon.png", rel: "apple-touch-icon", type: "image/png" %>
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
