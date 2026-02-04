@@ -6,49 +6,63 @@ RSpec.describe "Planning Hub", type: :system do
     driven_by(:rack_test)
   end
 
-  it "shows timeline items and updates them from the modal form" do
+  it "creates plan items, saves a view, and manages dependencies" do
     user = create_ui_user(suffix: "plan-#{SecureRandom.hex(4)}")
     program = Program.create!(name: "Planning Program", user: user)
-    contract = Contract.create!(
-      program: program,
-      contract_code: "PLAN-200",
-      start_date: Date.new(2024, 1, 1),
-      end_date: Date.new(2024, 12, 31),
-      sell_price_per_unit: 250
-    )
-    milestone = DeliveryMilestone.create!(
-      contract: contract,
-      milestone_ref: "MS-200",
-      due_date: Date.new(2024, 2, 1),
-      quantity_due: 4
-    )
-    DeliveryUnit.create!(
-      contract: contract,
-      unit_serial: "UNIT-200",
-      ship_date: Date.new(2024, 1, 15)
-    )
 
     sign_in_ui_user(email: user.email)
+    visit planning_hub_path(program_id: program.id, new_item: true)
+
+    within("dialog", visible: :all) do
+      fill_in "Title", with: "Launch roadmap"
+      select "Initiative", from: "Item type"
+      select "Planned", from: "Status"
+      fill_in "Start date", with: "2024-01-01"
+      fill_in "Due date", with: "2024-02-01"
+      fill_in "Percent complete", with: "10"
+      click_button "Create item"
+    end
+
+    expect(page).to have_content("Plan item created.")
+    expect(page).to have_content("Launch roadmap")
+
+    PlanItem.create!(
+      title: "Dependency item",
+      item_type: "task",
+      status: "planned",
+      program: program
+    )
+
+    visit planning_hub_path(program_id: program.id, view: "dependencies")
+    select "Launch roadmap", from: "Predecessor"
+    select "Dependency item", from: "Successor"
+    select "Blocks", from: "Type"
+    click_button "Add dependency"
+
+    expect(page).to have_content("Dependency added.")
+    expect(page).to have_content("Launch roadmap → Dependency item")
+
+    visit planning_hub_path(program_id: program.id)
+    click_button "Save as default"
+    expect(page).to have_content("Planning Hub view saved as default.")
+
     visit planning_hub_path
+    expect(page).to have_content("Saved view applied.").or have_content("Saved view is ready to apply on your next visit.")
+  end
 
-    expect(page).to have_content("PLAN-200")
-    expect(page).to have_content("MS-200")
-    expect(page).to have_content("UNIT-200")
+  it "enforces program scoping" do
+    user = create_ui_user(suffix: "plan-scope-#{SecureRandom.hex(4)}")
+    program = Program.create!(name: "Scoped Program", user: user)
+    other_user = create_ui_user(suffix: "plan-other-#{SecureRandom.hex(4)}")
+    other_program = Program.create!(name: "Other Program", user: other_user)
 
-    within("[data-testid='planning-modal-contracts-#{contract.id}']", visible: :all) do
-      fill_in "Planned quantity", with: 12
-      click_button "Save changes"
-    end
+    PlanItem.create!(title: "Scoped item", item_type: "initiative", status: "planned", program: program)
+    PlanItem.create!(title: "Other item", item_type: "initiative", status: "planned", program: other_program)
 
-    expect(page).to have_current_path(planning_hub_path)
-    expect(page).to have_content("Contract was successfully updated.")
+    sign_in_ui_user(email: user.email)
+    visit planning_hub_path(program_id: other_program.id)
 
-    within("[data-testid='planning-modal-milestones-#{milestone.id}']", visible: :all) do
-      fill_in "Quantity due", with: 8
-      click_button "Save changes"
-    end
-
-    expect(page).to have_current_path(planning_hub_path)
-    expect(page).to have_content("Milestone updated.")
+    expect(page).to have_content("Scoped item")
+    expect(page).to have_no_content("Other item")
   end
 end

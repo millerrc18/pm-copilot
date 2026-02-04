@@ -69,6 +69,47 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
         material_cost: 100,
         other_costs: 25
       )
+      Risk.create!(
+        title: "Supplier delay",
+        risk_type: "risk",
+        probability: 4,
+        impact: 3,
+        status: "open",
+        program: program,
+        owner: "Jordan",
+        due_date: Date.new(2024, 3, 10)
+      )
+      Risk.create!(
+        title: "Scope expansion",
+        risk_type: "opportunity",
+        probability: 3,
+        impact: 4,
+        status: "open",
+        program: program,
+        owner: "Taylor",
+        due_date: Date.new(2024, 4, 5)
+      )
+      plan_item = PlanItem.create!(
+        title: "Launch roadmap",
+        item_type: "initiative",
+        status: "planned",
+        start_on: Date.new(2024, 1, 1),
+        due_on: Date.new(2024, 2, 15),
+        program: program
+      )
+      dependency_item = PlanItem.create!(
+        title: "Dependency task",
+        item_type: "task",
+        status: "planned",
+        start_on: Date.new(2024, 1, 15),
+        due_on: Date.new(2024, 2, 1),
+        program: program
+      )
+      PlanDependency.create!(
+        predecessor: plan_item,
+        successor: dependency_item,
+        dependency_type: "blocks"
+      )
 
       auth_viewports = {
         "iphone_15_pro" => [ 393, 852 ],
@@ -305,6 +346,63 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
             save_ui_screenshot("cost_entries_edit", device_name, "open")
             close_sidebar
           end
+        end
+
+        planning_viewports = {
+          "iphone" => [ 390, 844 ],
+          "ipad" => [ 820, 1180 ],
+          "desktop" => [ 1440, 900 ]
+        }
+
+        planning_viewports.each do |device_name, (width, height)|
+          set_viewport(width, height)
+          visit planning_hub_path(program_id: program.id)
+          save_ui_screenshot("planning_hub/timeline", device_name, "closed")
+
+          if width < 768
+            open_sidebar
+            save_ui_screenshot("planning_hub/timeline", device_name, "open")
+            close_sidebar
+          end
+
+          visit planning_hub_path(program_id: program.id, view: "dependencies")
+          save_ui_screenshot("planning_hub/dependencies", device_name, "closed")
+
+          if width < 768
+            open_sidebar
+            save_ui_screenshot("planning_hub/dependencies", device_name, "open")
+            close_sidebar
+          end
+
+          visit planning_hub_path(program_id: program.id, edit_item_id: plan_item.id)
+          save_ui_screenshot("planning_hub/item_drawer", device_name, "closed")
+        end
+
+        risk_viewports = {
+          "iphone" => [ 390, 844 ],
+          "ipad" => [ 820, 1180 ],
+          "desktop" => [ 1440, 900 ]
+        }
+
+        risk_viewports.each do |device_name, (width, height)|
+          set_viewport(width, height)
+          visit risks_path(program_id: program.id)
+          save_ui_screenshot("risks_opportunities/default", device_name, "closed")
+
+          if width < 768
+            open_sidebar
+            save_ui_screenshot("risks_opportunities/default", device_name, "open")
+            close_sidebar
+          end
+
+          visit risks_path(program_id: program.id, risk_type: "risk", status: "open")
+          save_ui_screenshot("risks_opportunities/filters", device_name, "closed")
+
+          visit risks_path(program_id: program.id)
+          save_ui_screenshot("risks_opportunities/heatmap", device_name, "closed")
+
+          visit new_risk_path
+          save_ui_screenshot("risks_opportunities/new", device_name, "closed")
         end
       end
     end

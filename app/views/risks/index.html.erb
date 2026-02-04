@@ -16,120 +16,255 @@
   <%= link_to "Risk tracker guide", doc_path("risk-opportunities"), class: "text-light-text/70 hover:text-light-text" %>
 </p>
 
-<div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-  <div class="panel p-5">
-    <p class="text-sm text-light-text/60">Total items</p>
-    <p class="mt-3 text-2xl font-semibold"><%= @summary[:total] %></p>
-  </div>
-  <div class="panel p-5">
-    <p class="text-sm text-light-text/60">Open</p>
-    <p class="mt-3 text-2xl font-semibold"><%= @summary[:open_items] %></p>
-  </div>
-  <div class="panel p-5">
-    <p class="text-sm text-light-text/60">Monitoring</p>
-    <p class="mt-3 text-2xl font-semibold"><%= @summary[:monitoring] %></p>
-  </div>
-  <div class="panel p-5">
-    <p class="text-sm text-light-text/60">High severity</p>
-    <p class="mt-3 text-2xl font-semibold"><%= @summary[:high_severity] %></p>
-  </div>
-  <div class="panel p-5">
-    <p class="text-sm text-light-text/60">Opportunities</p>
-    <p class="mt-3 text-2xl font-semibold"><%= @summary[:opportunities] %></p>
-  </div>
-</div>
-
-<div class="mt-6 panel p-6">
-  <h2 class="text-lg font-semibold">Filters</h2>
-  <%= form_with url: risks_path, method: :get, local: true, class: "mt-4 grid gap-4 md:grid-cols-3" do |form| %>
-    <div>
-      <%= form.label :program_id, "Program", class: "text-sm font-semibold" %>
-      <%= form.select :program_id,
-                      options_from_collection_for_select(@programs, :id, :name, @filters[:program_id]),
-                      { include_blank: "All programs" },
-                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+<% if @selected_program.present? %>
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+    <div class="panel p-5">
+      <p class="text-sm text-light-text/60">Open risks</p>
+      <p class="mt-3 text-2xl font-semibold"><%= @summary[:open_risks] %></p>
     </div>
-    <div>
-      <%= form.label :contract_id, "Contract", class: "text-sm font-semibold" %>
-      <%= form.select :contract_id,
-                      options_from_collection_for_select(@contracts, :id, :contract_code, @filters[:contract_id]),
-                      { include_blank: "All contracts" },
-                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    <div class="panel p-5">
+      <p class="text-sm text-light-text/60">Open opportunities</p>
+      <p class="mt-3 text-2xl font-semibold"><%= @summary[:open_opportunities] %></p>
     </div>
-    <div>
-      <%= form.label :risk_type, "Type", class: "text-sm font-semibold" %>
-      <%= form.select :risk_type,
-                      [["All types", ""], ["Risk", "risk"], ["Opportunity", "opportunity"]],
-                      { selected: @filters[:risk_type] },
-                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    <div class="panel p-5">
+      <p class="text-sm text-light-text/60">Risk exposure</p>
+      <p class="mt-3 text-2xl font-semibold"><%= number_with_delimiter(@summary[:risk_exposure]) %></p>
     </div>
-    <div>
-      <%= form.label :status, class: "text-sm font-semibold" %>
-      <%= form.select :status,
-                      [["All statuses", ""]] + Risk::STATUSES.map { |status| [status.titleize, status] },
-                      { selected: @filters[:status] },
-                      class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    <div class="panel p-5">
+      <p class="text-sm text-light-text/60">Opportunity exposure</p>
+      <p class="mt-3 text-2xl font-semibold"><%= number_with_delimiter(@summary[:opportunity_exposure]) %></p>
     </div>
-    <div>
-      <%= form.label :owner, class: "text-sm font-semibold" %>
-      <%= form.text_field :owner, value: @filters[:owner], placeholder: "Owner name", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    <div class="panel p-5">
+      <p class="text-sm text-light-text/60">Net exposure</p>
+      <p class="mt-3 text-2xl font-semibold"><%= number_with_delimiter(@summary[:net_exposure]) %></p>
     </div>
-    <div class="flex items-end gap-2">
-      <%= form.submit "Apply filters", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
-      <%= link_to "Reset", risks_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    <div class="panel p-5">
+      <p class="text-sm text-light-text/60">Due soon</p>
+      <p class="mt-3 text-2xl font-semibold"><%= @summary[:due_soon] %></p>
     </div>
-  <% end %>
-</div>
-
-<div class="mt-6 panel p-6">
-  <div class="flex flex-wrap items-center justify-between gap-4">
-    <div>
-      <h2 class="text-lg font-semibold">Register</h2>
-      <p class="text-sm text-light-text/60">Review and update risk mitigation status.</p>
-    </div>
-    <%= render "shared/ui/button", label: "New item", variant: "secondary", url: new_risk_path %>
   </div>
 
-  <% if @risks.any? %>
-    <div class="mt-4 space-y-3">
-      <% @risks.each do |risk| %>
-        <div class="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div>
-            <p class="text-sm font-semibold"><%= risk.title %></p>
-            <p class="mt-1 text-xs text-light-text/50">
-              <%= risk.risk_type.titleize %> · <%= risk.status.titleize %>
-              <% if risk.owner.present? %>
-                · Owner: <%= risk.owner %>
-              <% end %>
-            </p>
-            <% if risk.description.present? %>
-              <p class="mt-2 text-sm text-light-text/70"><%= risk.description %></p>
-            <% end %>
-            <p class="mt-2 text-xs text-light-text/50">
-              Scope:
-              <% if risk.program %>
-                <%= risk.program.name %>
-              <% elsif risk.contract %>
-                <%= risk.contract.contract_code %>
-              <% end %>
-              <% if risk.due_date.present? %>
-                · Due <%= risk.due_date.strftime("%b %-d, %Y") %>
-              <% end %>
-            </p>
-          </div>
-          <div class="text-right text-xs text-light-text/50">
-            <p class="text-sm font-semibold"><%= risk.severity_label %></p>
-            <p class="mt-1">Score <%= risk.severity_score %></p>
-            <p class="mt-1">Impact <%= risk.impact %> · Probability <%= risk.probability %></p>
-            <div class="mt-3 flex flex-wrap justify-end gap-2">
-              <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_risk_path(risk) %>
-              <%= button_to "Delete", risk_path(risk), method: :delete, data: { turbo_confirm: "Delete this item?" }, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-accent-red transition hover:bg-white/10 focus-ring" %>
-            </div>
-          </div>
-        </div>
+  <div class="mt-6 panel p-6">
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Filters</h2>
+        <p class="mt-1 text-sm text-light-text/60">Program scope is required. Save a default view for quick access.</p>
+      </div>
+    </div>
+    <%= form_with url: risks_path, method: :get, local: true, class: "mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-4" do |form| %>
+      <div>
+        <%= form.label :program_id, "Program", class: "text-sm font-semibold" %>
+        <%= form.select :program_id,
+                        options_from_collection_for_select(@programs, :id, :name, @filters["program_id"]),
+                        { include_blank: "Select a program" },
+                        class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :contract_id, "Contract", class: "text-sm font-semibold" %>
+        <%= form.select :contract_id,
+                        options_from_collection_for_select(@contracts, :id, :contract_code, @filters["contract_id"]),
+                        { include_blank: "All contracts" },
+                        class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :start_date, "Start date", class: "text-sm font-semibold" %>
+        <%= form.date_field :start_date, value: @start_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :end_date, "End date", class: "text-sm font-semibold" %>
+        <%= form.date_field :end_date, value: @end_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :risk_type, "Type", class: "text-sm font-semibold" %>
+        <%= form.select :risk_type,
+                        [["All types", ""], ["Risk", "risk"], ["Opportunity", "opportunity"]],
+                        { selected: @filters["risk_type"] },
+                        class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :status, class: "text-sm font-semibold" %>
+        <%= form.select :status,
+                        [["All statuses", ""]] + Risk::STATUSES.map { |status| [status.titleize, status] },
+                        { selected: @filters["status"] },
+                        class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :owner_scope, "Owner scope", class: "text-sm font-semibold" %>
+        <%= form.select :owner_scope,
+                        [["All owners", ""], ["Mine", "mine"]],
+                        { selected: @filters["owner_scope"] },
+                        class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div>
+        <%= form.label :owner, "Owner name", class: "text-sm font-semibold" %>
+        <%= form.text_field :owner, value: @filters["owner"], placeholder: "Owner name", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div class="md:col-span-2 xl:col-span-2">
+        <%= form.label :query, "Search", class: "text-sm font-semibold" %>
+        <%= form.text_field :query, value: @filters["query"], placeholder: "Search title, description, owner", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      </div>
+      <div class="flex items-end gap-2">
+        <%= form.submit "Apply filters", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+        <%= link_to "Reset", risks_path, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+      </div>
+    <% end %>
+
+    <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-light-text/70">
+      <%= button_to "Save as default",
+                    risk_saved_view_path,
+                    method: :post,
+                    params: @filters.merge(start_date: @start_date, end_date: @end_date),
+                    class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+      <% if current_user.risk_saved_filters.present? %>
+        <%= button_to "Reset saved view",
+                      risk_saved_view_path,
+                      method: :delete,
+                      class: "inline-flex items-center justify-center rounded-full border border-white/10 px-4 py-2 font-semibold text-light-text/70 hover:bg-white/10 focus-ring" %>
+        <span><%= @using_saved_filters ? "Saved view applied." : "Saved view is ready to apply on your next visit." %></span>
+      <% else %>
+        <span>Save the applied filters as your default view.</span>
       <% end %>
     </div>
-  <% else %>
-    <p class="mt-4 text-sm text-light-text/60">No risks or opportunities yet. Add one to get started.</p>
-  <% end %>
-</div>
+  </div>
+
+  <div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <div class="panel p-6">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h3 class="text-base font-semibold">Risk burndown</h3>
+          <p class="mt-1 text-sm text-light-text/60">Total risk exposure over time.</p>
+        </div>
+      </div>
+      <div class="mt-4 h-56 overflow-hidden sm:h-64">
+        <canvas
+          class="h-full w-full max-w-full"
+          data-controller="chart"
+          data-chart-type-value="line"
+          data-chart-labels-value="<%= @burndown_labels.to_json %>"
+          data-chart-datasets-value="<%= @burndown_datasets.to_json %>"></canvas>
+      </div>
+    </div>
+    <div class="panel p-6">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h3 class="text-base font-semibold">Opportunity trend</h3>
+          <p class="mt-1 text-sm text-light-text/60">Opportunity exposure over time.</p>
+        </div>
+      </div>
+      <div class="mt-4 h-56 overflow-hidden sm:h-64">
+        <canvas
+          class="h-full w-full max-w-full"
+          data-controller="chart"
+          data-chart-type-value="line"
+          data-chart-labels-value="<%= @opportunity_labels.to_json %>"
+          data-chart-datasets-value="<%= @opportunity_datasets.to_json %>"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 panel p-6">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <h3 class="text-base font-semibold">Net exposure trend</h3>
+        <p class="mt-1 text-sm text-light-text/60">Opportunities minus risks over time.</p>
+      </div>
+    </div>
+    <div class="mt-4 h-56 overflow-hidden sm:h-64">
+      <canvas
+        class="h-full w-full max-w-full"
+        data-controller="chart"
+        data-chart-type-value="line"
+        data-chart-labels-value="<%= @net_labels.to_json %>"
+        data-chart-datasets-value="<%= @net_datasets.to_json %>"></canvas>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-6 lg:grid-cols-2">
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Risk heatmap</h3>
+      <p class="mt-1 text-sm text-light-text/60">Probability by impact for risks.</p>
+      <div class="mt-4 grid grid-cols-5 gap-2 text-center text-xs">
+        <% @risk_heatmap.each_with_index do |row, impact| %>
+          <% row.each_with_index do |value, probability| %>
+            <div class="rounded-xl border border-white/10 bg-white/5 px-2 py-3">
+              <p class="text-light-text/60">P<%= probability + 1 %> · I<%= impact + 1 %></p>
+              <p class="mt-1 text-sm font-semibold"><%= value %></p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel p-6">
+      <h3 class="text-base font-semibold">Opportunity heatmap</h3>
+      <p class="mt-1 text-sm text-light-text/60">Probability by impact for opportunities.</p>
+      <div class="mt-4 grid grid-cols-5 gap-2 text-center text-xs">
+        <% @opportunity_heatmap.each_with_index do |row, impact| %>
+          <% row.each_with_index do |value, probability| %>
+            <div class="rounded-xl border border-white/10 bg-white/5 px-2 py-3">
+              <p class="text-light-text/60">P<%= probability + 1 %> · I<%= impact + 1 %></p>
+              <p class="mt-1 text-sm font-semibold"><%= value %></p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 panel p-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Register</h2>
+        <p class="text-sm text-light-text/60">Review and update risk mitigation status.</p>
+      </div>
+      <%= render "shared/ui/button", label: "New item", variant: "secondary", url: new_risk_path %>
+    </div>
+
+    <% if @risks.any? %>
+      <div class="mt-4 space-y-3">
+        <% @risks.each do |risk| %>
+          <div class="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div>
+              <p class="text-sm font-semibold"><%= risk.title %></p>
+              <p class="mt-1 text-xs text-light-text/50">
+                <%= risk.risk_type.titleize %> · <%= risk.status.titleize %>
+                <% if risk.owner.present? %>
+                  · Owner: <%= risk.owner %>
+                <% end %>
+              </p>
+              <% if risk.description.present? %>
+                <p class="mt-2 text-sm text-light-text/70"><%= risk.description %></p>
+              <% end %>
+              <p class="mt-2 text-xs text-light-text/50">
+                Program: <%= risk.program.name %>
+                <% if risk.contract %>
+                  · Contract: <%= risk.contract.contract_code %>
+                <% end %>
+                <% if risk.due_date.present? %>
+                  · Due <%= risk.due_date.strftime("%b %-d, %Y") %>
+                <% end %>
+              </p>
+            </div>
+            <div class="text-right text-xs text-light-text/50">
+              <p class="text-sm font-semibold"><%= risk.severity_label %></p>
+              <p class="mt-1">Score <%= risk.severity_score %></p>
+              <p class="mt-1">Impact <%= risk.impact %> · Probability <%= risk.probability %></p>
+              <div class="mt-3 flex flex-wrap justify-end gap-2">
+                <%= render "shared/ui/button", label: "Edit", variant: "ghost", url: edit_risk_path(risk) %>
+                <%= button_to "Delete", risk_path(risk), method: :delete, data: { turbo_confirm: "Delete this item?" }, class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-accent-red transition hover:bg-white/10 focus-ring" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="mt-4 text-sm text-light-text/60">No risks or opportunities yet. Add one to get started.</p>
+    <% end %>
+  </div>
+<% else %>
+  <div class="mt-6 panel p-6">
+    <p class="text-sm text-light-text/60">Add a program to start tracking risks and opportunities.</p>
+    <div class="mt-4">
+      <%= link_to "Create program", new_program_path, class: "inline-flex items-center justify-center rounded-full bg-accent-red px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring" %>
+    </div>
+  </div>
+<% end %>

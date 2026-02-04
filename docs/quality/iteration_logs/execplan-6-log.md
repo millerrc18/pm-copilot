@@ -1,0 +1,152 @@
+# ExecPlan 6 Iteration Log
+
+## Entry 1
+- Timestamp: 2025-09-15 20:18 UTC
+- Summary: Baseline audit of Risks and Opportunities hub and Planning Hub. Documented current model and UI scope before changes.
+- Files changed:
+  - docs/quality/iteration_logs/execplan-6-log.md
+- Commands run:
+  - None
+- Test outcomes:
+  - Not run
+- Screenshots produced:
+  - None
+- Follow-ups:
+  - Update ExecPlan-6 progress for Milestone 0 and log creation.
+  - Capture baseline notes for risk model, risk summary, and planning hub timeline builder.
+
+### Baseline notes
+- Risks and Opportunities
+  - Model: app/models/risk.rb uses risk_type with values risk and opportunity, severity_score is probability times impact, and scope validation requires either program_id or contract_id with both optional. Program scope is not enforced. RiskSummary only reports counts and high severity. Current UI is app/views/risks/index.html.erb with summary tiles for total, open, monitoring, high severity, and opportunities and a register list with filters.
+  - Controllers: app/controllers/risks_controller.rb filters risks with for_user and passes summary from RiskSummary.
+  - Tests: spec/models/risk_spec.rb and spec/system/risk_register_spec.rb exist.
+- Planning Hub
+  - Controller: app/controllers/planning_hub_controller.rb builds timeline items from Planning::TimelineBuilder with program and item type filters.
+  - Timeline builder: app/services/planning/timeline_builder.rb aggregates contracts, milestones, delivery units and sorts by date, no dependencies or saved views.
+  - UI: app/views/planning_hub/index.html.erb shows filter form and cards with edit modals for contracts, milestones, and delivery units.
+  - Tests: spec/system/planning_hub_spec.rb and spec/services/planning/timeline_builder_spec.rb exist.
+
+## Entry 2
+- Timestamp: 2025-09-15 20:32 UTC
+- Summary: Implemented program required scoping for risks, exposure totals and net exposure metrics, and added risk exposure snapshot model and snapshotter service.
+- Files changed:
+  - .agent/execplans/iteration-6.md
+  - app/controllers/risks_controller.rb
+  - app/models/risk.rb
+  - app/models/risk_exposure_snapshot.rb
+  - app/services/risk_exposure_snapshotter.rb
+  - app/services/risk_summary.rb
+  - app/views/risks/_form.html.erb
+  - app/views/risks/index.html.erb
+  - db/migrate/20260203171000_create_risk_exposure_snapshots.rb
+  - spec/models/risk_spec.rb
+  - spec/system/risk_register_spec.rb
+- Commands run:
+  - None
+- Test outcomes:
+  - Not run
+- Screenshots produced:
+  - None
+- Follow-ups:
+  - Update issue and improvement logs with exposure changes.
+  - Run required validation commands and UI screenshots for later milestones.
+
+## Entry 3
+- Timestamp: 2025-09-15 21:05 UTC
+- Summary: Ran required validation commands, built Tailwind assets for tests, and captured a Risks and Opportunities hub screenshot with net exposure tiles.
+- Files changed:
+  - docs/quality/iteration_logs/execplan-6-log.md
+- Commands run:
+  - bundle install
+  - RAILS_ENV=test bin/rails db:prepare
+  - bundle exec rubocop
+  - bundle exec brakeman
+  - bundle exec bundler-audit check --update
+  - bundle exec rspec
+  - RAILS_ENV=test bin/rails tailwindcss:build
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots
+  - bin/rails db:prepare
+  - bin/rails runner "user = User.find_or_create_by!(email: 'ui-screenshot@example.com') { |u| u.password = 'Password123!' }; program = Program.find_or_create_by!(name: 'Exposure Program', user: user); Risk.create!(title: 'Delivery delay', risk_type: 'risk', probability: 4, impact: 5, status: 'open', program: program, owner: 'Jordan'); Risk.create!(title: 'Scope expansion', risk_type: 'opportunity', probability: 3, impact: 4, status: 'open', program: program, owner: 'Taylor')"
+  - bin/rails runner "user = User.find_by(email: 'ui-screenshot@example.com'); user.update!(password: 'Password123!', password_confirmation: 'Password123!') if user"
+  - bin/rails server -p 3000 -b 0.0.0.0
+- Test outcomes:
+  - bundle exec rubocop: pass
+  - bundle exec brakeman: pass
+  - bundle exec bundler-audit check --update: pass
+  - bundle exec rspec: fail (missing UI_TEST_EMAIL and tailwind.css)
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec: pass with pending Chrome dependent specs
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb: pass
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots: pass with pending Chrome dependent spec
+- Screenshots produced:
+  - browser:/tmp/codex_browser_invocations/73b419c198d48205/artifacts/artifacts/risks-exposure-summary.png
+- Follow-ups:
+  - Continue ExecPlan 6 milestone 2 UX work for Risks and Opportunities hub.
+
+## Entry 4
+- Timestamp: 2025-09-15 22:20 UTC
+- Summary: Completed Risks and Opportunities UX overhaul with saved views, charts, and heatmaps, and delivered Planning Hub models, dependencies, and refreshed UI views.
+- Files changed:
+  - .agent/execplans/iteration-6.md
+  - app/controllers/plan_dependencies_controller.rb
+  - app/controllers/plan_items_controller.rb
+  - app/controllers/planning_hub_controller.rb
+  - app/controllers/planning_hub_saved_views_controller.rb
+  - app/controllers/risk_saved_views_controller.rb
+  - app/controllers/risks_controller.rb
+  - app/models/plan_dependency.rb
+  - app/models/plan_item.rb
+  - app/services/risk_summary.rb
+  - app/views/planning_hub/index.html.erb
+  - app/views/risks/index.html.erb
+  - config/routes.rb
+  - db/migrate/20260203173000_add_saved_views_to_users.rb
+  - db/migrate/20260203173500_create_plan_items.rb
+  - db/migrate/20260203174000_create_plan_dependencies.rb
+  - spec/models/plan_dependency_spec.rb
+  - spec/models/plan_item_spec.rb
+  - spec/models/risk_exposure_snapshot_spec.rb
+  - spec/models/risk_spec.rb
+  - spec/system/planning_hub_spec.rb
+  - spec/system/risk_hub_saved_views_spec.rb
+  - spec/system/risk_register_spec.rb
+  - spec/system/ui_responsive_screenshots_spec.rb
+- Commands run:
+  - bundle install
+  - RAILS_ENV=test bin/rails db:prepare
+  - bundle exec rubocop
+  - bundle exec brakeman
+  - bundle exec bundler-audit check --update
+  - RAILS_ENV=test bin/rails tailwindcss:build
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots
+- Test outcomes:
+  - bundle exec rubocop: pass
+  - bundle exec brakeman: pass
+  - bundle exec bundler-audit check --update: pass
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec: pass with pending Chrome dependent specs
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb: pass
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots: pass with pending Chrome dependent spec
+- Screenshots produced:
+  - Pending via bin/ui-screenshots because Chrome is unavailable
+- Follow-ups:
+  - Re-run UI screenshots when Chrome is available.
+
+## Entry 5
+- Timestamp: 2025-09-15 22:30 UTC
+- Summary: Captured updated Risks and Opportunities and Planning Hub screenshots using Playwright for UX verification.
+- Files changed:
+  - docs/quality/iteration_logs/execplan-6-log.md
+- Commands run:
+  - bin/rails db:prepare
+  - bin/rails runner "user = User.find_or_create_by!(email: 'ui-screenshot@example.com') { |u| u.password = 'Password123!' }; program = Program.find_or_create_by!(name: 'Exposure Program', user: user); plan_item = PlanItem.find_or_create_by!(title: 'Launch roadmap', program: program) { |item| item.item_type = 'initiative'; item.status = 'planned'; item.start_on = Date.current; item.due_on = Date.current + 14 }; dependency_item = PlanItem.find_or_create_by!(title: 'Dependency task', program: program) { |item| item.item_type = 'task'; item.status = 'planned'; item.start_on = Date.current + 1; item.due_on = Date.current + 7 }; PlanDependency.find_or_create_by!(predecessor: plan_item, successor: dependency_item) { |dep| dep.dependency_type = 'blocks' }; Risk.find_or_create_by!(title: 'Supplier delay', program: program, risk_type: 'risk') { |risk| risk.probability = 4; risk.impact = 3; risk.status = 'open'; risk.owner = 'Jordan'; risk.due_date = Date.current + 7 }; Risk.find_or_create_by!(title: 'Scope expansion', program: program, risk_type: 'opportunity') { |risk| risk.probability = 3; risk.impact = 4; risk.status = 'open'; risk.owner = 'Taylor'; risk.due_date = Date.current + 14 }"
+  - bin/rails server -p 3000 -b 0.0.0.0
+- Test outcomes:
+  - Not run
+- Screenshots produced:
+  - browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/risks-hub.png
+  - browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/planning-hub.png
+- Follow-ups:
+  - Re-run bin/ui-screenshots when Chrome is available.

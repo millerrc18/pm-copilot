@@ -19,6 +19,9 @@ class ProgramDashboard
       units_delivered: contract_rows.sum { |r| r[:units_delivered] },
       revenue_to_date: contract_rows.sum { |r| r[:revenue_to_date] },
       cost_to_date: cost_to_date,
+      profit_to_date: 0.to_d,
+      ros_to_date: nil,
+      roc_to_date: nil,
       margin_to_date: 0.to_d,
       margin_pct_to_date: 0.to_d,
       avg_cost_per_unit: 0.to_d,
@@ -29,8 +32,11 @@ class ProgramDashboard
     }
 
     totals[:margin_to_date] = totals[:revenue_to_date] - totals[:cost_to_date]
+    totals[:profit_to_date] = totals[:margin_to_date]
     totals[:margin_pct_to_date] =
       totals[:revenue_to_date].zero? ? 0.to_d : (totals[:margin_to_date] / totals[:revenue_to_date])
+    totals[:ros_to_date] = totals[:revenue_to_date].zero? ? nil : (totals[:profit_to_date] / totals[:revenue_to_date])
+    totals[:roc_to_date] = totals[:cost_to_date].zero? ? nil : (totals[:profit_to_date] / totals[:cost_to_date])
 
     totals[:avg_cost_per_unit] =
       totals[:units_delivered].zero? ? 0.to_d : (totals[:cost_to_date] / totals[:units_delivered].to_d)

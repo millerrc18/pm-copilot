@@ -20,7 +20,11 @@ Rails.application.routes.draw do
   resources :delivery_units, only: [:index, :new]
   resources :proposals, only: [:index, :new]
   resources :risks
+  resource :risk_saved_view, only: [ :create, :destroy ]
   get "planning-hub", to: "planning_hub#index", as: :planning_hub
+  resource :planning_hub_saved_view, only: [ :create, :destroy ]
+  resources :plan_items, only: [ :create, :update, :destroy ]
+  resources :plan_dependencies, only: [ :create, :destroy ]
   get "exports/cost-hub(.:format)", to: "exports#cost_hub", as: :cost_hub_export
   get "exports/risks(.:format)", to: "exports#risks", as: :risks_export
 

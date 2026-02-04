@@ -22,7 +22,7 @@
     </div>
 
     <% if defined?(@dashboard) && @dashboard.present? %>
-      <div class="grid gap-4 md:grid-cols-2">
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <div class="panel p-5">
           <p class="text-sm text-light-text/60">Revenue to date</p>
           <p class="mt-3 text-2xl font-semibold"><%= number_to_currency(@dashboard[:totals][:revenue_to_date]) %></p>
@@ -34,11 +34,37 @@
           <p class="mt-2 text-xs text-light-text/50">Updated this week</p>
         </div>
         <div class="panel p-5">
-          <p class="text-sm text-light-text/60">Margin to date</p>
-          <p class="mt-3 text-2xl font-semibold <%= @dashboard[:totals][:margin_to_date].to_d < 0 ? "text-accent-red" : "text-light-text" %>">
-            <%= number_to_currency(@dashboard[:totals][:margin_to_date]) %>
+          <p class="text-sm text-light-text/60">Profit to date</p>
+          <p class="mt-3 text-2xl font-semibold <%= @dashboard[:totals][:profit_to_date].to_d < 0 ? "text-accent-red" : "text-light-text" %>">
+            <%= number_to_currency(@dashboard[:totals][:profit_to_date]) %>
           </p>
-          <p class="mt-2 text-xs text-light-text/50"><%= (@dashboard[:totals][:margin_pct_to_date].to_d * 100).round(1) %>%</p>
+          <p class="mt-2 text-xs text-light-text/50">Revenue minus cost</p>
+        </div>
+        <div class="panel p-5">
+          <p class="text-sm text-light-text/60">
+            <span title="Return on sales equals profit divided by revenue. Shows N/A when revenue is zero.">Return on sales</span>
+          </p>
+          <p class="mt-3 text-2xl font-semibold">
+            <% if @dashboard[:totals][:ros_to_date].present? %>
+              <%= (@dashboard[:totals][:ros_to_date].to_d * 100).round(1) %>%
+            <% else %>
+              N/A
+            <% end %>
+          </p>
+          <p class="mt-2 text-xs text-light-text/50">ROS</p>
+        </div>
+        <div class="panel p-5">
+          <p class="text-sm text-light-text/60">
+            <span title="Return on cost equals profit divided by cost. Shows N/A when cost is zero.">Return on cost</span>
+          </p>
+          <p class="mt-3 text-2xl font-semibold">
+            <% if @dashboard[:totals][:roc_to_date].present? %>
+              <%= (@dashboard[:totals][:roc_to_date].to_d * 100).round(1) %>%
+            <% else %>
+              N/A
+            <% end %>
+          </p>
+          <p class="mt-2 text-xs text-light-text/50">ROC</p>
         </div>
         <div class="panel p-5">
           <p class="text-sm text-light-text/60">OTD to date</p>

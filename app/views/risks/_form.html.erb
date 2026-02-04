@@ -44,6 +44,7 @@
                       options_from_collection_for_select(@programs, :id, :name, risk.program_id),
                       { include_blank: "Select a program" },
                       class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+      <p class="mt-2 text-xs text-light-text/50">Program scope is required.</p>
     </div>
     <div>
       <%= form.label :contract_id, "Contract scope", class: "text-sm font-semibold" %>
@@ -51,7 +52,7 @@
                       options_from_collection_for_select(@contracts, :id, :contract_code, risk.contract_id),
                       { include_blank: "Select a contract" },
                       class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
-      <p class="mt-2 text-xs text-light-text/50">Choose either a program or a contract.</p>
+      <p class="mt-2 text-xs text-light-text/50">Contract scope is optional and must belong to the program.</p>
     </div>
   </div>
 
