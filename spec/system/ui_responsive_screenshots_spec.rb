@@ -113,6 +113,7 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
 
       auth_viewports = {
         "iphone" => [ 390, 844 ],
+        "ipad" => [ 820, 1180 ],
         "desktop" => [ 1440, 900 ]
       }
 
@@ -120,12 +121,33 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
         set_viewport(width, height)
         visit new_user_session_path
         save_named_screenshot("auth/sign_in", "#{device_name}.png")
+        save_ui_screenshot("branding/auth_sign_in", device_name, "default")
 
         visit new_user_registration_path
         save_named_screenshot("auth/sign_up", "#{device_name}.png")
+        save_ui_screenshot("branding/auth_sign_up", device_name, "default")
       end
 
       sign_in_ui_user(email: user.email)
+
+      branding_viewports = {
+        "iphone" => [ 390, 844 ],
+        "ipad" => [ 820, 1180 ],
+        "desktop" => [ 1440, 900 ]
+      }
+
+      branding_viewports.each do |device_name, (width, height)|
+        set_viewport(width, height)
+        visit programs_path
+
+        if width < 768
+          open_sidebar
+          save_ui_screenshot("branding/sidebar", device_name, "open")
+          close_sidebar
+        else
+          save_ui_screenshot("branding/sidebar", device_name, "closed")
+        end
+      end
 
       chart_viewports = {
         "iphone" => [ 390, 844 ],

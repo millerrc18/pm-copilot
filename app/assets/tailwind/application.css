@@ -115,6 +115,18 @@
     pointer-events: auto;
   }
 
+  .brand-logo__image--light {
+    display: none;
+  }
+
+  .theme-light .brand-logo__image--light {
+    display: inline;
+  }
+
+  .theme-light .brand-logo__image--dark {
+    display: none;
+  }
+
   .turbo-progress-bar {
     background-color: var(--turbo-progress-color);
     box-shadow: 0 0 12px var(--turbo-progress-glow);

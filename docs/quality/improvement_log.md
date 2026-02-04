@@ -479,6 +479,30 @@ This is a living document that tracks product improvements and refinements acros
   - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
   - bin/ui-screenshots (pending Chrome).
 
+### IMP-024 Branding logos and favicons
+
+- **Status**: Done
+- **Date**: 2026-02-08
+- **Why**: Branding needed to show the new logos and favicon variants across navigation and auth experiences.
+- **Approach**:
+  - Add a shared brand logo partial that toggles by theme.
+  - Use the logo in sidebar, top bar, and Devise auth pages.
+  - Add light and dark favicon link tags plus an apple touch icon link.
+  - Add system coverage and branding screenshots under tmp/screenshots/ui/branding.
+- **Acceptance criteria**:
+  - Navigation and auth pages render the new logo for light and dark themes.
+  - The head includes favicon and apple touch icon links.
+- **Evidence**:
+  - spec/system/branding_spec.rb.
+  - bundle exec rubocop.
+  - bundle exec brakeman.
+  - bundle exec bundler-audit check --update.
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec (fails because Chrome is not available for Cuprite).
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - bin/ui-screenshots (pending Chrome).
+  - Playwright screenshot browser:/tmp/codex_browser_invocations/7f43d50eacbf07d5/artifacts/artifacts/branding-sign-in.png.
+  - PR: pending.
+
 ## Completed improvements
 
 - IMP-001 Program scoped costs. Evidence in system and model specs, screenshots pending due to missing Chrome.

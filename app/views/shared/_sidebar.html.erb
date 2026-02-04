@@ -1,11 +1,7 @@
 <aside class="sidebar fixed inset-y-0 left-0 z-40 flex w-72 -translate-x-full flex-col gap-6 border-r border-white/10 bg-dark-panel-strong px-5 py-6 transition duration-300 md:static md:translate-x-0 md:shadow-none" data-sidebar-target="sidebar">
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent-red/20 text-accent-red">
-        <svg class="icon-md" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8L12 3z" />
-        </svg>
-      </span>
+      <%= render "shared/brand_logo", class_name: "h-8 w-auto" %>
       <div>
         <p class="text-sm font-semibold">PM Copilot</p>
         <p class="text-xs text-light-text/50">Program workspace</p>

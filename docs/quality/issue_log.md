@@ -160,3 +160,17 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-06
 - Notes: Added Chart.js importmap pins and updated the chart controller to import from chart.js/auto so the @kurkle/color dependency resolves.
 - Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; RAILS_ENV=test bin/rails db:prepare; RAILS_ENV=test bin/rails tailwindcss:build; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec (fails because Chrome is not available for Cuprite); UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending Chrome).
+
+## ISS-022 Apple touch icon size mismatch
+
+- Status: Open
+- Date: 2026-02-08
+- Notes: Page area is layout head icons. Added apple touch icon link using the provided favicon, but the files are 1536 by 1024 so a dedicated 180 by 180 icon is still needed for correct sizing.
+- Evidence: app/assets/images/branding/black-favicon.png and white-favicon.png dimensions checked via a PNG header script.
+
+## ISS-023 Favicon media query support varies by browser
+
+- Status: Open
+- Date: 2026-02-08
+- Notes: Page area is layout head icons. Added prefers-color-scheme favicon links, but some browsers ignore media queries for link rel icon so the fallback icon remains necessary.
+- Evidence: Layout includes both media specific and fallback favicon link tags.

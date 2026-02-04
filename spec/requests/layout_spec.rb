@@ -6,9 +6,9 @@ RSpec.describe "Layout", type: :request do
 
     expect(response).to have_http_status(:ok)
     document = Nokogiri::HTML(response.body)
-    icon_link = document.at_css("link[rel='icon'][type='image/svg+xml']")
+    icon_links = document.css("link[rel='icon'][type='image/png']")
 
-    expect(icon_link).not_to be_nil
-    expect(icon_link["href"]).to include(".svg")
+    expect(icon_links).not_to be_empty
+    expect(icon_links.map { |link| link["href"] }).to include(a_string_including("branding/black-favicon"))
   end
 end

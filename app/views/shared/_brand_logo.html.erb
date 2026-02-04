@@ -1,0 +1,9 @@
+<% logo_class = local_assigns.fetch(:class_name, "h-8 w-auto") %>
+<span class="brand-logo inline-flex items-center" data-testid="brand-logo">
+  <%= image_tag "branding/white-logo.png",
+                class: "brand-logo__image brand-logo__image--dark #{logo_class}",
+                alt: "PM Copilot logo" %>
+  <%= image_tag "branding/black-logo.png",
+                class: "brand-logo__image brand-logo__image--light #{logo_class}",
+                alt: "PM Copilot logo" %>
+</span>
