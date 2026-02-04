@@ -38,34 +38,34 @@ This log is separate from `docs/quality/issue_log.md` and `docs/quality/improvem
 
 ## Progress
 
-- [ ] (T0) Audit current main branch state for R&O and Planning (routes, models, pages, tests, screenshots).
-- [ ] (T_toggle) Create `docs/quality/iteration_logs/execplan-6-log.md` and write initial baseline entry.
-- [ ] (M1) R&O Hub: Data model alignment (liabilities/assets semantics), add Net Exposure, and ensure program scoping is correct.
-- [ ] (M2) R&O Hub: UX overhaul (dashboard layout, burndown, opportunity trend, heatmaps, table, saved views behavior).
-- [ ] (M3) R&O Hub: Tests + screenshot coverage + CI browser reliability.
-- [ ] (M4) Planning Hub: Data model (Plan Items + dependencies + views) and core CRUD.
-- [ ] (M5) Planning Hub: UX (timeline, dependency view, filters, saved views, program/contract scoping).
-- [ ] (M6) Planning Hub: Tests + screenshot coverage + documentation updates.
-- [ ] (M7) Final validation: run full command set, confirm acceptance criteria, update docs and logs.
+- [x] (T0) Audit current main branch state for R&O and Planning (routes, models, pages, tests, screenshots).
+- [x] (T_toggle) Create `docs/quality/iteration_logs/execplan-6-log.md` and write initial baseline entry.
+- [x] (M1) R&O Hub: Data model alignment (liabilities/assets semantics), add Net Exposure, and ensure program scoping is correct.
+- [x] (M2) R&O Hub: UX overhaul (dashboard layout, burndown, opportunity trend, heatmaps, table, saved views behavior).
+- [x] (M3) R&O Hub: Tests + screenshot coverage + CI browser reliability.
+- [x] (M4) Planning Hub: Data model (Plan Items + dependencies + views) and core CRUD.
+- [x] (M5) Planning Hub: UX (timeline, dependency view, filters, saved views, program/contract scoping).
+- [x] (M6) Planning Hub: Tests + screenshot coverage + documentation updates.
+- [x] (M7) Final validation: run full command set, confirm acceptance criteria, update docs and logs.
 
 ## Surprises & Discoveries
 
 (Keep updated during implementation with concise evidence.)
 
-- Observation:
-  Evidence:
+- Observation: UI screenshot spec remains pending because Chrome is not available in the environment.
+  Evidence: bin/ui-screenshots output shows pending status for ui_responsive_screenshots_spec.rb.
 
 ## Decision Log
 
 (Keep updated during implementation.)
 
-- Decision:
-  Rationale:
-  Date/Author:
+- Decision: Applied date range filters only when explicitly provided, while keeping default ranges for charting.
+  Rationale: Prevented risk items without due dates from being hidden while still providing trend coverage.
+  Date/Author: 2026-02-03 Codex
 
 ## Outcomes & Retrospective
 
-(Complete at the end with what shipped, what did not, and what to do next.)
+Shipped Risk and Opportunity hub updates with saved views, exposure metrics, charts, and heatmaps, plus planning hub models, dependencies, and updated UX. Tests pass with UI screenshot coverage pending Chrome availability. Next steps are to verify UI screenshots once Chrome is available and continue refining burndown and dependency visuals.
 
 ## Context and Orientation
 

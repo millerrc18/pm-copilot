@@ -33,7 +33,7 @@ class Risk < ApplicationRecord
   TYPES = %w[risk opportunity].freeze
   STATUSES = %w[open monitoring mitigated closed].freeze
 
-  belongs_to :program, optional: true
+  belongs_to :program
   belongs_to :contract, optional: true
 
   validates :title, :risk_type, :status, presence: true
@@ -41,7 +41,7 @@ class Risk < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates :probability, :impact,
             numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 5 }
-  validate :exactly_one_scope
+  validate :contract_matches_program
 
   before_validation :update_severity_score
 
@@ -54,10 +54,27 @@ class Risk < ApplicationRecord
   }
 
   def self.for_user(user)
-    joins("LEFT JOIN programs AS risk_programs ON risk_programs.id = risks.program_id")
-      .joins("LEFT JOIN contracts ON contracts.id = risks.contract_id")
-      .joins("LEFT JOIN programs AS contract_programs ON contract_programs.id = contracts.program_id")
-      .where("risk_programs.user_id = :user_id OR contract_programs.user_id = :user_id", user_id: user.id)
+    joins(:program).where(programs: { user_id: user.id })
+  end
+
+  def self.risk_total_exposure(scope)
+    scope.where(risk_type: "risk", status: "open").sum(:severity_score)
+  end
+
+  def self.opportunity_total_exposure(scope)
+    scope.where(risk_type: "opportunity", status: "open").sum(:severity_score)
+  end
+
+  def self.net_exposure(scope)
+    opportunity_total_exposure(scope) - risk_total_exposure(scope)
+  end
+
+  def self.exposure_totals(scope)
+    {
+      risk_total: risk_total_exposure(scope),
+      opportunity_total: opportunity_total_exposure(scope),
+      net_exposure: net_exposure(scope)
+    }
   end
 
   def severity_label
@@ -81,11 +98,11 @@ class Risk < ApplicationRecord
     self.severity_score = probability.to_i * impact.to_i
   end
 
-  def exactly_one_scope
-    if program_id.present? && contract_id.present?
-      errors.add(:base, "Select a program or a contract, not both.")
-    elsif program_id.blank? && contract_id.blank?
-      errors.add(:base, "Select a program or a contract.")
-    end
+  def contract_matches_program
+    return if contract.blank? || program.blank?
+
+    return if contract.program_id == program_id
+
+    errors.add(:contract_id, "must belong to the selected program.")
   end
 end

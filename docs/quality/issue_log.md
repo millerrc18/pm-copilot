@@ -111,3 +111,24 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-04
 - Notes: Added matrix to the production bundle and upgraded prawn to ensure matrix is declared as a runtime dependency on Ruby 3.4.1.
 - Evidence: bundle exec ruby -e "require 'prawn'; require 'matrix'; puts 'ok'"; bundle exec rails runner "puts 'boot ok'"; bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots.
+
+## ISS-015 Risk exposure metrics and program scoping
+
+- Status: Done
+- Date: 2026-02-05
+- Notes: Require program scope for risks, allow optional contracts aligned to program, add exposure totals and net exposure metrics, and introduce program level exposure snapshots.
+- Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; browser:/tmp/codex_browser_invocations/73b419c198d48205/artifacts/artifacts/risks-exposure-summary.png; bin/ui-screenshots (pending Chrome).
+
+## ISS-016 Risk hub UX refresh and saved views
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Added program scoped filters, saved view actions, exposure tiles, trend charts, and heatmaps for Risks and Opportunities.
+- Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/risks-hub.png; bin/ui-screenshots (pending Chrome).
+
+## ISS-017 Planning Hub dependencies and saved views
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Added plan items, dependencies, saved views, and refreshed Planning Hub timeline, list, and dependencies views.
+- Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/planning-hub.png; bin/ui-screenshots (pending Chrome).

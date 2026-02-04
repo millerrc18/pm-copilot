@@ -6,7 +6,7 @@ RSpec.describe "Risk register", type: :system do
     driven_by(:rack_test)
   end
 
-  it "creates and edits a risk item" do
+  it "creates and edits a risk item and saves a view" do
     user = create_ui_user(suffix: "risk-#{SecureRandom.hex(4)}")
     program = Program.create!(name: "Risk Program", user: user)
     contract = Contract.create!(
@@ -38,14 +38,17 @@ RSpec.describe "Risk register", type: :system do
     expect(page).to have_content("Risk item created.")
     expect(page).to have_content("Late supplier delivery")
     expect(page).to have_content("Score 12")
+    expect(page).to have_content("Risk exposure")
 
     click_link "Edit"
-    select "Select a program", from: "Program scope"
     select "Monitoring", from: "Status"
     select contract.contract_code, from: "Contract scope"
     click_button "Save changes"
 
     expect(page).to have_content("Risk item updated.")
     expect(page).to have_content("Monitoring")
+
+    click_button "Save as default"
+    expect(page).to have_content("Saved view applied.").or have_content("Saved view is ready to apply on your next visit.")
   end
 end

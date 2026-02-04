@@ -389,6 +389,58 @@ This is a living document that tracks product improvements and refinements acros
   - System spec covering the new filter.
   - UI screenshots showing the filtered state.
 
+### IMP-019 Risk exposure and net exposure metrics
+
+- **Status**: Done
+- **Date**: 2026-02-05
+- **Why**: The R&O hub needs clear liability and asset totals to show net exposure trends.
+- **Approach**:
+  - Require program scoping for risks and ensure contracts align to the program.
+  - Add exposure totals and net exposure metrics to summaries.
+  - Add program level exposure snapshots for trend tracking.
+- **Acceptance criteria**:
+  - Risk and opportunity exposure totals are calculated from open items.
+  - Net exposure shows opportunity totals minus risk totals.
+  - Program level snapshots can be captured without duplication.
+- **Evidence**:
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec.
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - browser:/tmp/codex_browser_invocations/73b419c198d48205/artifacts/artifacts/risks-exposure-summary.png.
+  - bin/ui-screenshots (pending Chrome).
+
+### IMP-020 Risk hub experience upgrade
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: The R&O hub needed richer insights, saved views, and visual summaries for exposure trends.
+- **Approach**:
+  - Add program scoped filters with saved views and date range controls.
+  - Add exposure tiles, burndown, opportunity trend, net exposure trend, and heatmaps.
+- **Acceptance criteria**:
+  - Filters and saved views persist for the user.
+  - Charts render for the selected program.
+  - Heatmaps show probability and impact distribution.
+- **Evidence**:
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec.
+  - browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/risks-hub.png.
+  - bin/ui-screenshots (pending Chrome).
+
+### IMP-021 Planning Hub model and UX foundation
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Planning Hub needed structured plan items, dependencies, and saved views for day to day planning.
+- **Approach**:
+  - Add plan items and dependencies with program scoping.
+  - Provide timeline, list, and dependencies views with saved view actions.
+- **Acceptance criteria**:
+  - Users can create plan items and dependencies.
+  - Saved views persist across visits.
+- **Evidence**:
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec.
+  - browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/planning-hub.png.
+  - bin/ui-screenshots (pending Chrome).
+
 ## Completed improvements
 
 - IMP-001 Program scoped costs. Evidence in system and model specs, screenshots pending due to missing Chrome.

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_03_174000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -141,6 +141,38 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
     t.index ["contract_id"], name: "index_delivery_units_on_contract_id"
   end
 
+  create_table "plan_dependencies", force: :cascade do |t|
+    t.integer "predecessor_id", null: false
+    t.integer "successor_id", null: false
+    t.string "dependency_type", default: "blocks", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["predecessor_id", "successor_id"], name: "index_plan_dependencies_on_predecessor_and_successor", unique: true
+    t.index ["predecessor_id"], name: "index_plan_dependencies_on_predecessor_id"
+    t.index ["successor_id"], name: "index_plan_dependencies_on_successor_id"
+  end
+
+  create_table "plan_items", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "contract_id"
+    t.integer "owner_id"
+    t.string "title", null: false
+    t.text "description"
+    t.string "item_type", null: false
+    t.string "status", default: "planned", null: false
+    t.date "start_on"
+    t.date "due_on"
+    t.integer "percent_complete"
+    t.integer "sort_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_plan_items_on_contract_id"
+    t.index ["item_type"], name: "index_plan_items_on_item_type"
+    t.index ["owner_id"], name: "index_plan_items_on_owner_id"
+    t.index ["program_id"], name: "index_plan_items_on_program_id"
+    t.index ["status"], name: "index_plan_items_on_status"
+  end
+
   create_table "programs", force: :cascade do |t|
     t.string "name"
     t.string "customer"
@@ -149,6 +181,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_programs_on_user_id"
+  end
+
+  create_table "risk_exposure_snapshots", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.date "snapshot_on", null: false
+    t.integer "risk_total", default: 0, null: false
+    t.integer "opportunity_total", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["program_id", "snapshot_on"], name: "index_risk_exposure_snapshots_on_program_id_and_snapshot_on", unique: true
+    t.index ["program_id"], name: "index_risk_exposure_snapshots_on_program_id"
   end
 
   create_table "risks", force: :cascade do |t|
@@ -161,7 +204,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
     t.string "status", default: "open", null: false
     t.string "owner"
     t.date "due_date"
-    t.integer "program_id"
+    t.integer "program_id", null: false
     t.integer "contract_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -331,6 +374,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
     t.json "cost_hub_saved_filters", default: {}, null: false
     t.string "contracts_view"
     t.integer "contracts_view_year"
+    t.json "risk_saved_filters", default: {}, null: false
+    t.json "planning_hub_saved_filters", default: {}, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -345,7 +390,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_165024) do
   add_foreign_key "cost_imports", "users"
   add_foreign_key "delivery_milestones", "contracts"
   add_foreign_key "delivery_units", "contracts"
+  add_foreign_key "plan_dependencies", "plan_items", column: "predecessor_id"
+  add_foreign_key "plan_dependencies", "plan_items", column: "successor_id"
+  add_foreign_key "plan_items", "contracts"
+  add_foreign_key "plan_items", "programs"
+  add_foreign_key "plan_items", "users", column: "owner_id"
   add_foreign_key "programs", "users"
+  add_foreign_key "risk_exposure_snapshots", "programs"
   add_foreign_key "risks", "contracts"
   add_foreign_key "risks", "programs"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
