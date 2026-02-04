@@ -441,6 +441,22 @@ This is a living document that tracks product improvements and refinements acros
   - browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/planning-hub.png.
   - bin/ui-screenshots (pending Chrome).
 
+### IMP-022 Program Profit, ROS, and ROC metrics
+
+- **Status**: Done
+- **Date**: 2026-02-03
+- **Why**: Program dashboards needed profit and ratio metrics for quick performance checks.
+- **Approach**:
+  - Add Profit, Return on Sales, and Return on Cost to the program dashboard totals.
+  - Display N/A when revenue or cost is zero and add tooltip definitions.
+- **Acceptance criteria**:
+  - Profit shows revenue minus cost.
+  - ROS and ROC show percentages or N/A when denominators are zero.
+- **Evidence**:
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec.
+  - browser:/tmp/codex_browser_invocations/61ee250103d76e2c/artifacts/artifacts/program-metrics.png.
+  - bin/ui-screenshots (pending Chrome).
+
 ## Completed improvements
 
 - IMP-001 Program scoped costs. Evidence in system and model specs, screenshots pending due to missing Chrome.

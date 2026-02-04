@@ -132,3 +132,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-03
 - Notes: Added plan items, dependencies, saved views, and refreshed Planning Hub timeline, list, and dependencies views.
 - Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; browser:/tmp/codex_browser_invocations/f2a9fb5f847f4ea3/artifacts/artifacts/planning-hub.png; bin/ui-screenshots (pending Chrome).
+
+## ISS-018 Program metrics: Profit, ROS, ROC
+
+- Status: Done
+- Date: 2026-02-03
+- Notes: Programs dashboard overview now includes Profit, Return on Sales, and Return on Cost metrics with zero denominator handling for ratios.
+- Evidence: UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bundle exec rspec; browser:/tmp/codex_browser_invocations/61ee250103d76e2c/artifacts/artifacts/program-metrics.png; bin/ui-screenshots (pending Chrome).
