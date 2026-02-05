@@ -30,7 +30,9 @@ RSpec.describe "Sidebar navigation", type: :system do
       [ "Risk & Opportunities", "Risk & Opportunities", risks_path ],
       [ "Cost Hub", "Cost Hub", cost_hub_path ],
       [ "Imports Hub", "Imports Hub", imports_hub_path ],
+      [ "Operations Imports", "Operations Imports", ops_imports_path ],
       [ "Planning Hub", "Planning Hub", planning_hub_path ],
+      [ "Operations", "Operations Procurement", operations_procurement_path ],
       [ "Knowledge Center", "Knowledge Center", docs_path ]
     ]
 

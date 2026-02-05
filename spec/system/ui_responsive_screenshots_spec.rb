@@ -69,6 +69,72 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
         material_cost: 100,
         other_costs: 25
       )
+      ops_import = OpsImport.create!(
+        program: program,
+        imported_by: user,
+        report_type: "materials",
+        checksum: "ops-#{SecureRandom.hex(4)}"
+      )
+      OpsMaterial.create!(
+        program: program,
+        ops_import: ops_import,
+        part_number: "PN-10",
+        supplier: "Acme",
+        receipt_date: Date.new(2024, 1, 6),
+        quantity_received: 5,
+        unit_cost: 10,
+        extended_cost: 50
+      )
+      OpsShopOrder.create!(
+        program: program,
+        ops_import: ops_import,
+        order_number: "SO-100",
+        status: "In Progress",
+        due_date: Date.new(2024, 2, 1),
+        order_quantity: 10,
+        completed_quantity: 4
+      )
+      OpsShopOrderOperation.create!(
+        program: program,
+        ops_import: ops_import,
+        order_number: "SO-100",
+        operation_number: "10",
+        status: "Started"
+      )
+      OpsHistoricalEfficiency.create!(
+        program: program,
+        ops_import: ops_import,
+        period_start: Date.new(2024, 1, 1),
+        planned_hours: 8,
+        actual_hours: 10,
+        variance_hours: 2
+      )
+      OpsScrapRecord.create!(
+        program: program,
+        ops_import: ops_import,
+        scrap_date: Date.new(2024, 1, 4),
+        part_number: "PN-10",
+        scrap_quantity: 1,
+        scrap_cost: 20
+      )
+      OpsMrbPartDetail.create!(
+        program: program,
+        ops_import: ops_import,
+        mrb_number: "MRB-10",
+        status: "open",
+        part_number: "PN-10",
+        quantity: 1,
+        unit_cost: 10,
+        extended_cost: 10
+      )
+      OpsBomComponent.create!(
+        program: program,
+        ops_import: ops_import,
+        parent_part_number: "ASM-10",
+        component_part_number: "COMP-10",
+        level: 1,
+        quantity_per: 2
+      )
       Risk.create!(
         title: "Supplier delay",
         risk_type: "risk",
@@ -378,6 +444,76 @@ RSpec.describe "Responsive UI screenshots", type: :system, js: true do
           if width < 768
             open_sidebar
             save_ui_screenshot("cost_entries_edit", device_name, "open")
+            close_sidebar
+          end
+        end
+
+        operations_viewports = {
+          "iphone" => [ 390, 844 ],
+          "ipad" => [ 820, 1180 ],
+          "desktop" => [ 1440, 900 ]
+        }
+
+        operations_viewports.each do |device_name, (width, height)|
+          set_viewport(width, height)
+
+          visit operations_procurement_path(program_id: program.id)
+          save_ui_screenshot("operations/procurement", device_name, "closed")
+
+          visit operations_production_path(program_id: program.id)
+          save_ui_screenshot("operations/production", device_name, "closed")
+
+          visit operations_efficiency_path(program_id: program.id)
+          save_ui_screenshot("operations/efficiency", device_name, "closed")
+
+          visit operations_quality_path(program_id: program.id)
+          save_ui_screenshot("operations/quality", device_name, "closed")
+
+          visit operations_bom_path(program_id: program.id)
+          save_ui_screenshot("operations/bom", device_name, "closed")
+
+          if width <= 820
+            open_sidebar
+            save_ui_screenshot("operations/procurement", device_name, "open")
+            save_ui_screenshot("operations/production", device_name, "open")
+            save_ui_screenshot("operations/efficiency", device_name, "open")
+            save_ui_screenshot("operations/quality", device_name, "open")
+            save_ui_screenshot("operations/bom", device_name, "open")
+            close_sidebar
+          end
+        end
+
+        required_viewports = {
+          "iphone" => [ 390, 844 ],
+          "ipad" => [ 820, 1180 ],
+          "desktop" => [ 1440, 900 ]
+        }
+
+        required_viewports.each do |device_name, (width, height)|
+          set_viewport(width, height)
+
+          visit programs_path
+          save_ui_screenshot("programs", device_name, "closed")
+
+          visit contracts_path
+          save_ui_screenshot("contracts", device_name, "closed")
+
+          visit imports_hub_path(tab: "costs")
+          save_ui_screenshot("cost_imports", device_name, "closed")
+
+          visit profile_path
+          save_ui_screenshot("account_profile", device_name, "closed")
+
+          visit docs_path
+          save_ui_screenshot("knowledge_center", device_name, "closed")
+
+          if width <= 820
+            open_sidebar
+            save_ui_screenshot("programs", device_name, "open")
+            save_ui_screenshot("contracts", device_name, "open")
+            save_ui_screenshot("cost_imports", device_name, "open")
+            save_ui_screenshot("account_profile", device_name, "open")
+            save_ui_screenshot("knowledge_center", device_name, "open")
             close_sidebar
           end
         end

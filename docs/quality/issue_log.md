@@ -174,3 +174,17 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-08
 - Notes: Page area is layout head icons. Added prefers-color-scheme favicon links, but some browsers ignore media queries for link rel icon so the fallback icon remains necessary.
 - Evidence: Layout includes both media specific and fallback favicon link tags.
+
+## ISS-024 Operations audit docs baseline
+
+- Status: Done
+- Date: 2026-02-05
+- Notes: Added baseline IFS report mapping, UI system notes, and current pattern audit for Operations to guide upcoming imports and dashboards.
+- Evidence: docs/operations/ifs_report_mappings.md, docs/operations/ui_system.md, docs/operations/current_patterns.md.
+
+## ISS-025 Operations dashboards and imports baseline
+
+- Status: Done
+- Date: 2026-02-05
+- Notes: Added Operations imports, dashboards, saved views, and normalized models for procurement, production, efficiency, quality, and BOM workflows.
+- Evidence: spec/services/ops_import_service_spec.rb, spec/models/ops_models_spec.rb, spec/system/operations_imports_spec.rb, spec/system/operations_dashboards_spec.rb, spec/system/ui_responsive_screenshots_spec.rb.
