@@ -516,3 +516,43 @@ This is a living document that tracks product improvements and refinements acros
 - IMP-010 Cost Hub saved views and chart polish. Evidence in system specs, screenshots pending due to missing Chrome.
 - IMP-007 Search keytips cross-platform. Evidence in view spec, screenshots pending due to missing Chrome.
 - IMP-009 Global loading feedback and favicon polish. Evidence in request spec, screenshots pending due to missing Chrome.
+
+### IMP-025 Operations audit and UI system baselines
+
+- **Status**: Done
+- **Date**: 2026-02-05
+- **Why**: Operations work needs a shared baseline for report mappings, UI patterns, and existing repo conventions.
+- **Approach**:
+  - Document expected IFS report tabs with keys, measures, and filters.
+  - Capture the shared Operations UI system expectations.
+  - Summarize current import, saved view, chart, and table patterns.
+- **Acceptance criteria**:
+  - Mapping doc is available for the iteration.
+  - UI system doc defines filter, card, chart, and table behavior.
+  - Current pattern audit is captured for reuse.
+- **Evidence**:
+  - docs/operations/ifs_report_mappings.md.
+  - docs/operations/ui_system.md.
+  - docs/operations/current_patterns.md.
+  - Issue: ISS-024.
+
+### IMP-026 Operations imports and dashboards
+
+- **Status**: Done
+- **Date**: 2026-02-05
+- **Why**: Operations intelligence requires standardized imports and dashboards for procurement, production, efficiency, quality, and BOM analysis.
+- **Approach**:
+  - Add OpsImport tracking with normalized tables for each report type.
+  - Build dashboards with filters, summary cards, charts, and tables.
+  - Add saved views per Operations page and new Knowledge Center docs.
+- **Acceptance criteria**:
+  - Operations imports accept IFS exports and record history.
+  - Procurement, production, efficiency, quality, and BOM dashboards render for a selected program.
+  - Saved views persist and apply per dashboard.
+- **Evidence**:
+  - spec/services/ops_import_service_spec.rb.
+  - spec/models/ops_models_spec.rb.
+  - spec/system/operations_imports_spec.rb.
+  - spec/system/operations_dashboards_spec.rb.
+  - docs/operations_overview.md and related Operations docs.
+  - Issue: ISS-025.

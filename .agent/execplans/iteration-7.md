@@ -56,32 +56,32 @@ Also update:
 
 ## Progress
 
-- [ ] (M0) Audit: workbook tabs, current import patterns, saved views patterns, existing UI components and charts.
-- [ ] (M0) Create `docs/quality/iteration_logs/iteration-7-log.md` and write baseline entry.
-- [ ] (M1) Imports backbone: standardized Ops imports with program scoping, import history, and normalization.
-- [ ] (M2) Procurement dashboard (Materials) with filters, KPIs, charts, and table drilldown.
-- [ ] (M3) Production board (Shop Orders + Operations) with status views and order drilldowns.
-- [ ] (M4) Efficiency dashboard (planned vs actual labor) with variance insights.
-- [ ] (M5) Quality dashboard (Scrap + MRB) with pareto + trend + drilldown.
-- [ ] (M6) BOM Explorer (tree, flattened rollup, where-used).
-- [ ] (M7) Saved views for all Operations pages, consistent UX, default view behavior.
-- [ ] (M8) Documentation hub updates, tests, deterministic screenshots, CI browser reliability notes.
+- [x] (M0) Audit: workbook tabs, current import patterns, saved views patterns, existing UI components and charts.
+- [x] (M0) Create `docs/quality/iteration_logs/iteration-7-log.md` and write baseline entry.
+- [x] (M1) Imports backbone: standardized Ops imports with program scoping, import history, and normalization.
+- [x] (M2) Procurement dashboard (Materials) with filters, KPIs, charts, and table drilldown.
+- [x] (M3) Production board (Shop Orders + Operations) with status views and order drilldowns.
+- [x] (M4) Efficiency dashboard (planned vs actual labor) with variance insights.
+- [x] (M5) Quality dashboard (Scrap + MRB) with pareto + trend + drilldown.
+- [x] (M6) BOM Explorer (tree, flattened rollup, where-used).
+- [x] (M7) Saved views for all Operations pages, consistent UX, default view behavior.
+- [x] (M8) Documentation hub updates, tests, deterministic screenshots, CI browser reliability notes.
 - [ ] (M9) Final validation and acceptance pass, close logs.
 
 ## Surprises & Discoveries
 
 (Keep updated during implementation with concise evidence snippets.)
 
-- Observation:
-  Evidence:
+- Observation: Chrome was not available for Cuprite system specs or UI screenshots, so browser dependent runs remain pending.
+  Evidence: bundle exec rspec and bin/ui-screenshots output reports missing Chrome.
 
 ## Decision Log
 
 (Keep updated during implementation.)
 
-- Decision:
-  Rationale:
-  Date/Author:
+- Decision: Implement Operations saved views as per user default filters, matching existing Cost Hub and Risk patterns.
+  Rationale: Keeps UX consistent with current saved view flow while avoiding a new data model mid-iteration.
+  Date/Author: 2026-02-05 Codex
 
 ## Outcomes & Retrospective
 

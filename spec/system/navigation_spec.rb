@@ -28,6 +28,7 @@ RSpec.describe "Navigation", type: :system do
       expect(page).to have_link("Cost Hub")
       expect(page).to have_link("Contracts")
       expect(page).to have_link("Planning Hub")
+      expect(page).to have_link("Operations")
       expect(page).to have_no_link("Imports Hub")
       expect(page).to have_no_link("Knowledge Center")
     end
@@ -35,6 +36,7 @@ RSpec.describe "Navigation", type: :system do
     within("[data-testid='sidebar-group-imports']") do
       expect(page).to have_text("Imports")
       expect(page).to have_link("Imports Hub")
+      expect(page).to have_link("Operations Imports")
     end
 
     within("[data-testid='sidebar-group-registers']") do

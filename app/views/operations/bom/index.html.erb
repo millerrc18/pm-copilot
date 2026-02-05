@@ -1,0 +1,156 @@
+<% content_for :page_title, "Operations BOM" %>
+<% content_for :page_subtitle, "Explore BOM structure, rollups, and where used." %>
+
+<div class="flex flex-wrap items-start justify-between gap-4">
+  <div>
+    <h2 class="text-lg font-semibold">BOM explorer</h2>
+    <p class="mt-1 text-sm text-light-text/60">Explore multi-level BOMs and where used relationships.</p>
+    <p class="mt-2 text-xs text-light-text/50">
+      <%= link_to "BOM explorer guide", doc_path("bom_explorer"), class: "text-light-text/70 hover:text-light-text" %>
+    </p>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <%= link_to "Operations imports", ops_imports_path(program_id: @program&.id), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+  </div>
+</div>
+
+<div class="mt-6 panel p-6">
+  <%= form_with url: operations_bom_path, method: :get, local: true, class: "grid gap-4 md:grid-cols-4" do |f| %>
+    <div>
+      <%= f.label :program_id, "Program", class: "text-sm font-semibold" %>
+      <%= f.select :program_id,
+                   options_from_collection_for_select(@programs, :id, :name, @program&.id),
+                   { include_blank: "Select a program" },
+                   class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= f.label :parent_part_number, "Parent part", class: "text-sm font-semibold" %>
+      <%= f.text_field :parent_part_number, value: @parent_part_number, placeholder: "ASM-100", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div>
+      <%= f.label :component_part_number, "Component part", class: "text-sm font-semibold" %>
+      <%= f.text_field :component_part_number, value: @component_part_number, placeholder: "COMP-10", class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
+    </div>
+    <div class="flex items-end">
+      <%= f.hidden_field :view, value: @view %>
+      <%= f.submit "Apply filters", class: "inline-flex w-full items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    </div>
+  <% end %>
+
+  <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-light-text/70">
+    <%= button_to "Save as default",
+                  ops_bom_saved_view_path,
+                  method: :post,
+                  params: { program_id: @program&.id, parent_part_number: @parent_part_number, component_part_number: @component_part_number, view: @view },
+                  class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-2 font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
+    <% if @saved_filters.present? %>
+      <%= button_to "Reset saved view",
+                    ops_bom_saved_view_path,
+                    method: :delete,
+                    class: "inline-flex items-center justify-center rounded-full border border-white/10 px-4 py-2 font-semibold text-light-text/70 hover:bg-white/10 focus-ring" %>
+      <span><%= @using_saved_filters ? "Saved view applied." : "Saved view is ready to apply on your next visit." %></span>
+    <% else %>
+      <span>Save the applied filters as your default view.</span>
+    <% end %>
+  </div>
+</div>
+
+<div class="mt-6 panel p-6">
+  <div class="flex flex-wrap items-center gap-3">
+    <%= link_to "Tree", operations_bom_path(params.permit(:program_id, :parent_part_number, :component_part_number).merge(view: "tree")),
+                class: "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold #{@view == "tree" ? "bg-white/10" : "border border-white/10"}" %>
+    <%= link_to "Flattened", operations_bom_path(params.permit(:program_id, :parent_part_number, :component_part_number).merge(view: "flattened")),
+                class: "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold #{@view == "flattened" ? "bg-white/10" : "border border-white/10"}" %>
+    <%= link_to "Where used", operations_bom_path(params.permit(:program_id, :parent_part_number, :component_part_number).merge(view: "where_used")),
+                class: "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold #{@view == "where_used" ? "bg-white/10" : "border border-white/10"}" %>
+  </div>
+
+  <% if @view == "flattened" %>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
+          <tr>
+            <th class="pb-3">Component</th>
+            <th class="pb-3">Description</th>
+            <th class="pb-3">Rollup qty</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          <% if @flattened_components.any? %>
+            <% @flattened_components.each do |component| %>
+              <tr>
+                <td class="py-3"><%= component.component_part_number %></td>
+                <td class="py-3"><%= component.component_description %></td>
+                <td class="py-3"><%= number_with_precision(component.total_quantity.to_d, precision: 4) %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="3" class="py-6 text-center text-light-text/60">No components match the current filters.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% elsif @view == "where_used" %>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
+          <tr>
+            <th class="pb-3">Parent assembly</th>
+            <th class="pb-3">Component</th>
+            <th class="pb-3">Level</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          <% if @where_used.any? %>
+            <% @where_used.each do |entry| %>
+              <tr>
+                <td class="py-3"><%= entry.parent_part_number %></td>
+                <td class="py-3"><%= entry.component_part_number %></td>
+                <td class="py-3"><%= entry.level %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="3" class="py-6 text-center text-light-text/60">No where used results match the current filters.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-left text-xs uppercase tracking-[0.2em] text-light-text/40">
+          <tr>
+            <th class="pb-3">Level</th>
+            <th class="pb-3">Component</th>
+            <th class="pb-3">Description</th>
+            <th class="pb-3">Qty per</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          <% if @bom_components.any? %>
+            <% @bom_components.each do |component| %>
+              <tr>
+                <td class="py-3"><%= component.level %></td>
+                <td class="py-3">
+                  <span class="inline-block" style="padding-left: <%= component.level.to_i * 12 %>px">
+                    <%= component.component_part_number %>
+                  </span>
+                </td>
+                <td class="py-3"><%= component.component_description %></td>
+                <td class="py-3"><%= number_with_precision(component.quantity_per.to_d, precision: 4) %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="4" class="py-6 text-center text-light-text/60">No BOM rows match the current filters.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

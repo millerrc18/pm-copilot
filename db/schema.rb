@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_03_174000) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_05_115248) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -139,6 +139,194 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_174000) do
     t.datetime "updated_at", null: false
     t.index ["contract_id", "unit_serial"], name: "index_delivery_units_on_contract_id_and_unit_serial", unique: true
     t.index ["contract_id"], name: "index_delivery_units_on_contract_id"
+  end
+
+  create_table "ops_bom_components", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.string "parent_part_number", null: false
+    t.string "component_part_number", null: false
+    t.string "component_description"
+    t.string "unit"
+    t.integer "level"
+    t.decimal "quantity_per", precision: 12, scale: 4
+    t.date "effective_from"
+    t.date "effective_to"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_bom_components_on_ops_import_id"
+    t.index ["program_id", "parent_part_number"], name: "index_ops_bom_components_on_program_id_and_parent_part_number"
+    t.index ["program_id"], name: "index_ops_bom_components_on_program_id"
+  end
+
+  create_table "ops_historical_efficiencies", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.date "period_start"
+    t.date "period_end"
+    t.string "labor_category"
+    t.string "work_center"
+    t.decimal "planned_hours", precision: 12, scale: 2
+    t.decimal "actual_hours", precision: 12, scale: 2
+    t.decimal "variance_hours", precision: 12, scale: 2
+    t.decimal "efficiency_percent", precision: 6, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_historical_efficiencies_on_ops_import_id"
+    t.index ["program_id"], name: "index_ops_historical_efficiencies_on_program_id"
+  end
+
+  create_table "ops_imports", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "imported_by_id", null: false
+    t.string "report_type", null: false
+    t.string "source_filename"
+    t.string "checksum", null: false
+    t.integer "rows_imported", default: 0, null: false
+    t.integer "rows_rejected", default: 0, null: false
+    t.string "status", default: "completed", null: false
+    t.datetime "imported_at"
+    t.json "notes", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["imported_by_id"], name: "index_ops_imports_on_imported_by_id"
+    t.index ["program_id", "report_type", "checksum"], name: "index_ops_imports_on_program_id_and_report_type_and_checksum", unique: true
+    t.index ["program_id"], name: "index_ops_imports_on_program_id"
+  end
+
+  create_table "ops_materials", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.string "part_number"
+    t.string "part_description"
+    t.string "supplier"
+    t.string "commodity"
+    t.string "buyer"
+    t.string "purchase_order"
+    t.date "order_date"
+    t.date "need_date"
+    t.date "receipt_date"
+    t.decimal "quantity_ordered", precision: 12, scale: 2
+    t.decimal "quantity_received", precision: 12, scale: 2
+    t.decimal "unit_cost", precision: 12, scale: 2
+    t.decimal "extended_cost", precision: 12, scale: 2
+    t.integer "lead_time_days"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_materials_on_ops_import_id"
+    t.index ["program_id"], name: "index_ops_materials_on_program_id"
+  end
+
+  create_table "ops_mrb_dispo_lines", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.string "mrb_number", null: false
+    t.string "line_number"
+    t.string "disposition"
+    t.string "responsible"
+    t.date "disposition_date"
+    t.decimal "disposition_quantity", precision: 12, scale: 2
+    t.decimal "disposition_cost", precision: 12, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_mrb_dispo_lines_on_ops_import_id"
+    t.index ["program_id", "mrb_number"], name: "index_ops_mrb_dispo_lines_on_program_id_and_mrb_number"
+    t.index ["program_id"], name: "index_ops_mrb_dispo_lines_on_program_id"
+  end
+
+  create_table "ops_mrb_part_details", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.string "mrb_number", null: false
+    t.string "line_number"
+    t.string "status"
+    t.string "disposition"
+    t.string "part_number"
+    t.string "part_description"
+    t.string "supplier"
+    t.date "created_date"
+    t.date "closed_date"
+    t.decimal "quantity", precision: 12, scale: 2
+    t.decimal "unit_cost", precision: 12, scale: 2
+    t.decimal "extended_cost", precision: 12, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_mrb_part_details_on_ops_import_id"
+    t.index ["program_id", "mrb_number"], name: "index_ops_mrb_part_details_on_program_id_and_mrb_number"
+    t.index ["program_id"], name: "index_ops_mrb_part_details_on_program_id"
+  end
+
+  create_table "ops_scrap_records", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.date "scrap_date"
+    t.string "part_number"
+    t.string "part_description"
+    t.string "reason_code"
+    t.string "shop_order_number"
+    t.decimal "scrap_quantity", precision: 12, scale: 2
+    t.decimal "scrap_cost", precision: 12, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_scrap_records_on_ops_import_id"
+    t.index ["program_id"], name: "index_ops_scrap_records_on_program_id"
+  end
+
+  create_table "ops_shop_order_operations", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.string "order_number", null: false
+    t.string "operation_number", null: false
+    t.string "sequence"
+    t.string "status"
+    t.string "work_center"
+    t.date "scheduled_start"
+    t.date "scheduled_finish"
+    t.date "actual_start"
+    t.date "actual_finish"
+    t.decimal "setup_hours", precision: 12, scale: 2
+    t.decimal "run_hours", precision: 12, scale: 2
+    t.decimal "labor_hours", precision: 12, scale: 2
+    t.decimal "queue_time", precision: 12, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_shop_order_operations_on_ops_import_id"
+    t.index ["program_id", "order_number"], name: "index_ops_shop_order_operations_on_program_id_and_order_number"
+    t.index ["program_id"], name: "index_ops_shop_order_operations_on_program_id"
+  end
+
+  create_table "ops_shop_orders", force: :cascade do |t|
+    t.integer "program_id", null: false
+    t.integer "ops_import_id", null: false
+    t.integer "source_row_number"
+    t.string "order_number", null: false
+    t.string "release_number"
+    t.string "status"
+    t.string "part_number"
+    t.string "part_description"
+    t.string "work_center"
+    t.date "planned_start"
+    t.date "planned_finish"
+    t.date "actual_start"
+    t.date "actual_finish"
+    t.date "due_date"
+    t.decimal "order_quantity", precision: 12, scale: 2
+    t.decimal "completed_quantity", precision: 12, scale: 2
+    t.decimal "remaining_quantity", precision: 12, scale: 2
+    t.decimal "estimated_hours", precision: 12, scale: 2
+    t.decimal "actual_hours", precision: 12, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ops_import_id"], name: "index_ops_shop_orders_on_ops_import_id"
+    t.index ["program_id", "order_number"], name: "index_ops_shop_orders_on_program_id_and_order_number"
+    t.index ["program_id"], name: "index_ops_shop_orders_on_program_id"
   end
 
   create_table "plan_dependencies", force: :cascade do |t|
@@ -376,6 +564,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_174000) do
     t.integer "contracts_view_year"
     t.json "risk_saved_filters", default: {}, null: false
     t.json "planning_hub_saved_filters", default: {}, null: false
+    t.json "ops_procurement_saved_filters", default: {}, null: false
+    t.json "ops_production_saved_filters", default: {}, null: false
+    t.json "ops_efficiency_saved_filters", default: {}, null: false
+    t.json "ops_quality_saved_filters", default: {}, null: false
+    t.json "ops_bom_saved_filters", default: {}, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -390,6 +583,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_03_174000) do
   add_foreign_key "cost_imports", "users"
   add_foreign_key "delivery_milestones", "contracts"
   add_foreign_key "delivery_units", "contracts"
+  add_foreign_key "ops_bom_components", "ops_imports"
+  add_foreign_key "ops_bom_components", "programs"
+  add_foreign_key "ops_historical_efficiencies", "ops_imports"
+  add_foreign_key "ops_historical_efficiencies", "programs"
+  add_foreign_key "ops_imports", "programs"
+  add_foreign_key "ops_imports", "users", column: "imported_by_id"
+  add_foreign_key "ops_materials", "ops_imports"
+  add_foreign_key "ops_materials", "programs"
+  add_foreign_key "ops_mrb_dispo_lines", "ops_imports"
+  add_foreign_key "ops_mrb_dispo_lines", "programs"
+  add_foreign_key "ops_mrb_part_details", "ops_imports"
+  add_foreign_key "ops_mrb_part_details", "programs"
+  add_foreign_key "ops_scrap_records", "ops_imports"
+  add_foreign_key "ops_scrap_records", "programs"
+  add_foreign_key "ops_shop_order_operations", "ops_imports"
+  add_foreign_key "ops_shop_order_operations", "programs"
+  add_foreign_key "ops_shop_orders", "ops_imports"
+  add_foreign_key "ops_shop_orders", "programs"
   add_foreign_key "plan_dependencies", "plan_items", column: "predecessor_id"
   add_foreign_key "plan_dependencies", "plan_items", column: "successor_id"
   add_foreign_key "plan_items", "contracts"
