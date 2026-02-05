@@ -1,0 +1,15 @@
+<% content_for :page_title, "Operations setup" %>
+<% content_for :page_subtitle, "Operations data is not ready yet." %>
+
+<div class="panel p-6">
+  <h2 class="text-lg font-semibold">Operations is being set up</h2>
+  <p class="mt-2 text-sm text-light-text/70">
+    The Operations schema is missing or migrations are pending. Run database migrations, then reload this page.
+  </p>
+  <div class="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-light-text/70">
+    <code>bin/rails db:migrate</code>
+  </div>
+  <p class="mt-4 text-sm text-light-text/60">
+    If you just deployed, ensure the release step runs migrations before starting the web process.
+  </p>
+</div>

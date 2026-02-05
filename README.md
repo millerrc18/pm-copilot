@@ -32,6 +32,10 @@ bin/ui-screenshots
 
 Screenshots are written to `tmp/screenshots/ui/<page>/<device>.png`.
 
+## Deployment
+
+Production deploys must run database migrations before starting the web process. The Render start script runs `bin/rails db:migrate` followed by `bin/rails ops:schema:check` to fail fast if Operations tables or saved filter columns are missing.
+
 ## Manual QA checklist (first release)
 
 Functional

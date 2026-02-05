@@ -556,3 +556,23 @@ This is a living document that tracks product improvements and refinements acros
   - spec/system/operations_dashboards_spec.rb.
   - docs/operations_overview.md and related Operations docs.
   - Issue: ISS-025.
+
+### IMP-027 Operations procurement schema guardrails
+
+- **Status**: Done
+- **Date**: 2026-02-09
+- **Why**: Operations Procurement needs a safe fallback when migrations are missing and a clear empty state for new users.
+- **Approach**:
+  - Add schema checks and deploy guards to ensure ops tables and saved filters are available.
+  - Render a friendly setup message when schema is missing.
+  - Show empty states when no programs or no procurement data exists.
+- **Acceptance criteria**:
+  - Procurement loads with no ops data and shows guidance text.
+  - Missing schema returns a 503 with a setup message.
+  - Deploy start runs migrations and a schema smoke check.
+- **Evidence**:
+  - bundle exec rspec spec/requests/operations_procurement_spec.rb.
+  - bin/render-start.sh.
+  - lib/tasks/ops_schema.rake.
+  - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots (pending, Chrome not available).
+  - Issue: ISS-026.

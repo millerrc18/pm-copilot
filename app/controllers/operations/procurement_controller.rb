@@ -1,9 +1,7 @@
-class Operations::ProcurementController < ApplicationController
-  before_action :authenticate_user!
-
+class Operations::ProcurementController < Operations::BaseController
   def index
     @programs = current_user.programs.order(:name)
-    @saved_filters = current_user.ops_procurement_saved_filters || {}
+    @saved_filters = saved_filters_for(:ops_procurement_saved_filters)
     filters = filter_params
     @using_saved_filters = false
 
@@ -13,10 +11,18 @@ class Operations::ProcurementController < ApplicationController
     end
 
     @program = current_user.programs.find_by(id: filters["program_id"])
+    @no_programs = @programs.empty?
+    @program_missing = @program.nil?
     @supplier = filters["supplier"]
     @commodity = filters["commodity"]
     @buyer = filters["buyer"]
     @part_number = filters["part_number"]
+
+    if @program_missing
+      @start_date, @end_date = default_date_range
+      initialize_procurement_empty_state
+      return
+    end
 
     @start_date, @end_date = resolve_dates(filters)
 
@@ -29,6 +35,7 @@ class Operations::ProcurementController < ApplicationController
     scope = scope.where("part_number ILIKE ?", "%#{@part_number}%") if @part_number.present?
 
     @materials = scope.order(receipt_date: :desc)
+    @no_materials = @materials.none?
 
     @summary = {
       total_spend: @materials.sum(:extended_cost).to_d,

@@ -1,9 +1,7 @@
-class Operations::QualityController < ApplicationController
-  before_action :authenticate_user!
-
+class Operations::QualityController < Operations::BaseController
   def index
     @programs = current_user.programs.order(:name)
-    @saved_filters = current_user.ops_quality_saved_filters || {}
+    @saved_filters = saved_filters_for(:ops_quality_saved_filters)
     filters = filter_params
     @using_saved_filters = false
 
