@@ -29,6 +29,7 @@
       <%= render "shared/ui/nav_item", label: "Cost Hub", url: cost_hub_path, icon: "currency", active: controller_name == "cost_entries" %>
       <%= render "shared/ui/nav_item", label: "Contracts", url: contracts_path, icon: "receipt", active: controller_name == "contracts" %>
       <%= render "shared/ui/nav_item", label: "Planning Hub", url: planning_hub_path, icon: "document", active: controller_name == "planning_hub" %>
+      <%= render "shared/ui/nav_item", label: "Operations", url: operations_procurement_path, icon: "document", active: controller_name.in?(%w[procurement production efficiency quality bom]) %>
     </nav>
   </div>
 
@@ -40,6 +41,11 @@
                  url: imports_hub_path,
                  icon: "document",
                  active: %w[imports_hub cost_imports milestone_imports delivery_unit_imports].include?(controller_name) %>
+      <%= render "shared/ui/nav_item",
+                 label: "Operations Imports",
+                 url: ops_imports_path,
+                 icon: "document",
+                 active: controller_name == "ops_imports" %>
     </nav>
   </div>
 
