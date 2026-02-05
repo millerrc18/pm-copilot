@@ -1,9 +1,7 @@
-class Operations::ProductionController < ApplicationController
-  before_action :authenticate_user!
-
+class Operations::ProductionController < Operations::BaseController
   def index
     @programs = current_user.programs.order(:name)
-    @saved_filters = current_user.ops_production_saved_filters || {}
+    @saved_filters = saved_filters_for(:ops_production_saved_filters)
     filters = filter_params
     @using_saved_filters = false
 

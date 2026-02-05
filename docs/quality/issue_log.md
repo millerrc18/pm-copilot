@@ -188,3 +188,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-05
 - Notes: Added Operations imports, dashboards, saved views, and normalized models for procurement, production, efficiency, quality, and BOM workflows.
 - Evidence: spec/services/ops_import_service_spec.rb, spec/models/ops_models_spec.rb, spec/system/operations_imports_spec.rb, spec/system/operations_dashboards_spec.rb, spec/system/ui_responsive_screenshots_spec.rb.
+
+## ISS-026 Operations procurement schema guard and empty state
+
+- Status: Done
+- Date: 2026-02-09
+- Notes: Added schema guardrails, deploy checks, and friendly empty states for Operations Procurement when schema or data is missing.
+- Evidence: bundle exec rspec spec/requests/operations_procurement_spec.rb; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots (pending, Chrome not available); Playwright screenshot attempt failed due to Chromium crash.

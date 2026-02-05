@@ -15,6 +15,17 @@
 </div>
 
 <div class="mt-6 panel p-6">
+  <% if @no_programs %>
+    <div class="mb-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text/70">
+      You do not have any programs yet. Create a program to unlock Operations dashboards.
+      <%= link_to "Create a program", new_program_path, class: "ml-2 font-semibold text-light-text/90 hover:text-light-text" %>
+    </div>
+  <% elsif @program_missing %>
+    <div class="mb-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text/70">
+      Select a program to load procurement metrics and charts.
+    </div>
+  <% end %>
+
   <%= form_with url: operations_procurement_path, method: :get, local: true, class: "grid gap-4 md:grid-cols-4" do |f| %>
     <div>
       <%= f.label :program_id, "Program", class: "text-sm font-semibold" %>
@@ -69,6 +80,12 @@
     <% end %>
   </div>
 </div>
+
+<% if @no_materials %>
+  <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-light-text/70">
+    No procurement records match the current filters. Import Operations data to see spend trends and supplier insights.
+  </div>
+<% end %>
 
 <div class="mt-6 grid gap-6 lg:grid-cols-4">
   <div class="panel p-5">

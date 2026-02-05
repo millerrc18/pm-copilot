@@ -1,9 +1,7 @@
-class Operations::EfficiencyController < ApplicationController
-  before_action :authenticate_user!
-
+class Operations::EfficiencyController < Operations::BaseController
   def index
     @programs = current_user.programs.order(:name)
-    @saved_filters = current_user.ops_efficiency_saved_filters || {}
+    @saved_filters = saved_filters_for(:ops_efficiency_saved_filters)
     filters = filter_params
     @using_saved_filters = false
 
