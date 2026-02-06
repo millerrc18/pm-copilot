@@ -33,6 +33,7 @@ class Operations::BomController < Operations::BaseController
     where_used_scope = where_used_scope.where(component_part_number: @component_part_number) if @component_part_number.present?
 
     @where_used = where_used_scope.select(:parent_part_number, :component_part_number, :level).distinct.order(:parent_part_number)
+    @operations_empty = @bom_components.none?
   end
 
   private

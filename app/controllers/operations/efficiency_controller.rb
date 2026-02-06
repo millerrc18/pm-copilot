@@ -23,6 +23,7 @@ class Operations::EfficiencyController < Operations::BaseController
     scope = scope.where("work_center ILIKE ?", "%#{@work_center}%") if @work_center.present?
 
     @entries = scope.order(period_start: :asc)
+    @operations_empty = @entries.none?
 
     planned = @entries.sum(:planned_hours).to_d
     actual = @entries.sum(:actual_hours).to_d

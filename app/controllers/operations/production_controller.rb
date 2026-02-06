@@ -36,6 +36,7 @@ class Operations::ProductionController < Operations::BaseController
     operations_scope = operations_scope.where(actual_start: @start_date..@end_date) if @start_date && @end_date
 
     @operations = operations_scope.order(actual_start: :asc)
+    @operations_empty = @orders.none? && @operations.none?
   end
 
   private

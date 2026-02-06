@@ -8,6 +8,7 @@ class RiskSummary
 
     {
       total: @scope.count,
+      risks: @scope.where(risk_type: "risk").count,
       open_risks: @scope.where(status: "open", risk_type: "risk").count,
       open_opportunities: @scope.where(status: "open", risk_type: "opportunity").count,
       open_items: @scope.where(status: "open").count,

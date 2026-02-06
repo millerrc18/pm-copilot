@@ -1,4 +1,5 @@
-<%= form_with(model: [@contract, period], local: true, class: "space-y-6", html: { autocomplete: "off" }) do |form| %>
+<%= turbo_frame_tag dom_id(period, :form) do %>
+  <%= form_with(model: [@contract, period], local: true, class: "space-y-6", html: { autocomplete: "off" }) do |form| %>
   <% if period.errors.any? %>
     <div class="rounded-2xl border border-accent-red/40 bg-accent-red/10 p-4 text-sm text-light-text">
       <p class="font-semibold"><%= pluralize(period.errors.count, "error") %> prohibited this record from being saved:</p>
@@ -13,7 +14,7 @@
   <div class="grid gap-4 md:grid-cols-2">
     <div>
       <%= form.label :period_start_date, class: "text-sm font-semibold" %>
-      <%= form.date_select :period_start_date, { include_blank: true }, class: "mt-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-light-text focus-ring" %>
+      <%= form.date_field :period_start_date, class: "mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text focus-ring" %>
     </div>
 
     <div>
@@ -103,4 +104,5 @@
     <%= form.submit(period.persisted? ? "Save changes" : "Create period", class: "inline-flex items-center justify-center rounded-full bg-accent-red px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-red/90 focus-ring") %>
     <%= link_to "Cancel", contract_path(@contract), class: "inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-light-text/80 hover:bg-white/10 focus-ring" %>
   </div>
+  <% end %>
 <% end %>

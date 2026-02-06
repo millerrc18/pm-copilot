@@ -31,10 +31,24 @@ class DeliveryMilestonesController < ApplicationController
   def create
     @delivery_milestone = @contract.delivery_milestones.build(delivery_milestone_params)
 
-    if @delivery_milestone.save
-      redirect_to contract_path(@contract), notice: "Milestone created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @delivery_milestone.save
+        format.html { redirect_to contract_path(@contract), notice: "Milestone created." }
+        format.turbo_stream { redirect_to contract_path(@contract), notice: "Milestone created." }
+      else
+        flash.now[:alert] = "Milestone could not be saved."
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@delivery_milestone, :form),
+              partial: "delivery_milestones/form",
+              locals: { delivery_milestone: @delivery_milestone }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -42,10 +56,24 @@ class DeliveryMilestonesController < ApplicationController
   end
 
   def update
-    if @delivery_milestone.update(delivery_milestone_params)
-      redirect_to(safe_return_to || contract_path(@contract), notice: "Milestone updated.")
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @delivery_milestone.update(delivery_milestone_params)
+        format.html { redirect_to(safe_return_to || contract_path(@contract), notice: "Milestone updated.") }
+        format.turbo_stream { redirect_to(safe_return_to || contract_path(@contract), notice: "Milestone updated.") }
+      else
+        flash.now[:alert] = "Milestone could not be saved."
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@delivery_milestone, :form),
+              partial: "delivery_milestones/form",
+              locals: { delivery_milestone: @delivery_milestone }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
