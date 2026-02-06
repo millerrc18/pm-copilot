@@ -35,7 +35,9 @@
         <% end %>
 
         <main class="flex-1 overflow-y-auto px-5 py-6 pb-28 md:px-8 md:pb-10">
-          <%= render "shared/flash" %>
+          <div id="flash">
+            <%= render "shared/flash" %>
+          </div>
           <%= yield %>
         </main>
       </div>

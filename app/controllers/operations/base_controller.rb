@@ -33,5 +33,6 @@ class Operations::BaseController < ApplicationController
     @parts = []
     @materials = []
     @no_materials = false
+    @operations_empty = true
   end
 end

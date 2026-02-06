@@ -14,6 +14,10 @@
   </div>
 </div>
 
+<% if @operations_empty %>
+  <%= render "operations/empty_state", program_id: @program&.id %>
+<% end %>
+
 <div class="mt-6 panel p-6">
   <%= form_with url: operations_efficiency_path, method: :get, local: true, class: "grid gap-4 md:grid-cols-4" do |f| %>
     <div>

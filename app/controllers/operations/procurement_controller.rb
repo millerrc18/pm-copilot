@@ -36,6 +36,7 @@ class Operations::ProcurementController < Operations::BaseController
 
     @materials = scope.order(receipt_date: :desc)
     @no_materials = @materials.none?
+    @operations_empty = @materials.none?
 
     @summary = {
       total_spend: @materials.sum(:extended_cost).to_d,

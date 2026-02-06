@@ -25,10 +25,24 @@ class RisksController < ApplicationController
     @risk = Risk.new(risk_params.except(:program_id, :contract_id))
     assign_scope(@risk)
 
-    if @risk.save
-      redirect_to risks_path, notice: "Risk item created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @risk.save
+        format.html { redirect_to risks_path, notice: "Risk item created." }
+        format.turbo_stream { redirect_to risks_path, notice: "Risk item created." }
+      else
+        flash.now[:alert] = "Risk item could not be saved."
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@risk, :form),
+              partial: "risks/form",
+              locals: { risk: @risk }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -38,10 +52,24 @@ class RisksController < ApplicationController
     @risk.assign_attributes(risk_params.except(:program_id, :contract_id))
     assign_scope(@risk)
 
-    if @risk.save
-      redirect_to risks_path, notice: "Risk item updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @risk.save
+        format.html { redirect_to risks_path, notice: "Risk item updated." }
+        format.turbo_stream { redirect_to risks_path, notice: "Risk item updated." }
+      else
+        flash.now[:alert] = "Risk item could not be saved."
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@risk, :form),
+              partial: "risks/form",
+              locals: { risk: @risk }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -142,6 +170,7 @@ class RisksController < ApplicationController
     params.require(:risk).permit(
       :title,
       :description,
+      :mitigation,
       :risk_type,
       :probability,
       :impact,

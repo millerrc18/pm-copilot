@@ -1,7 +1,12 @@
 ENV["FERRUM_PROCESS_TIMEOUT"] ||= "60"
 ENV["FERRUM_TIMEOUT"] ||= "120"
-if ENV["FERRUM_BROWSER_PATH"].nil? && File.exist?("/usr/bin/google-chrome")
-  ENV["FERRUM_BROWSER_PATH"] = "/usr/bin/google-chrome"
+if ENV["FERRUM_BROWSER_PATH"].nil?
+  ENV["FERRUM_BROWSER_PATH"] = [
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser"
+  ].find { |path| File.exist?(path) }
 end
 
 require "capybara/cuprite"

@@ -195,3 +195,45 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-09
 - Notes: Added schema guardrails, deploy checks, and friendly empty states for Operations Procurement when schema or data is missing.
 - Evidence: bundle exec rspec spec/requests/operations_procurement_spec.rb; UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots (pending, Chrome not available); Playwright screenshot attempt failed due to Chromium crash.
+
+## ISS-027 Operations dashboards empty states and migration guard
+
+- Status: Done
+- Date: 2026-02-14
+- Notes: Render empty states with an Operations Imports link on procurement, production, efficiency, quality, and BOM dashboards and only show the schema banner when migrations are pending.
+- Evidence: bundle exec rspec spec/requests/operations_procurement_spec.rb; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/operations-empty.png.
+
+## ISS-028 Contract period creation failures and date input UX
+
+- Status: Done
+- Date: 2026-02-14
+- Notes: Replace multi select date input with a single date field, add error flash messaging, and render validation errors on failed creates.
+- Evidence: bundle exec rspec spec/requests/contract_periods_spec.rb; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-success.png; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-failure.png.
+
+## ISS-029 Delivery units ship date parsing and milestone due date input
+
+- Status: Done
+- Date: 2026-02-14
+- Notes: Parse typed ship dates in delivery units, switch milestone due dates to a single date field, and surface validation errors on failure.
+- Evidence: bundle exec rspec spec/requests/delivery_units_spec.rb spec/requests/delivery_milestones_spec.rb.
+
+## ISS-030 Cost Hub visible inputs and live total
+
+- Status: Done
+- Date: 2026-02-14
+- Notes: Add placeholders and help text for labor categories and show a live total cost calculation in the cost entry form.
+- Evidence: browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/cost-total-live.png.
+
+## ISS-031 Risk register accessibility and fields
+
+- Status: Done
+- Date: 2026-02-14
+- Notes: Add mitigation notes, align labels to risks and opportunities terminology, and add request coverage for register filters.
+- Evidence: bundle exec rspec spec/requests/risks_spec.rb; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/risks-index.png.
+
+## ISS-032 Flash messaging consistency for Turbo forms
+
+- Status: Done
+- Date: 2026-02-14
+- Notes: Add a dedicated flash container and turbo stream flash updates for create and update failures.
+- Evidence: bundle exec rspec; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-success.png; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-failure.png.

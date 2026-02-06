@@ -32,6 +32,7 @@ class Operations::QualityController < Operations::BaseController
     mrb_scope = mrb_scope.where("disposition ILIKE ?", "%#{@disposition}%") if @disposition.present?
 
     @mrb_records = mrb_scope.order(created_date: :desc)
+    @operations_empty = @scrap_records.none? && @mrb_records.none?
 
     scrap_cost_total = @scrap_records.sum(:scrap_cost).to_d
     mrb_open_count = @mrb_records.where.not(status: "closed").count

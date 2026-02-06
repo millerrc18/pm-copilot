@@ -14,6 +14,10 @@
   </div>
 </div>
 
+<% if @operations_empty %>
+  <%= render "operations/empty_state", program_id: @program&.id %>
+<% end %>
+
 <div class="mt-6 panel p-6">
   <% if @no_programs %>
     <div class="mb-6 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-light-text/70">

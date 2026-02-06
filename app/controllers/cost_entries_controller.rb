@@ -55,10 +55,24 @@ class CostEntriesController < ApplicationController
     @cost_entry = CostEntry.new(cost_entry_params.except(:program_id))
     assign_program
 
-    if @cost_entry.save
-      redirect_to cost_hub_path, notice: "Cost entry created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @cost_entry.save
+        format.html { redirect_to cost_hub_path, notice: "Cost entry created." }
+        format.turbo_stream { redirect_to cost_hub_path, notice: "Cost entry created." }
+      else
+        flash.now[:alert] = "Cost entry could not be saved."
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@cost_entry, :form),
+              partial: "cost_entries/form",
+              locals: { cost_entry: @cost_entry }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -68,10 +82,24 @@ class CostEntriesController < ApplicationController
     @cost_entry.assign_attributes(cost_entry_params.except(:program_id))
     assign_program
 
-    if @cost_entry.save
-      redirect_to cost_hub_path, notice: "Cost entry updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @cost_entry.save
+        format.html { redirect_to cost_hub_path, notice: "Cost entry updated." }
+        format.turbo_stream { redirect_to cost_hub_path, notice: "Cost entry updated." }
+      else
+        flash.now[:alert] = "Cost entry could not be saved."
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@cost_entry, :form),
+              partial: "cost_entries/form",
+              locals: { cost_entry: @cost_entry }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 

@@ -8,26 +8,54 @@ class ContractPeriodsController < ApplicationController
 
   def create
     @contract_period = @contract.contract_periods.build(period_params)
-    if @contract_period.save
-      redirect_to contract_path(@contract), notice: 'Period record was successfully created.'
-    else
-      render :new
+    respond_to do |format|
+      if @contract_period.save
+        format.html { redirect_to contract_path(@contract), notice: "Period record was successfully created." }
+        format.turbo_stream { redirect_to contract_path(@contract), notice: "Period record was successfully created." }
+      else
+        flash.now[:alert] = "Period record could not be saved."
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@contract_period, :form),
+              partial: "contract_periods/form",
+              locals: { period: @contract_period }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
   def edit; end
 
   def update
-    if @period.update(period_params)
-      redirect_to contract_path(@contract), notice: 'Period record was successfully updated.'
-    else
-      render :edit
+    respond_to do |format|
+      if @period.update(period_params)
+        format.html { redirect_to contract_path(@contract), notice: "Period record was successfully updated." }
+        format.turbo_stream { redirect_to contract_path(@contract), notice: "Period record was successfully updated." }
+      else
+        flash.now[:alert] = "Period record could not be saved."
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("flash", partial: "shared/flash"),
+            turbo_stream.replace(
+              view_context.dom_id(@period, :form),
+              partial: "contract_periods/form",
+              locals: { period: @period }
+            )
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 
   def destroy
     @period.destroy
-    redirect_to contract_path(@contract), notice: 'Period record was successfully destroyed.'
+    redirect_to contract_path(@contract), notice: "Period record was successfully destroyed."
   end
 
   private
@@ -36,7 +64,6 @@ class ContractPeriodsController < ApplicationController
     @contract = Contract.joins(:program)
       .where(programs: { user_id: current_user.id })
       .find(params[:contract_id])
-
   end
 
   def set_period
@@ -63,13 +90,4 @@ class ContractPeriodsController < ApplicationController
       :other_costs
     )
   end
-  def contract_period_params
-  params.require(:contract_period).permit(
-    :period_start_date, :period_type,
-    :hours_bam, :hours_eng, :hours_mfg_soft, :hours_mfg_hard, :hours_touch,
-    :rate_bam, :rate_eng, :rate_mfg_soft, :rate_mfg_hard, :rate_touch,
-    :material_cost, :other_costs,
-    :notes
-  )
-end
 end

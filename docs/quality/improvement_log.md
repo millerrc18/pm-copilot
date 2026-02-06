@@ -576,3 +576,63 @@ This is a living document that tracks product improvements and refinements acros
   - lib/tasks/ops_schema.rake.
   - UI_TEST_EMAIL=test@example.com UI_TEST_PASSWORD=Password123! bin/ui-screenshots (pending, Chrome not available).
   - Issue: ISS-026.
+
+### IMP-028 Operations dashboards empty state guidance
+
+- **Status**: Done
+- **Date**: 2026-02-14
+- **Why**: Operations dashboards should explain next steps when no IFS data is available.
+- **Approach**:
+  - Add a shared empty state panel with an Operations Imports call to action.
+  - Render the panel on procurement, production, efficiency, quality, and BOM pages when data is empty.
+- **Acceptance criteria**:
+  - Each Operations dashboard shows a No data yet message with a link to Operations Imports when no records exist.
+- **Evidence**:
+  - bundle exec rspec spec/requests/operations_procurement_spec.rb.
+  - browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/operations-empty.png.
+  - Issue: ISS-027.
+
+### IMP-029 Contract period and milestone date inputs
+
+- **Status**: Done
+- **Date**: 2026-02-14
+- **Why**: Multi select date fields made it easy to miss a month or day selection.
+- **Approach**:
+  - Switch contract period and milestone due dates to single date fields.
+  - Surface validation errors with flash alerts.
+- **Acceptance criteria**:
+  - Periods and milestones save with a single date input and failed submits show errors.
+- **Evidence**:
+  - bundle exec rspec spec/requests/contract_periods_spec.rb spec/requests/delivery_milestones_spec.rb.
+  - browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-success.png.
+  - browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-failure.png.
+  - Issue: ISS-028 and ISS-029.
+
+### IMP-030 Cost entry live totals and visible inputs
+
+- **Status**: Done
+- **Date**: 2026-02-14
+- **Why**: Numeric inputs should look interactive and totals should update while typing.
+- **Approach**:
+  - Add placeholders and help text for labor categories.
+  - Add a live total cost panel driven by Stimulus.
+- **Acceptance criteria**:
+  - Cost entry form shows visible inputs and total updates with input changes.
+- **Evidence**:
+  - browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/cost-total-live.png.
+  - Issue: ISS-030.
+
+### IMP-031 Risk register mitigation notes
+
+- **Status**: Done
+- **Date**: 2026-02-14
+- **Why**: Risks need space to capture mitigation details alongside core metadata.
+- **Approach**:
+  - Add a mitigation field and update labels to use risk and opportunity terminology.
+  - Update request specs to cover filters and creation.
+- **Acceptance criteria**:
+  - Risk register form includes mitigation notes and filters return scoped results.
+- **Evidence**:
+  - bundle exec rspec spec/requests/risks_spec.rb.
+  - browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/risks-index.png.
+  - Issue: ISS-031.
