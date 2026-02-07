@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_07_143000) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_07_150000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -186,11 +186,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_07_143000) do
     t.string "checksum", null: false
     t.integer "rows_imported", default: 0, null: false
     t.integer "rows_rejected", default: 0, null: false
-    t.string "status", default: "completed", null: false
+    t.string "status", default: "queued", null: false
     t.datetime "imported_at"
     t.json "notes", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "error_message"
     t.index ["imported_by_id"], name: "index_ops_imports_on_imported_by_id"
     t.index ["program_id", "report_type", "checksum"], name: "index_ops_imports_on_program_id_and_report_type_and_checksum", unique: true
     t.index ["program_id"], name: "index_ops_imports_on_program_id"

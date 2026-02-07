@@ -10,11 +10,12 @@
 #  rows_imported :integer          default(0), not null
 #  rows_rejected :integer          default(0), not null
 #  source_filename :string
-#  status        :string           default("completed"), not null
+#  status        :string           default("queued"), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  imported_by_id :bigint          not null
 #  program_id    :bigint           not null
+#  error_message :string
 #
 class OpsImport < ApplicationRecord
   REPORT_TYPES = %w[
@@ -28,6 +29,9 @@ class OpsImport < ApplicationRecord
     bom
   ].freeze
 
+  STATUSES = %w[queued running succeeded failed].freeze
+  MAX_UPLOAD_SIZE = 10.megabytes
+
   belongs_to :program
   belongs_to :imported_by, class_name: "User"
 
@@ -40,7 +44,9 @@ class OpsImport < ApplicationRecord
   has_many :ops_mrb_dispo_lines, dependent: :delete_all
   has_many :ops_bom_components, dependent: :delete_all
 
+  has_one_attached :source_file
+
   validates :report_type, presence: true, inclusion: { in: REPORT_TYPES }
   validates :checksum, presence: true
-  validates :status, presence: true
+  validates :status, presence: true, inclusion: { in: STATUSES }
 end
