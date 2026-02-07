@@ -636,3 +636,18 @@ This is a living document that tracks product improvements and refinements acros
   - bundle exec rspec spec/requests/risks_spec.rb.
   - browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/risks-index.png.
   - Issue: ISS-031.
+
+### IMP-032 Operations import performance and resiliency
+
+- **Status**: Done
+- **Date**: 2026-02-07
+- **Why**: Large XLSX uploads can exhaust memory on small instances and cause 502 responses.
+- **Approach**:
+  - Stream XLSX rows, batch insert rows, and move imports to a background job.
+  - Add file size guardrails and clearer upload errors.
+- **Acceptance criteria**:
+  - Uploading an ops report creates a queued import and enqueues a job.
+  - Oversized files return a 422 response with a helpful message.
+- **Evidence**:
+  - bundle exec rspec.
+  - Issue: ISS-033.

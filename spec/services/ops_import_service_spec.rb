@@ -1,23 +1,25 @@
 require "rails_helper"
-require "csv"
+require "caxlsx"
 
 RSpec.describe OpsImportService do
-  def build_upload(headers, rows)
-    file = Tempfile.new([ "ops-import", ".csv" ])
-    file.write(CSV.generate do |csv|
-      csv << headers
-      rows.each { |row| csv << row }
-    end)
-    file.rewind
-    Rack::Test::UploadedFile.new(file.path, "text/csv", original_filename: "ops.csv")
+  def build_workbook(headers, rows)
+    file = Tempfile.new([ "ops-import", ".xlsx" ])
+    package = Axlsx::Package.new
+    package.workbook.add_worksheet(name: "Sheet1") do |sheet|
+      sheet.add_row(headers)
+      rows.each { |row| sheet.add_row(row) }
+    end
+    package.serialize(file.path)
+    file
   end
 
   it "rejects missing required headers" do
     user = User.create!(email: "ops-import@example.com", password: "password")
     program = Program.create!(name: "Ops Program", user: user)
+    import = OpsImport.create!(program: program, imported_by: user, report_type: "materials", checksum: "abc123", status: "running")
 
-    file = build_upload([ "part_number" ], [ [ "PN-1" ] ])
-    result = described_class.new(user: user, program: program, report_type: "materials", file: file).call
+    file = build_workbook([ "part_number" ], [ [ "PN-1" ] ])
+    result = described_class.new(import: import, report_type: "materials", file_path: file.path).call
 
     expect(result.ok).to be(false)
     expect(result.errors.first).to include("Missing required column")
@@ -26,35 +28,51 @@ RSpec.describe OpsImportService do
   it "imports materials rows" do
     user = User.create!(email: "ops-import-2@example.com", password: "password")
     program = Program.create!(name: "Ops Program", user: user)
+    import = OpsImport.create!(program: program, imported_by: user, report_type: "materials", checksum: "abc124", status: "running")
 
     headers = OpsImportService::TEMPLATE_HEADERS.fetch("materials")
-    file = build_upload(
+    file = build_workbook(
       headers,
       [ [ "PN-1", "Bracket", "Acme", "Steel", "Buyer", "PO-1", "2024-01-01", "2024-01-03", "2024-01-05", 5, 5, 10, 50, 3 ] ]
     )
 
-    result = described_class.new(user: user, program: program, report_type: "materials", file: file).call
+    result = described_class.new(import: import, report_type: "materials", file_path: file.path).call
 
     expect(result.ok).to be(true)
     expect(OpsMaterial.count).to eq(1)
-    expect(OpsImport.count).to eq(1)
   end
 
-  it "blocks duplicate imports" do
-    user = User.create!(email: "ops-import-dup@example.com", password: "password")
+  it "batches inserts using insert_all" do
+    user = User.create!(email: "ops-import-3@example.com", password: "password")
     program = Program.create!(name: "Ops Program", user: user)
+    import = OpsImport.create!(program: program, imported_by: user, report_type: "materials", checksum: "abc125", status: "running")
 
-    headers = OpsImportService::TEMPLATE_HEADERS.fetch("scrap")
-    file = build_upload(
-      headers,
-      [ [ "2024-01-05", "PN-1", "Bracket", "Scratch", "SO-1", 1, 25 ] ]
-    )
+    cell = Struct.new(:value)
+    headers = OpsImportService::REPORT_CONFIG.fetch("materials").fetch(:required)
+    rows = [
+      headers.map { |header| cell.new(header) },
+      [
+        cell.new("PN-1"),
+        cell.new("Acme"),
+        cell.new(Date.new(2024, 1, 1)),
+        cell.new(1),
+        cell.new(2),
+        cell.new(2)
+      ]
+    ]
 
-    first = described_class.new(user: user, program: program, report_type: "scrap", file: file).call
-    second = described_class.new(user: user, program: program, report_type: "scrap", file: file).call
+    sheet = instance_double(Roo::Excelx)
+    allow(sheet).to receive(:each_row_streaming).and_yield(rows[0]).and_yield(rows[1])
+    allow(sheet).to receive(:sheet).and_return(sheet)
+    allow(Roo::Excelx).to receive(:new).and_return(sheet)
 
-    expect(first.ok).to be(true)
-    expect(second.ok).to be(false)
-    expect(second.errors.first).to include("already been imported")
+    expect(OpsMaterial).to receive(:insert_all).with(
+      array_including(hash_including(part_number: "PN-1")),
+      record_timestamps: true
+    ).and_return([])
+
+    result = described_class.new(import: import, report_type: "materials", file_path: "fake.xlsx").call
+
+    expect(result.ok).to be(true)
   end
 end

@@ -237,3 +237,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-14
 - Notes: Add a dedicated flash container and turbo stream flash updates for create and update failures.
 - Evidence: bundle exec rspec; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-success.png; browser:/tmp/codex_browser_invocations/d5dd6e13f42f9ee8/artifacts/tmp/screenshots/manual/period-failure.png.
+
+## ISS-033 Operations imports OOM protection
+
+- Status: Done
+- Date: 2026-02-07
+- Notes: Move operations imports to a background job, stream XLSX reads, batch insert rows, and add file size guardrails with clearer errors.
+- Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots.

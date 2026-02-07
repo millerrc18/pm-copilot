@@ -1,3 +1,5 @@
+require "digest"
+
 class OpsImportsController < ApplicationController
   before_action :authenticate_user!
 
@@ -14,6 +16,7 @@ class OpsImportsController < ApplicationController
   def create
     @programs = current_user.programs.order(:name)
     @program = current_user.programs.find_by(id: params[:program_id])
+    file = params[:file]
 
     unless @program
       redirect_to ops_imports_path, alert: "Select a program to import Operations data."
@@ -25,25 +28,46 @@ class OpsImportsController < ApplicationController
       return
     end
 
-    if params[:file].blank?
+    unless OpsImport::REPORT_TYPES.include?(params[:report_type])
+      @imports = OpsImport.where(program: @program).order(imported_at: :desc)
+      @errors = [ "Unknown report type." ]
+      render :index, status: :unprocessable_entity
+      return
+    end
+
+    if file.blank?
       redirect_to ops_imports_path(program_id: @program.id), alert: "Attach a file to import."
       return
     end
 
-    result = OpsImportService.new(
-      user: current_user,
-      program: @program,
-      report_type: params[:report_type],
-      file: params[:file]
-    ).call
-
-    if result.ok
-      redirect_to ops_imports_path(program_id: @program.id), notice: "Import complete."
-    else
+    if file.size.to_i > OpsImport::MAX_UPLOAD_SIZE
       @imports = OpsImport.where(program: @program).order(imported_at: :desc)
-      @errors = result.errors
+      @errors = [ "File is too large. Max size is 10MB. Export a smaller date range or upgrade the instance size." ]
       render :index, status: :unprocessable_entity
+      return
     end
+
+    checksum = Digest::SHA256.file(file.tempfile.path).hexdigest
+    if OpsImport.exists?(program: @program, report_type: params[:report_type], checksum: checksum)
+      @imports = OpsImport.where(program: @program).order(imported_at: :desc)
+      @errors = [ "This file has already been imported for this program." ]
+      render :index, status: :unprocessable_entity
+      return
+    end
+
+    import = OpsImport.create!(
+      program: @program,
+      imported_by: current_user,
+      report_type: params[:report_type],
+      source_filename: file.original_filename,
+      checksum: checksum,
+      status: "queued"
+    )
+    import.source_file.attach(file)
+
+    OpsImportJob.perform_later(import.id)
+
+    redirect_to ops_imports_path(program_id: @program.id), notice: "Import started. Refresh to see progress."
   end
 
   def destroy

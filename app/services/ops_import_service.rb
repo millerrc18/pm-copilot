@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "digest"
-
 class OpsImportService
-  Result = Struct.new(:ok, :import, :errors, keyword_init: true)
+  Result = Struct.new(:ok, :rows_imported, :rows_rejected, :errors, keyword_init: true)
 
   REPORT_CONFIG = {
     "materials" => {
@@ -71,100 +69,89 @@ class OpsImportService
     ]
   }.freeze
 
-  def initialize(user:, program:, report_type:, file:)
-    @user = user
-    @program = program
+  BATCH_SIZE = 500
+  MAX_ERROR_COUNT = 50
+
+  def initialize(import:, report_type:, file_path:)
+    @import = import
     @report_type = report_type
-    @file = file
+    @file_path = file_path
   end
 
   def call
     unless OpsImport::REPORT_TYPES.include?(@report_type)
-      return Result.new(ok: false, import: nil, errors: [ "Unknown report type." ])
-    end
-
-    checksum = Digest::SHA256.file(@file.tempfile.path).hexdigest
-    if OpsImport.exists?(program: @program, report_type: @report_type, checksum: checksum)
-      return Result.new(ok: false, import: nil, errors: [ "This file has already been imported for this program." ])
+      return Result.new(ok: false, rows_imported: 0, rows_rejected: 0, errors: [ "Unknown report type." ])
     end
 
     sheet = load_sheet
-    return Result.new(ok: false, import: nil, errors: [ "Unable to read the spreadsheet." ]) unless sheet
-
-    header_map = header_index_map(sheet)
-    missing = required_headers.reject { |key| header_map.key?(key) }
-    if missing.any?
-      return Result.new(ok: false, import: nil, errors: [ "Missing required column(s): #{missing.join(', ')}" ])
-    end
+    return Result.new(ok: false, rows_imported: 0, rows_rejected: 0, errors: [ "Unable to read the spreadsheet." ]) unless sheet
 
     errors = []
     rows_imported = 0
     rows_rejected = 0
-    import = nil
+    rows_processed = 0
+    batch_flush_count = 0
+    batch = []
+    header_map = nil
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
-    ActiveRecord::Base.transaction do
-      import = OpsImport.create!(
-        program: @program,
-        imported_by: @user,
-        report_type: @report_type,
-        source_filename: @file.original_filename,
-        checksum: checksum,
-        status: "processing",
-        imported_at: Time.current
-      )
+    sheet.each_row_streaming(pad_cells: true) do |row|
+      rows_processed += 1
+      values = row.map { |cell| cell&.value }
 
-      each_sheet_row(sheet) do |row_number, values|
-        next if blank_row?(values)
-
-        attrs, row_error = build_attrs(values, header_map, row_number)
-        if row_error
-          errors << row_error
-          rows_rejected += 1
-          next
+      if rows_processed == 1
+        header_map = header_index_map(values)
+        missing = required_headers.reject { |key| header_map.key?(key) }
+        if missing.any?
+          return Result.new(ok: false, rows_imported: 0, rows_rejected: 0, errors: [ "Missing required column(s): #{missing.join(', ')}" ])
         end
+        next
+      end
 
-        attrs[:program_id] = @program.id
-        attrs[:ops_import_id] = import.id
-        attrs[:source_row_number] = row_number
+      next if blank_row?(values)
 
-        REPORT_CONFIG.fetch(@report_type).fetch(:model).create!(attrs)
-        rows_imported += 1
-      rescue ActiveRecord::RecordInvalid => e
-        errors << "Row #{row_number}: #{e.record.errors.full_messages.join(', ')}"
+      attrs, row_error = build_attrs(values, header_map, rows_processed)
+      if row_error
         rows_rejected += 1
+        errors << row_error if errors.size < MAX_ERROR_COUNT
+        next
       end
 
-      if errors.any?
-        raise ActiveRecord::Rollback
+      attrs[:program_id] = @import.program_id
+      attrs[:ops_import_id] = @import.id
+      attrs[:source_row_number] = rows_processed
+
+      batch << attrs
+      if batch.size >= BATCH_SIZE
+        rows_imported += flush_batch(batch)
+        batch_flush_count += 1
       end
     end
 
-    if errors.any?
-      Result.new(ok: false, import: nil, errors: errors)
-    else
-      import.update!(rows_imported: rows_imported, rows_rejected: rows_rejected, status: "completed") if import
-      Result.new(ok: true, import: import, errors: [])
+    if batch.any?
+      rows_imported += flush_batch(batch)
+      batch_flush_count += 1
     end
+
+    duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+    log_import_summary(rows_processed, batch_flush_count, rows_imported, rows_rejected, duration)
+
+    Result.new(ok: true, rows_imported: rows_imported, rows_rejected: rows_rejected, errors: errors)
   rescue StandardError => e
-    Result.new(ok: false, import: nil, errors: [ "Import crashed: #{e.class} - #{e.message}" ])
+    Result.new(ok: false, rows_imported: 0, rows_rejected: 0, errors: [ "Import crashed: #{e.class} - #{e.message}" ])
   end
 
   private
 
   def load_sheet
-    spreadsheet = Roo::Spreadsheet.open(@file.tempfile.path, extension: file_extension)
-    spreadsheet.sheet(0)
+    Roo::Excelx.new(@file_path).sheet(0)
   rescue StandardError
     nil
   end
 
-  def file_extension
-    File.extname(@file.original_filename.to_s).delete(".")
-  end
-
-  def header_index_map(sheet)
-    headers = sheet.row(1).map { |value| normalize_header(value) }
-    headers.each_with_index.to_h
+  def header_index_map(headers)
+    normalized = headers.map { |value| normalize_header(value) }
+    normalized.each_with_index.to_h
   end
 
   def normalize_header(value)
@@ -175,24 +162,31 @@ class OpsImportService
     values.compact.all? { |value| value.to_s.strip.empty? }
   end
 
-  def each_sheet_row(sheet)
-    if sheet.respond_to?(:each_row_streaming)
-      row_index = 1
-      sheet.each_row_streaming(offset: 1, pad_cells: true) do |row|
-        row_index += 1
-        values = row.map { |cell| cell&.value }
-        yield row_index, values
-      end
-    else
-      (2..sheet.last_row.to_i).each do |row_index|
-        values = sheet.row(row_index)
-        yield row_index, values
-      end
-    end
-  end
-
   def required_headers
     REPORT_CONFIG.fetch(@report_type).fetch(:required)
+  end
+
+  def flush_batch(batch)
+    model = REPORT_CONFIG.fetch(@report_type).fetch(:model)
+    rows = batch.dup
+    batch.clear
+    model.insert_all(rows, record_timestamps: true)
+    rows.length
+  end
+
+  def log_import_summary(rows_processed, batch_flush_count, rows_imported, rows_rejected, duration)
+    Rails.logger.info(
+      {
+        message: "ops_import.summary",
+        ops_import_id: @import.id,
+        report_type: @report_type,
+        rows_processed: rows_processed,
+        rows_imported: rows_imported,
+        rows_rejected: rows_rejected,
+        batch_flush_count: batch_flush_count,
+        duration_s: duration.round(2)
+      }.to_json
+    )
   end
 
   def build_attrs(values, header_map, row_number)
