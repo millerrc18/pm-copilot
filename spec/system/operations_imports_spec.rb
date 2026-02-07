@@ -33,5 +33,6 @@ RSpec.describe "Operations imports", type: :system do
 
     expect(page).to have_content("Import started")
     expect(page).to have_content("Materials")
+    expect(page).to have_button("Refresh status")
   end
 end

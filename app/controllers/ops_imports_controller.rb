@@ -11,6 +11,12 @@ class OpsImportsController < ApplicationController
     else
       []
     end
+    @imports_last_updated_at = @imports.any? ? @imports.maximum(:updated_at) : nil
+
+    if turbo_frame_request?
+      render partial: "ops_imports/history",
+             locals: { imports: @imports, program: @program, last_updated_at: @imports_last_updated_at }
+    end
   end
 
   def create
@@ -65,7 +71,16 @@ class OpsImportsController < ApplicationController
     )
     import.source_file.attach(file)
 
-    OpsImportJob.perform_later(import.id)
+    job = OpsImportJob.perform_later(import.id)
+    import.update_column(:job_id, job.job_id)
+    Rails.logger.info(
+      {
+        message: "ops_import.enqueued",
+        ops_import_id: import.id,
+        report_type: import.report_type,
+        job_id: job.job_id
+      }.to_json
+    )
 
     redirect_to ops_imports_path(program_id: @program.id), notice: "Import started. Refresh to see progress."
   end

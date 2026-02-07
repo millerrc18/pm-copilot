@@ -244,3 +244,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-07
 - Notes: Move operations imports to a background job, stream XLSX reads, batch insert rows, and add file size guardrails with clearer errors.
 - Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec; bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots.
+
+## ISS-034 Operations import queue visibility and worker guidance
+
+- Status: Done
+- Date: 2026-02-07
+- Notes: Persist job identifiers, add enqueue and job lifecycle logs, and add refresh controls and last updated timestamps for Operations imports. Document the Solid Queue worker setup for Render.
+- Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec (fails: ops_imports_spec job_id assertion, missing tailwind.css, missing Chrome); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: missing tailwind.css); bin/ui-screenshots (pending, Chrome not available); browser:/tmp/codex_browser_invocations/b150e7c108c033dc/artifacts/artifacts/ops-imports.png.

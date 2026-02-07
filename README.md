@@ -36,6 +36,10 @@ Screenshots are written to `tmp/screenshots/ui/<page>/<device>.png`.
 
 Production deploys must run database migrations before starting the web process. The Render start script runs `bin/rails db:migrate` followed by `bin/rails ops:schema:check` to fail fast if Operations tables or saved filter columns are missing.
 
+### Render background worker for Solid Queue
+
+Operations imports run on Solid Queue and require a separate worker process in production. In Render, create a Background Worker service with the same environment variables as the web service, including DATABASE_URL, RAILS_MASTER_KEY, and RAILS_ENV. Use the start command `bin/jobs`. This worker must stay running to drain the queue.
+
 ## Manual QA checklist (first release)
 
 Functional

@@ -651,3 +651,24 @@ This is a living document that tracks product improvements and refinements acros
 - **Evidence**:
   - bundle exec rspec.
   - Issue: ISS-033.
+
+### IMP-033 Operations import queue observability
+
+- **Status**: Done
+- **Date**: 2026-02-07
+- **Why**: Queued imports need clearer status visibility and worker guidance so users know when the queue is draining.
+- **Approach**:
+  - Capture Active Job job identifiers and log enqueue and job lifecycle events.
+  - Add a refreshable import history panel with a last updated timestamp.
+  - Document the Solid Queue worker requirement for Render deployments.
+- **Acceptance criteria**:
+  - Ops imports store job identifiers and log start and finish events.
+  - Import history includes a refresh action and last updated timestamp.
+  - Render docs call out the worker start command and required environment variables.
+- **Evidence**:
+  - bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update.
+  - bundle exec rspec (fails: ops_imports_spec job_id assertion, missing tailwind.css, missing Chrome).
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: missing tailwind.css).
+  - bin/ui-screenshots (pending, Chrome not available).
+  - browser:/tmp/codex_browser_invocations/b150e7c108c033dc/artifacts/artifacts/ops-imports.png.
+  - Issue: ISS-034.

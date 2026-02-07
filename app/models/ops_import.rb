@@ -16,6 +16,7 @@
 #  imported_by_id :bigint          not null
 #  program_id    :bigint           not null
 #  error_message :string
+#  job_id        :string
 #
 class OpsImport < ApplicationRecord
   REPORT_TYPES = %w[
@@ -49,4 +50,12 @@ class OpsImport < ApplicationRecord
   validates :report_type, presence: true, inclusion: { in: REPORT_TYPES }
   validates :checksum, presence: true
   validates :status, presence: true, inclusion: { in: STATUSES }
+
+  before_validation :assign_job_id, on: :create
+
+  private
+
+  def assign_job_id
+    self.job_id ||= SecureRandom.uuid
+  end
 end
