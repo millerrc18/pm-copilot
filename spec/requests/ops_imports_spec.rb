@@ -37,6 +37,10 @@ RSpec.describe "Operations imports", type: :request do
     end.to change(OpsImport, :count).by(1)
       .and have_enqueued_job(OpsImportJob)
 
+    job = enqueued_jobs.reverse.find { |entry| entry[:job] == OpsImportJob }
+    import = OpsImport.find(job[:args].first)
+    expect(import.job_id).to eq(job[:job_id])
+
     expect(response).to redirect_to(ops_imports_path(program_id: program.id))
   end
 
