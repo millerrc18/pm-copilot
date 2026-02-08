@@ -47,7 +47,7 @@
               <td class="py-3">
                 <% if current_user.admin? %>
                   <%= button_to "Delete", ops_import_path(import), method: :delete,
-                                form: { data: { turbo_confirm: "Delete this import and its rows?" } },
+                                form: { data: { turbo_confirm: "Delete this import and its rows?", turbo_stream: true } },
                                 class: "text-sm font-semibold text-light-text/70 hover:text-light-text" %>
                 <% else %>
                   <span class="text-light-text/40">Admin only</span>
