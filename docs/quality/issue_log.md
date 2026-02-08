@@ -251,3 +251,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-07
 - Notes: Persist job identifiers, add enqueue and job lifecycle logs, and add refresh controls and last updated timestamps for Operations imports. Document the Solid Queue worker setup for Render.
 - Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec (fails: ops_imports_spec job_id assertion, missing tailwind.css, missing Chrome); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: missing tailwind.css); bin/ui-screenshots (pending, Chrome not available); browser:/tmp/codex_browser_invocations/b150e7c108c033dc/artifacts/artifacts/ops-imports.png.
+
+## ISS-035 Operations imports flash toast and header duplication
+
+- Status: Done
+- Date: 2026-02-07
+- Notes: Replace the in-flow flash banner with fixed toasts and remove duplicate Operations Imports heading so the topbar branding only appears once.
+- Evidence: bundle exec rspec (fails: ops_imports job_id mismatch, Chrome not available); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending, Chrome not available); browser:/tmp/codex_browser_invocations/2eb6a834e3da803d/artifacts/artifacts/ops-imports-flash.png.

@@ -93,6 +93,17 @@ class OpsImportsController < ApplicationController
     end
 
     import.destroy!
-    redirect_to ops_imports_path(program_id: import.program_id), notice: "Import deleted."
+    @program = import.program
+    @imports = OpsImport.where(program: @program).order(imported_at: :desc)
+    @imports_last_updated_at = @imports.any? ? @imports.maximum(:updated_at) : nil
+
+    respond_to do |format|
+      format.turbo_stream do
+        flash.now[:notice] = "Import deleted."
+      end
+      format.html do
+        redirect_to ops_imports_path(program_id: import.program_id), notice: "Import deleted."
+      end
+    end
   end
 end

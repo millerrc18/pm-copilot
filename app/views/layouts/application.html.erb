@@ -23,6 +23,9 @@
   </head>
 
   <body class="min-h-screen bg-dark-bg text-light-text">
+    <div id="flash" data-turbo-temporary class="fixed top-4 right-4 z-50 w-full max-w-md space-y-2 pointer-events-none">
+      <%= render "layouts/flash" %>
+    </div>
     <div class="flex min-h-screen" data-controller="sidebar right-panel">
       <% if user_signed_in? %>
         <%= render "shared/sidebar" %>
@@ -35,9 +38,6 @@
         <% end %>
 
         <main class="flex-1 overflow-y-auto px-5 py-6 pb-28 md:px-8 md:pb-10">
-          <div id="flash">
-            <%= render "shared/flash" %>
-          </div>
           <%= yield %>
         </main>
       </div>
