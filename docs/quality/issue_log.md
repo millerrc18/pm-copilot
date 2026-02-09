@@ -272,3 +272,9 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-15
 - Notes: Updated ops imports request spec to assert the correct job entry by job class and args, and made CI bundler-audit non-blocking when the advisory update fails.
 - Evidence: bundle install (fails: GitHub 500 for draft_generators); RAILS_ENV=test bin/rails db:prepare (fails: bundler Git dependency not installed); bundle exec rubocop (fails: bundler missing); bundle exec brakeman (fails: bundler missing); bundle exec bundler-audit check --update (fails: bundler missing); bundle exec rspec spec/requests/ops_imports_spec.rb (fails: bundler missing); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: bundler missing); bin/ui-screenshots (skipped: Chrome missing).
+## ISS-035 Operations imports flash toast and header duplication
+
+- Status: Done
+- Date: 2026-02-07
+- Notes: Replace the in-flow flash banner with fixed toasts and remove duplicate Operations Imports heading so the topbar branding only appears once.
+- Evidence: bundle exec rspec (fails: ops_imports job_id mismatch, Chrome not available); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb; bin/ui-screenshots (pending, Chrome not available); browser:/tmp/codex_browser_invocations/2eb6a834e3da803d/artifacts/artifacts/ops-imports-flash.png.

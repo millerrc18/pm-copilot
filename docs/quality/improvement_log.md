@@ -673,6 +673,7 @@ This is a living document that tracks product improvements and refinements acros
   - browser:/tmp/codex_browser_invocations/b150e7c108c033dc/artifacts/artifacts/ops-imports.png.
   - Issue: ISS-034.
 
+<<<<<<< codex/fix-activestorage-import-failures-in-production-81u7gz
 ### IMP-034 Shared storage for Operations import files
 
 - **Status**: Done
@@ -741,3 +742,22 @@ This is a living document that tracks product improvements and refinements acros
   - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: bundler missing).
   - bin/ui-screenshots (skipped: Chrome missing).
   - PR: pending.
+=======
+### IMP-034 Operations imports flash polish
+
+- **Status**: Done
+- **Date**: 2026-02-07
+- **Why**: Flash notices on Operations Imports should not push content down or duplicate page headers.
+- **Approach**:
+  - Render flash toasts in a fixed layout container and auto dismiss them.
+  - Remove the redundant Operations Imports heading so the topbar title and subtitle are the only header.
+- **Acceptance criteria**:
+  - Import deleted notice renders in a compact toast at the top right.
+  - The Operations Imports header appears once.
+- **Evidence**:
+  - bundle exec rspec (fails: ops_imports job_id mismatch, Chrome not available).
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - bin/ui-screenshots (pending, Chrome not available).
+  - browser:/tmp/codex_browser_invocations/2eb6a834e3da803d/artifacts/artifacts/ops-imports-flash.png.
+  - Issue: ISS-035.
+>>>>>>> main

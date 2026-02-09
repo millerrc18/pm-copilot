@@ -1,0 +1,6 @@
+<%= turbo_stream.update(
+  "ops_import_history",
+  partial: "ops_imports/history",
+  locals: { imports: @imports, program: @program, last_updated_at: @imports_last_updated_at }
+) %>
+<%= render_turbo_stream_flash %>

@@ -33,4 +33,8 @@ module ApplicationHelper
   def search_keytip
     "Ctrl K / ⌘ K"
   end
+
+  def render_turbo_stream_flash
+    turbo_stream.update("flash", partial: "layouts/flash")
+  end
 end
