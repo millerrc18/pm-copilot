@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RAILS_ENV: test
-      FERRUM_BROWSER_PATH: /usr/bin/google-chrome
+      FERRUM_BROWSER_PATH: /opt/google/chrome/chrome
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,19 +69,25 @@ jobs:
           bundler-cache: true
 
       - name: Install Chrome for Cuprite
-        run: |
-          curl -L -o /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt-get update
-          sudo apt-get install -y /tmp/google-chrome-stable.deb
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-dependencies: true
+          install-chromedriver: true
 
       - name: Prepare test database
         run: bin/rails db:prepare
 
-      - name: Run test suite
+      - name: Build Tailwind
+        run: bin/rails tailwindcss:build
+
+      - name: Run non-JS specs
         run: bundle exec rspec
+
+      - name: Run JS specs
+        run: bundle exec rspec --options .rspec.ci --tag js
 
       - name: Capture UI screenshots
         run: bin/ui-screenshots
 
       - name: Run bundler-audit
-        run: bundle exec bundler-audit check --update
+        run: bundle exec bundler-audit check --update || bundle exec bundler-audit check

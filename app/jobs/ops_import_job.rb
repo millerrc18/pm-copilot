@@ -16,7 +16,7 @@ class OpsImportJob < ApplicationJob
     )
 
     result = nil
-    import.source_file.open do |file|
+    import.source_file.blob.open do |file|
       result = OpsImportService.new(
         import: import,
         report_type: import.report_type,
@@ -51,6 +51,23 @@ class OpsImportJob < ApplicationJob
         rows_imported: import.rows_imported,
         rows_rejected: import.rows_rejected,
         duration_ms: duration_ms
+      }.to_json
+    )
+  rescue ActiveStorage::FileNotFoundError => e
+    blob_key = import&.source_file&.blob&.key
+    import&.update!(
+      status: "failed",
+      imported_at: Time.current,
+      error_message: "Uploaded file not accessible by worker. Verify Active Storage is using shared storage (S3) in production."
+    )
+    Rails.logger.error(
+      {
+        message: "ops_import.missing_file",
+        ops_import_id: ops_import_id,
+        job_id: job_id,
+        blob_key: blob_key,
+        error_class: e.class.name,
+        error_message: e.message
       }.to_json
     )
   rescue StandardError => e

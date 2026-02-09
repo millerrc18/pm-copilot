@@ -37,6 +37,9 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  config.define_derived_metadata(type: :system) do |metadata|
+    metadata[:js] = true
+  end
   # Suppress RSpec warnings about potential false positives
   RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 

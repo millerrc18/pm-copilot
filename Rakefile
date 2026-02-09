@@ -5,3 +5,7 @@ require_relative "config/application"
 require_relative "config/initializers/grade_runner"
 
 Rails.application.load_tasks
+
+if Rake::Task.task_defined?("spec")
+  Rake::Task["spec"].enhance([ "tailwindcss:build" ])
+end
