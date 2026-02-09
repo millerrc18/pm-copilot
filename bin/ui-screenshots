@@ -10,6 +10,11 @@ if [ -z "${FERRUM_BROWSER_PATH:-}" ]; then
   done
 fi
 
-bundle exec rspec spec/system/ui_responsive_screenshots_spec.rb
+if [ -z "${FERRUM_BROWSER_PATH:-}" ]; then
+  echo "Chrome not available. Skipping UI screenshots."
+  exit 0
+fi
+
+bundle exec rspec --options .rspec.ci --tag js spec/system/ui_responsive_screenshots_spec.rb
 
 echo "UI screenshots saved to tmp/screenshots/ui"
