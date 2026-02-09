@@ -672,3 +672,26 @@ This is a living document that tracks product improvements and refinements acros
   - bin/ui-screenshots (pending, Chrome not available).
   - browser:/tmp/codex_browser_invocations/b150e7c108c033dc/artifacts/artifacts/ops-imports.png.
   - Issue: ISS-034.
+
+### IMP-034 Shared storage for Operations import files
+
+- **Status**: Done
+- **Date**: 2026-02-15
+- **Why**: Solid Queue workers must access the same Active Storage files as the web service to process imports.
+- **Approach**:
+  - Switch production Active Storage to S3 with environment provided credentials.
+  - Read import files via blob open in the job and surface a clear failure message when missing.
+  - Add a job spec that stubs blob open using the XLSX fixture.
+- **Acceptance criteria**:
+  - Production config points to the shared S3 storage service.
+  - Import job opens the blob and updates status for success and missing file scenarios.
+  - Job spec verifies blob open is used.
+- **Evidence**:
+  - Issue: ISS-035.
+  - bundle exec rubocop.
+  - bundle exec brakeman.
+  - bundle exec bundler-audit check --update.
+  - bundle exec rspec (fails: missing tailwind.css, Chrome missing for system tests).
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: missing tailwind.css).
+  - bin/ui-screenshots (pending: Chrome missing).
+  - PR: pending.

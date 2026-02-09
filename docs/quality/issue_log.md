@@ -251,3 +251,10 @@ This log tracks quality issues and their resolution status. Update entries with 
 - Date: 2026-02-07
 - Notes: Persist job identifiers, add enqueue and job lifecycle logs, and add refresh controls and last updated timestamps for Operations imports. Document the Solid Queue worker setup for Render.
 - Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec (fails: ops_imports_spec job_id assertion, missing tailwind.css, missing Chrome); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: missing tailwind.css); bin/ui-screenshots (pending, Chrome not available); browser:/tmp/codex_browser_invocations/b150e7c108c033dc/artifacts/artifacts/ops-imports.png.
+
+## ISS-035 Operations imports missing Active Storage files on worker
+
+- Status: Done
+- Date: 2026-02-15
+- Notes: Switched production Active Storage to S3, updated the import job to open blobs from shared storage, and added a job spec that stubs blob open to process the XLSX fixture.
+- Evidence: bundle exec rubocop; bundle exec brakeman; bundle exec bundler-audit check --update; bundle exec rspec (fails: missing tailwind.css, Chrome missing for system tests); bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb (fails: missing tailwind.css); bin/ui-screenshots (pending: Chrome missing).
