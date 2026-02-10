@@ -12,4 +12,15 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: WEB_CONCURRENCY
-        value: 2
+        value: 1
+      - key: RAILS_MAX_THREADS
+        value: 3
+  - type: worker
+    name: my-app-name-worker
+    runtime: ruby
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bin/jobs --mode async"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
