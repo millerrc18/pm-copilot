@@ -214,6 +214,27 @@ This is a living document that tracks product improvements and refinements acros
   - bin/ui-screenshots (pending due to missing Chrome).
   - PR: pending.
 
+### IMP-035 Render memory baseline tuning for ops imports
+
+- **Status**: Done
+- **Why**: Render free tier memory caps at 512MB and ops imports triggered 502s from web OOM.
+- **Approach**:
+  - Set Puma to a single worker with three threads.
+  - Remove Solid Queue from the Puma process and run it in a dedicated worker service.
+  - Lower Solid Queue worker threads to avoid parallel imports.
+- **Acceptance criteria**:
+  - Web service idles below 512MB on Render.
+  - Ops imports complete without 502s and the import history frame updates.
+- **Evidence**:
+  - render.yaml, config/puma.rb, config/queue.yml.
+  - bundle exec rubocop.
+  - bundle exec brakeman.
+  - bundle exec bundler-audit check --update.
+  - bundle exec rspec (fails: missing tailwind.css, ops_imports job_id mismatch).
+  - bundle exec rspec spec/models/cost_entry_spec.rb spec/system/cost_hub_spec.rb spec/system/cost_hub_import_spec.rb spec/system/navigation_spec.rb spec/system/navigation_routes_spec.rb spec/system/account_management_spec.rb.
+  - bin/ui-screenshots (skipped: Chrome not available).
+  - Issue: ISS-038.
+
 ### IMP-011 Account profile overhaul
 
 - **Status**: Done
